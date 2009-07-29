@@ -196,8 +196,8 @@ screeplot.IKFA <- function(x, rand.test=TRUE, ...) {
     mm[4] <- mm[4] * 2
     par(mar=mm)
   }
-  plot(1:length(x$ccoef), summ$object[, "RMSE"], type="b", ylim=yR, col="black", axes=FALSE, xlab="Number of factors", ylab="RMSE", las=1)
-  axis(2)
+  plot(1:length(x$ccoef), summ$object[, "RMSE"], type="b", ylim=yR, col="black", axes=FALSE, xlab="Number of factors", ylab="RMSE")
+  axis(2, las=1)
   axis(1, at=1:length(x$ccoef), labels=1:length(x$ccoef))
   box()
   lines(1:length(x$ccoef), summ$crossval[, "RMSE"], type="b", col="red")

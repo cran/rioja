@@ -4,9 +4,11 @@
 #include "mat.h"
 
 extern "C" {
-/*
+
+#ifdef _MSC_VER
 __declspec(dllexport) 
-*/
+#endif
+
 SEXP WAPLS_fit(SEXP sexp_SpecData, SEXP sexp_EnvData, SEXP sexpNPLS, SEXP sexpIsWAPLS, SEXP sexpStandX, SEXP sexpLean)
 {
    SEXP dims, retNames=R_NilValue, R_meanY, R_meanT, R_sdX;
@@ -199,17 +201,8 @@ SEXP WAPLS_fit(SEXP sexp_SpecData, SEXP sexp_EnvData, SEXP sexpNPLS, SEXP sexpIs
    }
    SEXP ret = R_NilValue, R_coef = R_NilValue;
 
-   int nRet = 2, nnRet=1;
-   if (!bLean)
-      nRet += 2;
-   if (!bIsWAPLS) {
-      nRet += 1;
-      if (bStandX) {
-         nRet += 1;
-      }
-   }
-   PROTECT(ret = allocVector(VECSXP, nRet)); 
-   PROTECT(retNames = allocVector(STRSXP, nRet));
+   PROTECT(ret = allocVector(VECSXP, 6)); 
+   PROTECT(retNames = allocVector(STRSXP, 6));
 
    PROTECT(R_coef = allocVector(REALSXP, nc*nPLS));
    for (i=0;i<nc;i++) {
@@ -250,11 +243,11 @@ SEXP WAPLS_fit(SEXP sexp_SpecData, SEXP sexp_EnvData, SEXP sexpNPLS, SEXP sexpIs
       }
       SET_VECTOR_ELT(ret, 2, R_T);
       SET_VECTOR_ELT(ret, 3, R_P);
-      SET_STRING_ELT(retNames, 2, mkChar("T"));
-      SET_STRING_ELT(retNames, 3, mkChar("P"));
       UNPROTECT(2);
-      nnRet += 2;
    }
+
+   SET_STRING_ELT(retNames, 2, mkChar("T"));
+   SET_STRING_ELT(retNames, 3, mkChar("P"));
 
    if (!bIsWAPLS) {
       PROTECT(R_meanT = allocVector(REALSXP, nPLS));
@@ -264,20 +257,20 @@ SEXP WAPLS_fit(SEXP sexp_SpecData, SEXP sexp_EnvData, SEXP sexpNPLS, SEXP sexpIs
           else
              REAL(R_meanT)[j] = meanT(0,j);
       }
-      SET_VECTOR_ELT(ret, nnRet, R_meanT);
-      SET_STRING_ELT(retNames, nnRet, mkChar("meanT"));
-      nnRet++;
+      SET_VECTOR_ELT(ret, 4, R_meanT);
       PROTECT(R_sdX = allocVector(REALSXP, nc));
       for (j=0;j<nc;j++) {
          if (C.isMissing(0,j)) 
              REAL(R_sdX)[j] = NA_REAL;
           else
-             REAL(R_sdX)[j] = C(0,j);
+             REAL(R_sdX)[j] = C(j,0);
       }
-      SET_VECTOR_ELT(ret, nnRet, R_sdX);
-      SET_STRING_ELT(retNames, nnRet, mkChar("sdX"));
+      SET_VECTOR_ELT(ret, 5, R_sdX);
       UNPROTECT(2);
    }
+
+   SET_STRING_ELT(retNames, 4, mkChar("meanT"));
+   SET_STRING_ELT(retNames, 5, mkChar("sdX"));
 
    SET_NAMES(ret, retNames);
    UNPROTECT(2);
@@ -288,9 +281,9 @@ SEXP WAPLS_fit(SEXP sexp_SpecData, SEXP sexp_EnvData, SEXP sexpNPLS, SEXP sexpIs
 }
 
 extern "C" {
-/*
+#ifdef _MSC_VER
 __declspec(dllexport) 
-*/
+#endif
 SEXP WAPLS_predict(SEXP sexp_SpecData, SEXP sexp_Beta, SEXP sexp_meanY, SEXP sexpIsWAPLS, SEXP sexpStandX, SEXP sexpSDX, SEXP sexp_meanT)
 {
    SEXP dims, dims_beta, R_est = R_NilValue;

@@ -1,5 +1,17 @@
 rioja Change Log
 
+Version 0.5-4
+
+	* Released on CRAN 27/10/09
+
+	Fixed bug in WAPLS CPP & R code that crashed R with PLS 
+	(identified by Richard Telford) 
+	
+	Fixed bug in WAPLS R code that incorrectly calculated predicted 
+	values with standx=TRUE 
+	
+	Fixed bug in help file (WA example) pointed out by Sven Adler
+
 Version 0.5-3
 
 	* Released on CRAN, 12/8/09

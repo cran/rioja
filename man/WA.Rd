@@ -157,7 +157,7 @@ plot(fit.xv, xval=TRUE)
 plot(fit.xv, xval=TRUE, resid=TRUE)
 
 # RLGH reconstruction with sample specific errors
-pred <- predict(fit, cores, sse=TRUE, nboot=1000)
+pred <- predict(fit, core, sse=TRUE, nboot=1000)
 }
 }
 

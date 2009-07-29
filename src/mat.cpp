@@ -2328,7 +2328,7 @@ dMat count(const dMat &f, enumDirection dir)
       double *m1 = dataptr(target)[0];
 		for (int i=0;i<row;i++) {
          for (int j=0;j<col;j++) {
-            if (mm[i][j] > 0.0)
+            if (fabs(mm[i][j]) > 0.0)
                m1[j]++;
          }
       }
@@ -2339,7 +2339,7 @@ dMat count(const dMat &f, enumDirection dir)
       double *ss = dataptr(target)[0];
 		for (int i=0;i<row;i++) {
          for (int j=0;j<col;j++) {
-            if (mm[i][j] > 0.0)
+            if (fabs(mm[i][j]) > 0.0)
                ss[i]++;
          }
       }
@@ -2485,12 +2485,12 @@ dMat sd(const dMat &f, enumDirection dir)
 {
 	if (dir==RowWise) {
 		dMat target = sumsq(f-mean(f,RowWise),RowWise);
-		target /= (double) f.p->r;
+		target /= (double) (f.p->c - 1);
 		return sqrt(target);
 	}
 	else if (dir==ColWise) {
 		dMat target = sumsq(f-mean(f,ColWise),ColWise);
-		target /= (double) f.p->c;
+		target /= (double) (f.p->r - 1);
 		return sqrt(target);
 	}
 	else
@@ -2503,12 +2503,12 @@ dMat mean(const dMat &f, enumDirection dir)
 {
    if (dir==RowWise) {
 		dMat target = sum(f,RowWise);
-      target /= (double) f.p->r;
+      target /= (double) f.p->c;
       return target;
    }
    else if (dir==ColWise) {
 		dMat target = sum(f,ColWise);
-      target /= (double) f.p->c;
+      target /= (double) f.p->r;
       return target;
    }
    else

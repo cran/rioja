@@ -34,7 +34,7 @@ compare.datasets(y1, y2, n.cut=c(5, 10, 20, 50),
    \item{vars}{ data frame listing for each variable in the first dataset: N.occur = number of occurences in dataset 1, N2, Hill's N2 for species in dataset 1, Max = maximum value in dataset 1, N.2 = number of occurences in dataset 2, N2.2 = Hill's N2 for species in dataset 2, Max.2 = maximum value in dataset 2, N.005, number of occurences where the species is greater than 5 etc. }
    \item{objs}{ data frame listing for each observation in the first dataset: N.taxa = number of species greater than zero abundance, N2, Hill's N2 for samples, Max = maximum value, total =  sample total, M.002 = number of taxa with a maximum abundance greater than 2 2 etc., N2.005 = number of taxa in dataset 1 with more than 5 occurences in 2 dataset 2 etc., Sum.N2.005 = sample total including only those taxa with at least 5 occurrences in dataset 2 etc., M2.005 = number of taxa in dataset 1 with maximum abundance greater than 2 in dataset 2 etc., and Sum. M2.005 = sample total including only those taxa with a maximum abundance greater than 2 in dataset 2 etc. }
    
- Function \code{plot.compare.datasets} returns an object of class \code{\link[lattice]{trellis}} which may be plotted.
+ Function \code{plot.compare.datasets} returns an object of class \code{trellis} which may be plotted.
 }
 
 \author{ 

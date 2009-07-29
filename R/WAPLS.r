@@ -45,7 +45,7 @@ WAPLS.fit <- function(y, x, npls=5, iswapls=TRUE, standx=FALSE, lean=FALSE)
     ret$P <- P
   }
   if (!iswapls)
-    ret <- c(ret, list(standx=standx, meanT=result$sdX, sdx=result$sdX))
+    ret <- c(ret, list(standx=standx, meanT=result$meanT, sdx=result$sdX))
 	ret
 }
 
@@ -123,10 +123,10 @@ screeplot.WAPLS <- function(x, rand.test=TRUE, ...) {
     mm[4] <- mm[4] * 2
     par(mar=mm)
   }
-  plot(1:x$npls, summ$object[, "RMSE"], type="b", ylim=yR, col="black", xlab="Number of components", ylab="RMSE", las=1)
+  plot(1:x$npls, summ$object[, "RMSE"], type="b", ylim=yR, col="black", xlab="Number of components", ylab="RMSE", axes=FALSE)
   lines(1:x$npls, summ$crossval[, "RMSE"], type="b", col="red")
-  axis(2)
-  axis(1, at=1:length(x$npls), labels=1:length(x$npls))
+  axis(2, las=1)
+  axis(1, at=1:x$npls, labels=as.character(1:x$npls))
   box()
   args <- names(as.list(match.call()))
   if ("main" %in% args) 

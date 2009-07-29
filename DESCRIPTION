@@ -1,7 +1,7 @@
 Package: rioja
 Type: Package
 Title: An R package for the analysis of Quaternary science data
-Version: 0.5-3
+Version: 0.5-4
 Date: 2009-07-29
 Author: Steve Juggins
 Maintainer: Steve Juggins <Stephen.Juggins@ncl.ac.uk>
@@ -11,6 +11,6 @@ Description: Functions for the analysis of Quaternary science data,
         transfer functions, and stratigraphic diagrams.
 License: GPL-2
 URL: http://www.staff.ncl.ac.uk/staff/stephen.juggins/
-Packaged: 2009-08-12 16:23:21 UTC; nsj3
+Packaged: 2009-10-27 06:09:21 UTC; nsj3
 Repository: CRAN
-Date/Publication: 2009-08-13 08:59:36
+Date/Publication: 2009-10-27 07:46:59

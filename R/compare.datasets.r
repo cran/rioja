@@ -31,7 +31,7 @@ compare.datasets <- function(y1, y2, n.cut=c(5, 10, 20, 50), max.cut=c(2, 5, 10,
    colnames(m2) <- c(paste("N2.", sprintf("%03d", n.cut), sep=""), paste("Sum.N2.", sprintf("%03d", n.cut), sep=""), paste("M2.", sprintf("%03d", max.cut), sep=""), paste("Sum.M2.", sprintf("%03d", max.cut),  sep=""))
    sites <- data.frame(y1.summ2, m2)
    result <- list(vars=sp, obs=sites)
-   class(result) <- "compare.datasets"
+   class(result) <- c("compare.datasets")
    invisible(result)
 }
 
