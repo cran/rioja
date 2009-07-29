@@ -113,10 +113,10 @@ performance.default <- function(object, ...) {
     res2 <- array(dim=c(nsam, nest, nboot))
     res2.new <- array(dim=c(nsam.new, nest, nboot))
     call <- as.call(object$call.fit)
-    .set.rand.seed(100)
+#    .set.rand.seed(100)
     for (i in 1:nboot) {
-#      o <- sample(nsam, replace=TRUE)
-      o <- apply(data.frame(rep(nsam, nsam)), 1, .get.rand) + 1
+      o <- sample(nsam, replace=TRUE)
+#      o <- apply(data.frame(rep(nsam, nsam)), 1, .get.rand) + 1
       out <- (1:nsam)[-unique(o)]
       y <- object$y[o, ]
       x <- object$x[o]
@@ -216,10 +216,10 @@ performance.default <- function(object, ...) {
   if (cv.method == 3) {
     nest <- ncol(object$fitted.values)
     res2 <- array(dim=c(nsam, nest, nboot))
-    .set.rand.seed(100)
+#    .set.rand.seed(100)
     for (i in 1:nboot) {
-      o <- apply(data.frame(rep(nsam, nsam)), 1, .get.rand) + 1
- #     o <- sample(nsam, replace=TRUE)
+#      o <- apply(data.frame(rep(nsam, nsam)), 1, .get.rand) + 1
+      o <- sample(nsam, replace=TRUE)
       out <- (1:nsam)[-unique(o)]
       y <- object$y[o, ]
       x <- object$x[o]

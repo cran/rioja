@@ -1,5 +1,20 @@
 rioja Change Log
 
+Version 0.5-3
+
+	* Released on CRAN, 12/8/09
+	
+  Fixed bug in analog.c that crashed on 64 bit compilations.
+	
+  Replaced RODBC calls on non-Windows platforms with calls to 
+  read.xls in package gdata
+
+  Removed call to malloc.h that prevented compilation on MacSO X
+  
+  Added function sp.plot
+  
+  
+
 Version 0.5-2
 
 	* First Release on CRAN, 6/8/09

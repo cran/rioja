@@ -81,8 +81,10 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
       tit = &buffer[10];
    else
       tit = buffer;
-   RemoveLeadingSpaces(tit,tit);
-   RemoveTrailingSpaces(tit,tit);
+   char *tmp = new char[1000];
+   RemoveLeadingSpaces(tmp,tit);
+   RemoveTrailingSpaces(tit,tmp);
+   delete [] tmp;
    int tlen = MIN((int)strlen(tit),80);
    char *title = new char[tlen+1];
    sprintf(title,"%-.80s",tit);
@@ -97,11 +99,11 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
    double *ab2 = new double[ncoup];
    double *m = new double[nsp];
    if ((sp==NULL)||(ab==NULL)||(sp2==NULL)||(ab2==NULL)||(m==NULL)) {
-      if (sp2) delete sp2;
-      if (ab2) delete ab2;
-      if (sp) delete sp;
-      if (ab) delete ab;
-      if (m) delete m;
+      if (sp2) delete[] sp2;
+      if (ab2) delete[] ab2;
+      if (sp) delete[] sp;
+      if (ab) delete[] ab;
+      if (m) delete[] m;
       ccleanup(S,membuffers, first);
       throw("Out of memory allocating work space");
 //      return ERROR;
@@ -300,7 +302,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
 				Dm[i][ii[j]] = newS->m[j];
          }
          next = next->next;
-         delete newS->m;
+         delete[] newS->m;
          delete newS;
       }
    }
@@ -365,7 +367,8 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
       strncpy((char *) tsam, &samName2[nn*8],8);
       tsam[8] = '\0';
    	RemoveLeadingSpaces(samName[j],tsam);
-   	RemoveTrailingSpaces(samName[j],samName[j]);
+   	RemoveTrailingSpaces(tsam,samName[j]);
+   	strcpy(samName[j], tsam);
       if (strlen(samName[j]) == 0)
          bError++;
    }
@@ -398,7 +401,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
 		for(i=0;i<nsp;i++) sptags[i]= (occur[i] ? 0 : 1);
 		S.deleteCols(sptags);
       ColsWithNoData = missing_species;
-      delete sptags;
+      delete [] sptags;
 	}
 /*
    if (nMissingValues != 0) {
@@ -407,43 +410,43 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
 	   }
    }
 */
-	delete buffer;
-	delete format;
-	delete m;
-	delete sp;
-	delete ab;
-	delete sp2;
-	delete ab2;
-   delete occur;
-   delete spName2;
-   delete samName2;
-   nMissingValues = missing_flag;
-   nCouplets = ncoup;
-   return;
+	delete [] buffer;
+	delete [] format;
+	delete [] m;
+	delete [] sp;
+	delete [] ab;
+	delete [] sp2;
+	delete [] ab2;
+  delete [] occur;
+  delete [] spName2;
+  delete [] samName2;
+  nMissingValues = missing_flag;
+  nCouplets = ncoup;
+  return;
 }
 
 void ccleanup(dataMat &S, void **memb, sample *first)
 {
 		if (memb[0])
-        delete (char *) memb[0];
+        delete [] (char *) memb[0];
 		if (memb[1])
-        delete (char *) memb[1];
+        delete [] (char *) memb[1];
 		if (memb[2])
-        delete (char *) memb[2];
+        delete [] (char *) memb[2];
 		if (memb[3])
-        delete (double *) memb[3];
+        delete [] (double *) memb[3];
 		if (memb[4])
-        delete (double *) memb[4];
+        delete [] (double *) memb[4];
 		if (memb[5])
-        delete (int *) memb[5];
+        delete [] (int *) memb[5];
 		if (memb[6])
-        delete (double *) memb[6];
+        delete [] (double *) memb[6];
 		if (memb[7])
-        delete (int *) memb[7];
+        delete [] (int *) memb[7];
 		if (memb[8])
-        delete (char *) memb[8];
+        delete [] (char *) memb[8];
 		if (memb[9])
-        delete (char *) memb[9];
+        delete [] (char *) memb[9];
 
    sample *next;
    sample *newS = next = first;

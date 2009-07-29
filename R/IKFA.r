@@ -217,7 +217,7 @@ screeplot.IKFA <- function(x, rand.test=TRUE, ...) {
     axis(4, las=1)
     lines(1:ncomp, res[, "delta.RMSE"], type="b", col="blue")
     mtext("% change in RMSE", 4, line=2)
-    text(1:ncomp, res[, "delta.RMSE"], as.character(round(res[, "p"], 3)), pos=2, xpd=NA, cex=0.8, col="blue") 
+    text(1:ncomp, res[, "delta.RMSE"], sprintf("%.3f", res[, "p"], 3), pos=2, xpd=NA, cex=0.8, col="blue") 
     legend("bottomleft", c("model RMSE", "x-val RMSE", "% change RMSE"), lty=1, col=c("black", "red", "blue"))
     par(mar=oldmar)
     invisible(res)

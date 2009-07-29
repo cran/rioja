@@ -36,7 +36,6 @@ Steve Juggins
 }
 
 \examples{
-\dontrun{
 pth <- system.file("example.datasets/WOLSFELD.TIL", package="rioja")
 WOLS <- read.Tilia(pth)
 sel <- WOLS$vars$Sums == "A" | WOLS$vars$Sums == "B"
@@ -48,7 +47,6 @@ spec.sub <- spec.pc[, mx > 5]
 age <- WOLS$levels$Chron2
 strat.plot(spec.sub, scale.percent=TRUE, yvar=age, y.rev=TRUE,
       wa.order="bottomleft")
-}
 }
 \keyword{ IO }
 \keyword{ file }

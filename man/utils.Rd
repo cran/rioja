@@ -44,7 +44,7 @@ write.list.Excel(x, fName)
   
   Function \code{Hill.N2} returns Hill's N2 values for species or samples for a given species by sites dataset (Hill 1973).
 
-  Function \code{write.list.Excel} saves the data frames in a list object as a series of names worksheets in Excel format.
+  Function \code{write.list.Excel} saves the data frames in a list object as a series of names worksheets in Excel format.  Not that this function is only available on Windows.  See package \code{WriteXLS} for a Linux / MacOS X alternative.
 }
 
 \value{

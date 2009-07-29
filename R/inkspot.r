@@ -1,4 +1,4 @@
-inkspot <- function(data, gradient=1:nrow(data), use.rank=FALSE, reorder.species = TRUE, x.axis=c("sites", "gradient", "none"), x.axis.top=FALSE, pch.scale=3, legend=TRUE, site.names=NULL, spec.names=NULL, ...) {
+inkspot <- function(data, gradient=1:nrow(data), use.rank=FALSE, reorder.species = TRUE, x.axis=c("sites", "gradient", "none"), x.axis.top=FALSE, site.names=NULL, spec.names=NULL, pch=21, cex.max=3, col="black", bg="darkgrey", legend.values=c(2, 5, 10, 20, 50), ...) {
    x.axis = match.arg(x.axis)
    ord <- order(gradient)
    grad.srt <- sort(gradient)
@@ -16,9 +16,8 @@ inkspot <- function(data, gradient=1:nrow(data), use.rank=FALSE, reorder.species
    nC <- ncol(data)
    ss <- list(sites=ord, spec=spec.ord)
    ddd <- as.vector(as.matrix(sqrt(data[ss$sites, ss$spec])))
-#   r <- rep(1:nC, each=nR)
-#   c <- rep(1:nR, times=nC)
-#   ddd <- as.vector(as.matrix(sqrt(data)))
+ 	 ra <- max(ddd, na.rm=TRUE)
+   ddd <- ddd / ra * cex.max
    r <- rep((1:nC), each=nR)
    c <- rep(grad.srt, times=nC)
    if (!is.null(site.names))
@@ -29,13 +28,13 @@ inkspot <- function(data, gradient=1:nrow(data), use.rank=FALSE, reorder.species
       spn <- spec.names[ss$spec]
    else
       spn <- colnames(data)[ss$spec]
-   plot(c, r, cex=ddd/pch.scale, pch=19, yaxt="n", xaxt="n", ylab="", xlab="", ...)
+   plot(c, r, cex=ddd, pch=pch, yaxt="n", xaxt="n", ylab="", xlab="", col=col, bg=bg, ...)
 #   axis(side=1, at=1:nR, labels=sn, las=2, ...)
    if (x.axis=="sites")
      axis(side=1, at=grad.srt, labels=sn, las=2, ...)
    else {
      if (x.axis=="gradient")
-       axis(side=1, ...)
+       axis(side=1, col="black", ...)
      else
        axis(side=1, at=grad.srt, labels=rep("", length(sn), ...))
    }
@@ -51,8 +50,8 @@ inkspot <- function(data, gradient=1:nrow(data), use.rank=FALSE, reorder.species
          axis(side=3, ...)
       }
    }
-   if (legend)
-     legend("topleft", c("<2%", "2-5%", "5-10%", ">20%"), pch=19, bg="white", cex=.8, pt.cex=sqrt(c(2, 5, 10, 20)/pch.scale))
+   if (!is.null(legend.values))
+     legend("topleft", as.character(legend.values), pch=pch, bg="white", cex=.8, pt.cex=sqrt(legend.values) / ra * cex.max, col=col, pt.bg=bg)
    invisible(ss)
 }
 

@@ -5,13 +5,13 @@
    #define min(a,b) ((a)<(b)?(a):(b))
 #endif
 
-double Dissimilarity(double *data1, double *data2, long len, long coef);
+double Dissimilarity(double *data1, double *data2, int len, int coef);
 /*
 __declspec(dllexport) void Dissim(double *x, double *res, long *nrow, long *ncol, long *coef) {
 */
-void Dissim(double *x, double *res, long *nrow, long *ncol, long *coef) {
+void Dissim(double *x, double *res, int *nrow, int *ncol, int *coef) {
    int i, j;
-   long nn, nnn;
+   int nn, nnn;
    for (i=0;i<*ncol;i++) {
       nn = i * (*nrow);
       for (j=i+1;j<*ncol;j++) {
@@ -24,9 +24,9 @@ void Dissim(double *x, double *res, long *nrow, long *ncol, long *coef) {
 /*
 __declspec(dllexport) void Dissim2(double *x1, double *x2, double *res, long *nrow, long *ncol1, long *ncol2, long *coef) {
 */
-void Dissim2(double *x1, double *x2, double *res, long *nrow, long *ncol1, long *ncol2, long *coef) {
+void Dissim2(double *x1, double *x2, double *res, int *nrow, int *ncol1, int *ncol2, int *coef) {
    int i, j;
-   long nn1, nn2;
+   int nn1, nn2;
    for (i=0;i<*ncol1;i++) {
       nn1 = i * (*nrow);
       for (j=0;j<*ncol2;j++) {
@@ -36,7 +36,7 @@ void Dissim2(double *x1, double *x2, double *res, long *nrow, long *ncol1, long 
    }
 }
 
-double Dissimilarity(double *data1, double *data2, long len, long coef)
+double Dissimilarity(double *data1, double *data2, int len, int coef)
 {
 /*
  1    " Euclidean Distance          ",

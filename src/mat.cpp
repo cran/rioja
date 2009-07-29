@@ -191,7 +191,8 @@ Index::~Index()
 {
    if (--p->refs==0) {
       if (p->I) {
-         delete p->I;
+//         delete p->I;
+         delete[] p->I;
       }
       delete p;
 #ifdef MATDEBUG
@@ -317,18 +318,23 @@ void dataMat::kill()
 {
 	if (p->spNam) {
 		if (p->spNam[0])
-			delete p->spNam[0];
-		delete p->spNam;
+//			delete p->spNam[0];
+			delete[] p->spNam[0];
+//		delete p->spNam;
+		delete[] p->spNam;
 		p->spNam=NULL;
 	}
 	if (p->samNam) {
 		if (p->samNam[0])
-			delete p->samNam[0];
-		delete p->samNam;
+//			delete p->samNam[0];
+			delete[] p->samNam[0];
+//		delete p->samNam;
+		delete[] p->samNam;
       p->samNam=NULL;
    }
    if (p->samNum) {
-      delete p->samNum;
+//      delete p->samNum;
+      delete[] p->samNum;
       p->samNum=NULL;
    }
    if (p->C) {
@@ -340,7 +346,8 @@ void dataMat::kill()
       p->F=NULL;
    }
    if (p->title) {
-      delete p->title;
+//      delete p->title;
+      delete[] p->title;
       p->title=NULL;
    }
    p->mType = mattype(undefined);
@@ -394,7 +401,8 @@ bool dataMat::deleteRows(char *ii)
          if (!ii[i])
            s[n[i]] = p->samNam[i];
       }
-      delete p->samNam;
+//      delete p->samNam;
+      delete[] p->samNam;
       p->samNam = s;
    }
    if (p->samNum) {
@@ -405,7 +413,8 @@ bool dataMat::deleteRows(char *ii)
          if (!ii[i])
             l[n[i]] = p->samNum[i];
       }
-      delete p->samNum;
+//      delete p->samNum;
+      delete[] p->samNum;
       p->samNum = l;
    }
    delete n;
@@ -449,7 +458,8 @@ bool dataMat::deleteCols(char *ii)
          if (!ii[i])
             s[n[i]] = p->spNam[i];
       }
-      delete p->spNam;
+//      delete p->spNam;
+      delete[] p->spNam;
       p->spNam = s;
    }
    delete n;
@@ -581,26 +591,31 @@ dMat::~dMat()
    if (--p->refs==0) {
       if (parent==NULL) {
          if (p->c==1) {
-            delete p->m[0];
+//            delete p->m[0];
+            delete[] p->m[0];
          }
 			else {
             for(int i=0;i<p->r;i++) {
-               delete p->m[i];
+//               delete p->m[i];
+               delete[] p->m[i];
             }
          }
       }
       else if (--parent->refs==0) {
          if (parent->m) {
             if (parent->c==1) {
-               delete parent->m[0];
+//               delete parent->m[0];
+               delete[] parent->m[0];
             }
             else {
                for(int i=0;i<parent->r;i++) {
-                  delete parent->m[i];
+//                  delete parent->m[i];
+                  delete[] parent->m[i];
                }
             }
             if (parent->m)
-               delete parent->m;
+//               delete parent->m;
+               delete[] parent->m;
 			}
          delete parent;
 #ifdef MATDEBUG
@@ -608,7 +623,8 @@ dMat::~dMat()
 #endif
       }
       if (p->m)
-         delete p->m;
+//         delete p->m;
+         delete[] p->m;
       delete p;
 #ifdef MATDEBUG
       nmats--;
@@ -623,25 +639,30 @@ dMat dMat::operator=(const dMat &f)     // makes a reference to f
    if (--p->refs==0) {
       if (parent==NULL) {
          if (p->c==1) {
-				delete p->m[0];
+//				delete p->m[0];
+				delete[] p->m[0];
          }
          else {
             for(int i=0;i<p->r;i++) {
-               delete p->m[i];
+//               delete p->m[i];
+               delete[] p->m[i];
             }
          }
       }
       else if (--parent->refs==0) {
          if (parent->m) {
             if (parent->c==1) {
-               delete parent->m[0];
+//               delete parent->m[0];
+               delete[] parent->m[0];
             }
             else {
                for(int i=0;i<parent->r;i++) {
-                  delete parent->m[i];
+//                  delete parent->m[i];
+                  delete[] parent->m[i];
                }
             }
-				delete parent->m;
+//				delete parent->m;
+				delete[] parent->m;
 #ifdef MATDEBUG
             nmats--;
 #endif
@@ -649,7 +670,8 @@ dMat dMat::operator=(const dMat &f)     // makes a reference to f
          delete parent;
       }
       if (p->m)
-         delete p->m;
+//         delete p->m;
+         delete [] p->m;
       delete p;
 #ifdef MATDEBUG
       nmats--;
@@ -793,7 +815,8 @@ void dMat::merge(const dMat &f, int dir)
 					throw("Out of memory in merge(dMat &)");
 				m[0] = ff;
 				memcpy(ff, m1[0], (size_t) (sizeof(double) * p->r));
-				delete m1[0];
+//				delete m1[0];
+				delete[] m1[0];
 				memcpy(&ff[p->r], f.p->m[0], (size_t) (sizeof(double) * f.p->r));
 				for(i=0;i<p->r+f.p->r;i++)
 					m[i] = &ff[i];
@@ -810,7 +833,8 @@ void dMat::merge(const dMat &f, int dir)
 					memcpy(m[i+p->r],m1[i],(size_t) (sizeof(double) * p->c));
 				}
 			}
-			delete p->m;
+//			delete p->m;
+			delete[] p->m;
 			p->m = m;
 			p->r += f.p->r;
 		}
@@ -914,12 +938,14 @@ int dMat::deleteRows(char *ii)
             mm[n[i]] = p->m[i][0];
          }
       }
+//      delete[] p->m[0];
       delete p->m[0];
    }
    else {
       for(i=0;i<p->r;i++) {
          if(ii[i]) {
-            delete p->m[i];
+//            delete p->m[i];
+            delete[] p->m[i];
          }
          else {
             m[n[i]] = p->m[i];
@@ -927,6 +953,7 @@ int dMat::deleteRows(char *ii)
       }
    }
    delete n;
+//   delete[] p->m;
    delete p->m;
    p->m = m;
    p->r = j;
@@ -957,7 +984,8 @@ int dMat::deleteCols(char *ii)
 	            m[n[k]] = p->m[i][k];
          }
       }
-      delete p->m[i];
+//      delete p->m[i];
+      delete[] p->m[i];
       for(i=0;i<p->r;i++)
          p->m[i] = &m[i];
    }
@@ -970,7 +998,8 @@ int dMat::deleteCols(char *ii)
    	      if (!ii[k])
 	         m[n[k]] = p->m[i][k];
          }
-         delete p->m[i];
+//         delete p->m[i];
+         delete[] p->m[i];
          p->m[i] = m;
       }
    }
@@ -1787,7 +1816,8 @@ cMat::~cMat()
          if (p->m) {
 			   for(i=0;i<p->r;i++) {
                if (p->m[i])
-				      delete p->m[i];
+//				      delete p->m[i];
+				      delete[] p->m[i];
             }
 			}
 		}
@@ -1795,9 +1825,11 @@ cMat::~cMat()
 			if (parent->m) {
 				for(int i=0;i<parent->r;i++) {
                if (parent->m[i])
-					   delete parent->m[i];
+//					   delete parent->m[i];
+					   delete[] parent->m[i];
 				}
-				delete parent->m;
+//				delete parent->m;
+				delete[] parent->m;
 			}
 			if (parent->I)
 				delete [] parent->I;
@@ -1807,7 +1839,8 @@ cMat::~cMat()
 #endif
       }
       if (p->m)
-         delete p->m;
+//         delete p->m;
+         delete[] p->m;
       if (p->I)
 			delete [] p->I;
       delete p;
@@ -1830,7 +1863,8 @@ cMat cMat::operator=(const cMat &c)
          if (p->m) {
             for(i=0;i<p->r;i++) {
                if (p->m)
-                  delete p->m[i];
+//                  delete p->m[i];
+                  delete[] p->m[i];
             }
          }
       }
@@ -1838,15 +1872,18 @@ cMat cMat::operator=(const cMat &c)
          if (parent->m) {
             for(i=0;i<parent->r;i++) {
                if (parent->m[i])
-                  delete parent->m[i];
+//                  delete parent->m[i];
+                  delete[] parent->m[i];
             }
-            delete parent->m;
+//            delete parent->m;
+            delete[] parent->m;
          }
          if (parent->I)
             delete [] parent->I;
          delete parent;
       }
-      delete p->m;
+//      delete p->m;
+      delete[] p->m;
       if (p->I)
          delete [] p->I;
       delete p;
@@ -1930,13 +1967,15 @@ bool cMat::deleteRows(char *ii)
    }
    Index *I = new Index[j];
    if (I==NULL) {
-      delete m;
+//      delete m;
+      delete[] m;
       delete n;
       return 1;
    }
    for(i=0;i<p->r;i++) {
       if(ii[i]) {
-         delete p->m[i];
+//         delete p->m[i];
+         delete[] p->m[i];
       }
       else {
          m[n[i]] = p->m[i];
@@ -1945,8 +1984,10 @@ bool cMat::deleteRows(char *ii)
    }
    delete n;
 //   delete [p->r] p->I;
-	delete p->I;
-   delete p->m;
+//	delete p->I;
+//   delete p->m;
+	delete [] p->I;
+   delete [] p->m;
    p->I = I;
    p->m = m;
    p->r = j;
@@ -1998,7 +2039,8 @@ bool cMat::deleteCols(char *ii)
             count++;
          }
       }
-      delete p->m[i];
+//      delete p->m[i];
+      delete [] p->m[i];
       p->m[i] = m;
       Index III(count,newsp);
       p->I[i] = III;
@@ -2190,7 +2232,8 @@ dMat cMat::tproduct(const dMat &f)
       for (i=0;i<p->c;i++) {
          m[i] = dd[i];
       }
-      delete dd;
+//      delete dd;
+      delete[] dd;
    }
    else {
       double **m = target.p->m;
@@ -2212,7 +2255,8 @@ dMat cMat::tproduct(const dMat &f)
             m[i][k] = dd[i];
          }
       }
-      delete dd;
+//      delete dd;
+      delete[] dd;
    }
    return target;
 }
@@ -2252,8 +2296,10 @@ cMat dMat2cMat(const dMat &f, double missing_value)
       target.setrowptr(d,i);
       memcpy(d,dd,(size_t)(sizeof(double)*n));
    }
-   delete dd;
-   delete ii;
+//   delete dd;
+   delete [] dd;
+//   delete ii;
+   delete [] ii;
    return target;
 }
 

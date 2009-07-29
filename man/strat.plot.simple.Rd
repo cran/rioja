@@ -22,11 +22,13 @@ strat.plot.simple(y1, x1, y2=NULL, x2=NULL, col=c("blue", "red"),
 }
 
 \details{
-\code{strat.plot.simple} plots all or a subset of variables in a data frame (y) against a single secondary variable (x). The function is appropriate for plotting stratigraphic data, with the x-variable is plotted on the y-axis and variables in y arrayed across the page. The function is primarily intended for plotting the original data with an interpolated or smoothed version superimposed, to visualise the effect of smoothing. 
+\code{strat.plot.simple} plots all or a subset of variables in a data frame (y) against a single secondary variable (x). The function is appropriate for plotting stratigraphic data, with the x-variable is plotted on the y-axis and variables in y arrayed across the page. The function is primarily intended to visualise the effect of smoothing by plotting the original data with the interpolated or smoothed version superimposed.  
 
  The number of rows and columns in the plot may be controlled using the \code{layout} argument passed to \code{link{xyplot}}. For example \code{layout=c(10,1)} will produce a plot with 1 row and 10 columns.
  
  By default, the x-axis has the same scale for all variables.  To allow independent x-scales for each variable include the additional argument: \code{scales=list(x="free"))}.
+
+The function uses lattice to produce the plots so if you call it from a loop or using \code{source} you will need to wrap it in a \code{print} or \code{plot} statement.
 }
 
 \value{

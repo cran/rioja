@@ -34,7 +34,7 @@ SEXP chclust(SEXP sexpData, SEXP sexMethod)
       }
 	}
    UNPROTECT(1);
-   double *dend;
+   double *dend = NULL;
    bool errorFlag = false;
    if (method==1) {
       if (!Conslink(nr, DPtr, &dend))  {
@@ -60,10 +60,11 @@ SEXP chclust(SEXP sexpData, SEXP sexMethod)
    for (i=1;i<nr;i++) {
       REAL(sDend)[i-1] = dend[i];
    }
-   delete dend;
+  if (dend) 
+    delete [] dend;
  	for (i=1;i<nr;i++)
-      delete DPtr[i];
-   delete DPtr;
+      delete [] DPtr[i];
+   delete [] DPtr;
    UNPROTECT(1);
    if (errorFlag) {
       UNPROTECT(1);
@@ -162,10 +163,12 @@ bool ConISS(int nsam, double **DPtr, double **es)
 	}
 //	fprintf(fout,"\n\nSample  Level  Total\nNumber         Dispersion\n");
 //	DendrogramPlot(Data, es, fout);
-	delete ess;
-//	delete es;
-	delete nclus;
-	delete name;
+//	delete ess;
+//	delete nclus;
+//	delete name;
+	delete [] ess;
+	delete [] nclus;
+	delete [] name;
 	return true;
 }
 
@@ -311,10 +314,10 @@ bool Conslink(int nsam, double **DPtr, double **dend)
       Minim(diag, &tiny, least, &ncount, nsam);
       Group(DPtr, diag, tiny, &prev, *dend, least, ncount, &nclust, large, nbit, nsam, &nlev, nsplur);
    }
-   delete diag;
-   delete nsplur;
-   delete nbit;
-   delete least;
+   delete [] diag;
+   delete [] nsplur;
+   delete [] nbit;
+   delete [] least;
    return true;
 }
 

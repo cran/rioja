@@ -32,7 +32,7 @@ chclust(d, method = "coniss")
 \details{
 \code{chclust} performs a constrained hierarchical clustering of a distance matrix, with clusters constrained by sample order.  Returns an object of class \code{chclust} which can be plotted and interrogated.  See Grimm (1987), Gordon & Birks (1972) and Birks & Gordon (1985) for discusssiom of the coniss and conslink algorithms. The resulting dendrogram can be plotted with \code{plot}.  This is an extension of \code{plclust} that allows the dendrogram to be plotted horizontally or vertically (default). \code{plot} also accepts a numeric vector coordinates for x-axis positions of the leaves of the dendrogram.  These could, for example, be the stratigraphic depths of core samples or geographic distances along a line transect.
 
-\code{bstick.chclust} compares the dispersion of a hierarchical classification to that obtained from a broken stick model and displays the results graphically.  See Bennett (1996) for details. \code{bstick} is a generic function and the default method is defined in package \code{link{vegan}}. If this package is loaded the function may be called using \code{bstick}, otherwise use \code{bstick.chclust}.
+\code{bstick.chclust} compares the dispersion of a hierarchical classification to that obtained from a broken stick model and displays the results graphically.  See Bennett (1996) for details. \code{bstick} is a generic function and the default method is defined in package \code{vegan}. If this package is loaded the function may be called using \code{bstick}, otherwise use \code{bstick.chclust}.
 }
 
 \value{
@@ -69,6 +69,10 @@ plot(clust, hang=-1)
 plot(clust, hang=-1, horiz=TRUE)
 # Rotated and observations plotted according to sample depth.
 plot(clust, xvar=RLGH$depth$Depth, hang=-1, horiz=TRUE, x.rev=TRUE)
+
+# Conslink for comparison
+clust <- chclust(diss, method = "conslink")
+plot(clust, hang=-1)
 }
 
 \keyword{ cluster }

@@ -96,10 +96,10 @@ predict.MAT <- function(object, newdata=NULL, k=5, sse=FALSE, nboot=100, match.d
     nest <- 2
     res2 <- array(dim=c(nsam, nest, nboot))
     res2.new <- array(dim=c(nsam.new, nest, nboot))
-    .set.rand.seed(100)
+#    .set.rand.seed(100)
     for (i in 1:nboot) {
-      o <- apply(data.frame(rep(nsam, nsam)), 1, .get.rand) + 1
-#      o <- sample(nsam, replace=TRUE)
+#      o <- apply(data.frame(rep(nsam, nsam)), 1, .get.rand) + 1
+      o <- sample(nsam, replace=TRUE)
       out <- (1:nsam)[-unique(o)]
       x <- object$x[o]
 
@@ -185,10 +185,10 @@ crossval.MAT <- function(object, cv.method="lgo", verbose=TRUE, ngroups=10, nboo
     object$cv.summary$ngroups=ngroups
   } else if (cv.method == 2) {
     res2 <- array(dim=c(nsam, nres, nboot))
-    .set.rand.seed(100)
+#    .set.rand.seed(100)
     for (i in 1:nboot) {
-      o <- apply(data.frame(rep(nsam, nsam)), 1, .get.rand) + 1
-#      o <- sample(nsam, replace=TRUE)
+#      o <- apply(data.frame(rep(nsam, nsam)), 1, .get.rand) + 1
+      o <- sample(nsam, replace=TRUE)
       out <- (1:nsam)[-unique(o)]
       x <- object$x[o]
       diss <- object$dist[o, out]

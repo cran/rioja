@@ -21,6 +21,10 @@ double (*nrfunc)(double *, dMat &, dMat &);
 #define SQR(a) (sqrarg=(a),sqrarg*sqrarg)
 static double sqrarg;
 
+#ifdef _WIN32
+#define finite _finite
+#endif
+
 //#define MAX(X,Y) ((X) > (Y) ? : (X) : (Y))
 
 //int powell(double p[], double **xi, int n, double ftol, int *iter, double *fret, dMat & params, dMat &,  double(*func)(double *, dMat &, dMat &));

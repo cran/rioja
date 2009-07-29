@@ -118,8 +118,12 @@ bool TiliaBinIn(dataMat &S, FILE *fin, char *fname, PTYPES **pnames, double **pD
    int spnum, i;
    char shortcode[20];
    char version=1;
-	fread(name,10,1,fin);
-	name[10] = '\0';
+   size_t retval = fread(name,10,1,fin);
+   if (retval == 0) {
+		sprintf(strError,"Cannot read Tilia file");
+		return false;
+	}
+	 name[10] = '\0';
 
   // first 6 characters must be: "tilia "
 
@@ -144,18 +148,18 @@ bool TiliaBinIn(dataMat &S, FILE *fin, char *fname, PTYPES **pnames, double **pD
       if (!Tilia2ReadFlags(fin, n, m))
          return false;
    }
-   char errorMessage01[] = "unexpected EOF while reading taxon names";
    PTYPES *ppnames = new PTYPES[m];
    *pnames = ppnames;
    if (! ppnames) {
       sprintf(strError,"Out of memory allocating space for variable names");
    	return false;
    }
+   char * tmp = new char[1000];
 	for (i=0;i<m;i++) {
       char sum;
       if (version==1) {
          if (Tilia1ReadVar(fin, name, code, shortcode, spnum, sum)==FALSE) {
-		      sprintf(strError,errorMessage01);
+		      sprintf(strError, "Unexpected EOF while reading taxon names");
 		   	return false;
    		}
          if (strlen(code) < 1)
@@ -164,17 +168,19 @@ bool TiliaBinIn(dataMat &S, FILE *fin, char *fname, PTYPES **pnames, double **pD
       }
       else {
          if (Tilia2ReadVar(fin, name, code, spnum, sum)==FALSE) {
-		      sprintf(strError,errorMessage01);
+		      sprintf(strError,"Unexpected EOF while reading taxon names");
 	   		return false;
 		   }
       }
       strncpy(ppnames[i].pollentypes, name, 61);
 		strncpy(ppnames[i].shortname, code, 19);
-      RemoveTrailingSpaces(ppnames[i].pollentypes,ppnames[i].pollentypes);
-     	ppnames[i].pollentypes[60] = '\0';
-     	ppnames[i].shortname[20] = '\0';
+//    RemoveTrailingSpaces(ppnames[i].pollentypes, ppnames[i].pollentypes);
+    RemoveTrailingSpaces(tmp, ppnames[i].pollentypes);
+    strcpy(ppnames[i].pollentypes, tmp);
+   	ppnames[i].pollentypes[60] = '\0';
+   	ppnames[i].shortname[20] = '\0';
 		ppnames[i].num = spnum;
-      ppnames[i].sum = sum;
+    ppnames[i].sum = sum;
 	}
 	S.kill();
 	S.setmatType(full);
@@ -201,10 +207,9 @@ bool TiliaBinIn(dataMat &S, FILE *fin, char *fname, PTYPES **pnames, double **pD
    *pDepths = new double[n];
 
 	for (i=0;i<n;i++) {
-      char errorMessage02[] = "Unexpected EOF while reading sample depths";
       float num;
       if (TiliaReadSample(fin, num, name)==FALSE) {
-  			sprintf(strError,errorMessage02);
+  			sprintf(strError,"Unexpected EOF while reading sample depths");
    		return false;
 		}
       char str[30];

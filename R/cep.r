@@ -11,8 +11,11 @@ read.CEP <- function(fName, mValue=-99.9, impZero=0) {
     rownames(out) <- ret[[2]]
   }
   else {
-    out <- NULL
-    stop(ret[[3]])
+    errMsg <- ret[[3]]
+    if (substring(errMsg, 1, 18) == "Error reading data") {
+       errMsg <- paste(errMsg, "\nIf the file came from Windows this problem may be caused by the wrong end-of-line characters for your operating system.\nOpen the file in a text editor and convert if necessary")
+    }
+    stop(errMsg)
   }
   if (any(ret$Summary > 0)) {
     eMess <- paste("File", fName, "contains")
@@ -29,6 +32,8 @@ read.CEP <- function(fName, mValue=-99.9, impZero=0) {
 }
 
 write.CEP <- function(x, fName, fTitle=fName, type = "condensed", nSig=5, nCouplets=4, mValue=-99.9) {
+  if (!require(vegan))
+     stop("This function requires the package vegan")
   x <- as.matrix(x)
   if (!is.numeric(x))
     stop("output matric must be numeric")
@@ -39,7 +44,20 @@ write.CEP <- function(x, fName, fTitle=fName, type = "condensed", nSig=5, nCoupl
     stop("Argument type must be \"condensed\" or \"full\" (partial match allowed).")
   if (!is.numeric(nSig) && !is.numeric(nCouplets))
     stop("Arguments nSig and nCouplets must be numeric")
-
+  if (is.null(colnames(x)))
+     colnames(x) <- 1:ncol(x)
+  if (is.null(rownames(x)))
+     rownames(x) <- 1:nrow(x)
+  rN <- rownames(x)
+  cN <- colnames(x)
+  if (any(nchar(rN)>8)) {
+     rownames(x) <- make.cepnames(rN)
+     warning("Some sample names were longer than 8 characters and have been abbreviated - see returned list.")
+  }
+  if (any(nchar(cN)>8)) {
+     colnames(x) <- make.cepnames(cN)
+     warning("Some species names were longer than 8 characters and have been abbreviated - see returned list.")
+  }
   ret <- .Call("WriteCornellFile", x, fName, fTitle, as.integer(itype), as.integer(nSig), as.integer(nCouplets), as.integer(nSig), as.integer(nCouplets), as.double(mValue), PACKAGE="rioja")
   if (nchar(ret)>0) {
     if (substr(ret, 1, 6) == "Cannot")
@@ -47,6 +65,9 @@ write.CEP <- function(x, fName, fTitle=fName, type = "condensed", nSig=5, nCoupl
     else
       warning(ret)
   }
+  rN <- cbind(original=rN, written=rownames(x))
+  cN <- cbind(original=cN, written=colnames(x))
+  invisible (list(site.names=rN, sp.names=cN))
 }
 
 read.Tilia <- function(fName) {

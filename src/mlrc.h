@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <malloc.h>
 #include <stdlib.h>
+/* #include <malloc.h> */
 #include "mat.h"
 
 #define GOLD 1.618034

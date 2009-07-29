@@ -13,9 +13,9 @@ Analysis of Quaternary Science Data
 \tabular{ll}{
 Package: \tab rioja\cr
 Type: \tab Package\cr
-Version: \tab 0.5-2\cr
-Date: \tab 2009-07-29\cr
-License: \tab GLP-2\cr
+Version: \tab 0.5-3\cr
+Date: \tab 2009-08-12\cr
+License: \tab GPL-2\cr
 }
 
 Main functions:
@@ -28,11 +28,13 @@ IKFA                    Imbrie and Kipp Factor Analysis
 MLRC                    Maximum likelihood response curves
 crossval                Cross validate a transfer function model
 predict                 Predict using a transfer function model, 
-                        with sample specific errors
+                        with sample-specific errors
 read.CEP                Read and write data in Cornell Ecology 
                         Program format
 read.Tilia              Read Tilia files
 read.C2Model            Import results form a C2 model
+sp.plot                 Plot species distributions along one or two 
+                        environmental gradients 
 strat.plot              Plot a stratigraphic diagram
 strat.plot.simple       Plot a simple stratigraphic diagram
 chclust                 Constrained heirarchical clustering (zonation)

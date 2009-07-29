@@ -2,7 +2,7 @@
 #include "fio.h"
 #include "string.h"
 #ifndef NON_POSIX_STDIO
-#ifdef MSDOS
+#ifdef _WIN32
 #include "io.h"
 #else
 /* SJ Modified */

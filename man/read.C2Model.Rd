@@ -23,10 +23,10 @@ read.C2Model(fName)
 }
 
 \details{
-Function to import data from a C2 model into R for further processing. C2 is a Windows program for the analysis and visualisation of palaeoecological data (Juggins (2007). The code uses the RDOBC package to read the Excel file.
+Function to import data from a C2 model into R for further processing. C2 is a Windows program for the analysis and visualisation of palaeoecological data (Juggins (2007).  On Windows \code{read.C2Model} uses the package \code{RODBC} to import data from the Excel spreadsheet whereas on Linux and MacOS X the function uses \code{read.xls} in the package \code{gdata}.
 }
 \value{
-Returns a list with names elements corresponding to the worksheets in the saved C2 model.
+Returns a list with elements corresponding to the worksheets in the saved C2 model: these are named after the original worksheets under Windows but "Sheet1", "Sheet2", etc. on Linux and MacOS X.
 }
 
 \author{

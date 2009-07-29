@@ -151,7 +151,7 @@ pred <- predict(fit, core, npls=2)
 
 #plot predictions - depths are in rownames
 depth <- as.numeric(rownames(core))
-plot(depth, pred$fit[, 2], type="b")
+plot(depth, pred$fit[, 2], type="b", ylab="Predicted SumSST", las=1)
 
 # predictions with sample specific errors
 \dontrun{
