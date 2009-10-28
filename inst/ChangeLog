@@ -1,8 +1,16 @@
 rioja Change Log
 
+Version 0.5-5
+
+	* Released on CRAN 28/10/09
+
+	Fixed bug in read.CEP example that caused error on 64 bit platforms.
+
+	Fixed bug in help file (WA example) pointed out by Sven Adler
+
 Version 0.5-4
 
-	* Released on CRAN 27/10/09
+	* Not released on CRAN
 
 	Fixed bug in WAPLS CPP & R code that crashed R with PLS 
 	(identified by Richard Telford) 
@@ -10,8 +18,6 @@ Version 0.5-4
 	Fixed bug in WAPLS R code that incorrectly calculated predicted 
 	values with standx=TRUE 
 	
-	Fixed bug in help file (WA example) pointed out by Sven Adler
-
 Version 0.5-3
 
 	* Released on CRAN, 12/8/09

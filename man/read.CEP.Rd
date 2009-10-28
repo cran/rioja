@@ -36,7 +36,7 @@ write.CEP(x, fName, fTitle=fName, type = "condensed",
 }
 
 \note{
-The code uses a combination of C and C++, with several function converted to C from FORTRAN using f2c. It works on Windows but has not been tested on other platforms.  Please let me know of any problems.
+The code uses a combination of C and C++, with several function converted to C from FORTRAN using f2c. It works on 32 bit systems but currently generates an error on 64-bit systems.  Use \code{\link[vegan]{read.cep}} in the package \code{vegan} as an alternative.
 }
 
 \author{ 
@@ -56,6 +56,7 @@ ter Braak, C.J.F. & Smilauer, P. (1998) CANOCO Reference Manual and User's Guide
 }
 
 \examples{
+\dontrun{
 pth <- system.file("example.datasets/RLGHLongCore.cep", package="rioja")
 rlgh <- read.CEP(pth)
 depth <- as.numeric(gsub("r_", "", rownames(rlgh)))
@@ -63,6 +64,7 @@ mx <- apply(rlgh, 2, max)
 rlgh.sub <- rlgh[, mx > 5]
 strat.plot(rlgh.sub, scale.percent=TRUE, yvar=depth, y.rev=TRUE,
 wa.order="bottomleft")
+}
 }
 \keyword{ IO }
 \keyword{ file }
