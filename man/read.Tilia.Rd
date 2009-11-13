@@ -24,7 +24,7 @@ Returns a list with three names elements:
 }
 
 \note{
-The code uses a C and C++. In particular, it uses a non-standard structure alignment for reading the Tilia headers. It works on Windows but has not been test on other platforms.  Please let me know of any problems.
+The code uses a combination of C and C++ and needs 1-byte structure alignment to read the Tilia binary file. It works on 32 bit systems but currently generates an error on some 64-bit Linux systems.
 }
 
 \author{ 
@@ -36,6 +36,7 @@ Steve Juggins
 }
 
 \examples{
+\dontrun{
 pth <- system.file("example.datasets/WOLSFELD.TIL", package="rioja")
 WOLS <- read.Tilia(pth)
 sel <- WOLS$vars$Sums == "A" | WOLS$vars$Sums == "B"
@@ -47,6 +48,7 @@ spec.sub <- spec.pc[, mx > 5]
 age <- WOLS$levels$Chron2
 strat.plot(spec.sub, scale.percent=TRUE, yvar=age, y.rev=TRUE,
       wa.order="bottomleft")
+}
 }
 \keyword{ IO }
 \keyword{ file }

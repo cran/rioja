@@ -36,7 +36,7 @@ write.CEP(x, fName, fTitle=fName, type = "condensed",
 }
 
 \note{
-The code uses a combination of C and C++, with several function converted to C from FORTRAN using f2c. It works on 32 bit systems but currently generates an error on 64-bit systems.  Use \code{\link[vegan]{read.cep}} in the package \code{vegan} as an alternative.
+The code uses a combination of C and C++, with several function converted to C from FORTRAN using f2c. It works on 32 bit systems but currently generates an error on some 64-bit systems.  Use \code{\link[vegan]{read.cep}} in the package \code{vegan} as an alternative.
 }
 
 \author{ 
