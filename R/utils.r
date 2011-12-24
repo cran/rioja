@@ -45,7 +45,7 @@ site.summ <- function(y, max.cut=c(2, 5, 10, 20)) {
 }
 
 write.list.Excel <- function(x, fName) {
-  if(.Platform$OS.type == "windows") {
+  if(.Platform$OS.type == "windows" & .Machine$sizeof.pointer < 5) {
      require(RODBC)
      if (file.exists(fName)) 
          if (!file.remove(fName))
@@ -56,7 +56,11 @@ write.list.Excel <- function(x, fName) {
      if (require(RODBC)==FALSE) {
         stop("This function requires package RODBC")
      }
-     channel <- odbcConnectExcel(fName, readOnly=FALSE)
+     fp <- RODBC:::full.path(fName)
+     con <- paste("Driver={Microsoft Excel Driver (*.xls)};DriverId=790;Dbq=", fp, ";DefaultDir=", dirname(fp), ";", sep = "")
+     con = paste(con, "ReadOnly=False", sep = ";")
+     channel <- odbcDriverConnect(con, tabQuote = c("[", "]"))
+#     channel <- odbcConnectExcel(fName, readOnly=FALSE)
      if (channel == -1)
         stop(paste("Could not open file ", fName, "for writing. Is it already open?", sep=""))
      nms <- names(x)
@@ -68,7 +72,7 @@ write.list.Excel <- function(x, fName) {
      }    
      odbcCloseAll()
   } else {
-    stop("This function is only available on Windows. See package WriteXLS for a Linux / MacOS X alternative.")
+    stop("This function is only available on 32 bit Windows. See package WriteXLS for a Linux / MacOS X alternative.")
   }
 }
 

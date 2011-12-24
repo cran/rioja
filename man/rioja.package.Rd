@@ -13,9 +13,9 @@ Analysis of Quaternary Science Data
 \tabular{ll}{
 Package: \tab rioja\cr
 Type: \tab Package\cr
-Version: \tab 0.5-6\cr
-Date: \tab 2009-11-13\cr
-License: \tab GPL-2\cr
+Version: \tab 0.7-3\cr
+Date: \tab 2012-01-05\cr
+License: \tab GPL-3\cr
 }
 
 Main functions:
@@ -26,6 +26,7 @@ WAPLS                   Partial least squares (PLS) and Weighted
 MAT                     Modern analogue technique transfer functions
 IKFA                    Imbrie and Kipp Factor Analysis
 MLRC                    Maximum likelihood response curves
+LWR                     Locally weighted transfer functions
 crossval                Cross validate a transfer function model
 predict                 Predict using a transfer function model, 
                         with sample-specific errors

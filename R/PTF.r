@@ -16,12 +16,6 @@ performance.default <- function(object, ...) {
   stop(paste("No method for calculating performance for object of class", class(object)[1]))
 }
 
-performance <- function(object, ...) UseMethod("performance")
-
-performance.default <- function(object, ...) {
-  stop(paste("No method for calculating performance for object of class", class(object)[1]))
-}
-
 .check.data <- function(y, x) {
   if (any(apply(y, 1, sum) < 1.0E-8))
      stop(paste("Species data have zero abundaces for the following rows:", which(apply(y, 1, sum) < 1.0E-8)))

@@ -83,7 +83,7 @@ WA.fit <- function(y, x, mono=FALSE, tolDW=FALSE, use.N2=TRUE, tol.cut=0.01, lea
     b1.cla.t = sum(x.scaled * xHat.t.scaled, na.rm=TRUE) / sum(x.scaled^2, na.rm=TRUE)
     b0.cla.t = xHat.t.mean - b1.cla.t * x.mean
     coef <- cbind(u, tol)
-    colnames(coef) <- c("Optimum", "Tolerance")
+    colnames(coef) <- c("Optima", "Tolerances")
     deshrink.coefficients.t <- matrix(c(b0.inv.t,b1.inv.t,b0.cla.t,b1.cla.t), ncol=2)
     rownames(deshrink.coefficients.t) <- c("wa.tol.b0", "wa.tol.b1")
     deshrink.coefficients <- rbind(deshrink.coefficients, deshrink.coefficients.t)
@@ -93,7 +93,7 @@ WA.fit <- function(y, x, mono=FALSE, tolDW=FALSE, use.N2=TRUE, tol.cut=0.01, lea
   }
   else {
     coef <- as.matrix(u)
-    colnames(coef) <- "Optimum"
+    colnames(coef) <- "Optima"
   }
   result <- list(coefficients=coef, deshrink.coefficients=deshrink.coefficients, mono=mono, tolDW=tolDW)
   if (mono) {

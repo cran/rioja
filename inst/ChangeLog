@@ -1,5 +1,12 @@
 rioja Change Log
 
+Version 0.7-3
+* Released on CRAN 05/01/12
+Fixed numerous small bugs
+Added LWR
+Fixed problem with _finite() in C code
+Updated help files
+
 Version 0.5-6
 * Released on CRAN 13/11/09
 Fixed read.Tilia example that caused error on some 64 bit platforms.

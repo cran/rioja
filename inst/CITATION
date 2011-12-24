@@ -3,11 +3,11 @@ citHeader("To cite package 'rioja' in publications use:")
 citEntry(entry="Manual",
 	title ="rioja: Analysis of Quaternary Science Data",
 	author = personList(as.person("Steve Juggins")),
-	year = 2009,
+	year = 2012,
 	note = paste("R package version", packageDescription("rioja")$Version),
 	url = "http://www.staff.ncl.ac.uk/staff/stephen.juggins/",
 	textVersion =
-	paste("Juggins, S., (2009). ",
+	paste("Juggins, S., (2012). ",
 	"rioja: Analysis of Quaternary Science Data, R package version ",
 	packageDescription("rioja")$Version,". ","(http://cran.r-project.org/package=rioja)." , sep="")
 )
