@@ -16,7 +16,15 @@ void s_copy(char *, char *, ftnlen, ftnlen);
 integer f_clos(cllist *);
 integer s_rsfe(cilist *);
 
-/* Subroutine */ int openf_(char *fname, char *title, char *format, int *ncoup, int *chan, int *tag, int *filenamelength)
+int closef_(int chan)
+{
+   cllist cl;
+   cl.cerr = 0;
+   cl.cunit = chan;
+   cl.csta = 0;
+   return f_clos(&cl);
+}
+/* Subroutine */ int openf_(char *fname, char *title, char *format, int *ncoup, int *chan, int *tag, int *filenamelength, cllist *cl)
 {
 /*  ftnlen fname_len = *filenamelength;
     ftnlen title_len = 80;
@@ -145,8 +153,7 @@ L100003:
     s_copy(format + i__1, "\000", n + 1 - i__1, 1L);
 
     *tag = 0;
-
-
+    
     return 0;
 L12:
     *tag = 1;

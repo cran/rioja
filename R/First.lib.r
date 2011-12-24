@@ -1,4 +1,12 @@
-.First.lib <- function(lib, pkg)
-{
-   library.dynam("rioja", pkg, lib)
-}
+#.First.lib <- function(libname, pkgname)
+#{
+#    library.dynam("rioja", pkgname, libname)
+#}
+
+#.onLoad <- function(libname, pkgname)
+#{
+#    library.dynam("rioja", pkgname)
+#}
+
+#.onUnload <- function(libpath)
+#    library.dynam.unload("rioja", libpath)

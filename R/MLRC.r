@@ -136,7 +136,7 @@ plot.MLRC <- function(x, resid=FALSE, xval=FALSE, xlab="", ylab="", ylim=NULL, x
   }
   if (missing(xlim))
      xlim <- range(xx, x$x)
-  plot(xx, yy, ylim=ylim, xlim=xlim, xlab=xlab, ylab=ylab, las=1)
+  plot(xx, yy, ylim=ylim, xlim=xlim, xlab=xlab, ylab=ylab, las=1, ...)
   if (add.ref) {
      if (resid)
        abline(h=0, col="grey")
@@ -144,7 +144,7 @@ plot.MLRC <- function(x, resid=FALSE, xval=FALSE, xlab="", ylab="", ylim=NULL, x
        abline(0,1, col="grey")
   }
   if (add.smooth) {
-     lines(lowess(xx, yy))
+     lines(lowess(xx, yy), col="red")
   }
 }
 
@@ -152,8 +152,14 @@ fitted.MLRC <- function(object, ...) {
   object$fitted.values
 }
 
-residuals.MLRC <- function(object, ...) {
-  object$x - object$fitted.values
+residuals.MLRC <- function(object, cv=FALSE, ...) {
+  if (cv == FALSE)
+     return (object$x - object$fitted.values)
+  else {
+     if (object$cv.summary$cv.method == "none")
+        stop("Object does not contain cross validation results")
+     return (object$residuals.cv)
+  }
 }
 
 coef.MLRC <- function(object, ...) {

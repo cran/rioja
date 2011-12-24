@@ -17,15 +17,17 @@
 Functions for reconstructing (predicting) environmental values from biological assemblages using weighted averaging (WA) regression and calibration.
 }
 \usage{
-WA(y, x, tolDW = FALSE, use.N2=TRUE, check.data=TRUE, lean=FALSE)
+WA(y, x, mono=FALSE, tolDW = FALSE, use.N2=TRUE, tol.cut=.01, 
+      check.data=TRUE, lean=FALSE)
 
-WA.fit(y, x, tolDW=FALSE, use.N2=TRUE, lean=FALSE)
+WA.fit(y, x, mono=FALSE, tolDW=FALSE, use.N2=TRUE, tol.cut=.01,
+       lean=FALSE)
 
 \method{predict}{WA} (object, newdata=NULL, sse=FALSE, nboot=100,
       match.data=TRUE, verbose=TRUE, \dots)
 
-\method{crossval}{WA}(object, cv.method="loo", verbose=TRUE, ngroups=10,
-      nboot=100, \dots)
+\method{crossval}{WA}(object, cv.method="loo", verbose=TRUE, 
+      ngroups=10, nboot=100, \dots)
 
 \method{performance}{WA}(object, \dots)
 
@@ -37,9 +39,9 @@ WA.fit(y, x, tolDW=FALSE, use.N2=TRUE, lean=FALSE)
 
 \method{plot}{WA}(x, resid=FALSE, xval=FALSE, tolDW=FALSE, deshrink="inverse",
       xlab="", ylab="", ylim=NULL, xlim=NULL, add.ref=TRUE,
-      add.smooth=FALSE, ...)
+      add.smooth=FALSE, \dots)
 
-\method{residuals}{WA}(object, \dots)
+\method{residuals}{WA}(object, cv=FALSE, \dots)
 
 \method{coef}{WA}(object, \dots)
 
@@ -49,8 +51,10 @@ WA.fit(y, x, tolDW=FALSE, use.N2=TRUE, lean=FALSE)
   \item{y}{ a data frame or matrix of biological abundance data. }
   \item{x, object}{ a vector of environmental values to be modelled or an object of class \code{WA}. }
   \item{newdata}{ new biological data to be predicted. }
+  \item{mono}{ logical to perform monotonic curvilinear deshrinking. }
   \item{tolDW}{ logical to include regressions and predictions using tolerance downweighting. }
   \item{use.N2}{ logical to adjust tolerance by species N2 values. }
+  \item{tol.cut}{ tolerances less than \code{tol.cut} are replaced by the mean tolerance. }
   \item{check.data}{ logical to perform simple checks on the input data. }
   \item{lean}{ logical to exclude some output from the resulting models (used when cross-validating to speed calculations). }
   \item{full}{ logical to show head and tail of output in summaries. }
@@ -67,7 +71,8 @@ WA.fit(y, x, tolDW=FALSE, use.N2=TRUE, lean=FALSE)
   \item{ngroups}{ number of groups in leave-group-out cross-validation. }  
   \item{sse}{ logical indicating that sample specific errors should be calculated. }    
   \item{n.perm}{ number of permutations for randomisation t-test. } 
-  \item{...}{ additional arguments. }
+  \item{cv}{ logical to indicate model or cross-validation residuals. }
+  \item{\dots}{ additional arguments. }
 }
 
 \details{
@@ -91,7 +96,8 @@ Function \code{WA} returns an object of class \code{WA} with the following named
 
 If function \code{predict} is called with \code{newdata=NULL} it returns the fitted values of the original model, otherwise it returns a list with the following named elements:
 \item{fit}{ predicted values for \code{newdata}. }
-if sample specific errors were generated the list will also include:
+
+If sample specific errors were requested the list will also include:
 \item{fit.boot}{ mean of the bootstrap estimates of newdata. }
 \item{v1}{ squared standard error of the bootstrap estimates for each new sample. }
 \item{v2}{ mean squared error for the training set samples, across all bootstram samples. }

@@ -60,7 +60,7 @@ Grimm, E.C. (1987) CONISS: A FORTRAN 77 program for stratigraphically constraine
 
 \examples{
 data(RLGH)
-diss <- dist(sqrt(RLGH$spec/100)^2)
+diss <- dist(sqrt(RLGH$spec/100))
 clust <- chclust(diss)
 bstick.chclust(clust, 10)
 # Basic diagram

@@ -1,6 +1,7 @@
 #include "f2c.h"
 #include "fio.h"
 #include "fmt.h"
+#include "R_ext/Print.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -309,7 +310,8 @@ w_ed(struct syl *p, char *ptr, ftnlen len)
 	switch(p->op)
 	{
 	default:
-		fprintf(stderr,"w_ed, unexpected code: %d\n", p->op);
+/*		fprintf(stderr,"w_ed, unexpected code: %d\n", p->op); */
+		REprintf("w_ed, unexpected code: %d\n", p->op);
 		sig_die(f__fmtbuf, 1);
 	case I:	return(wrt_I((Uint *)ptr,p->p1,len, 10));
 	case IM:
@@ -352,7 +354,9 @@ w_ned(struct syl *p)
 {
 	switch(p->op)
 	{
-	default: fprintf(stderr,"w_ned, unexpected code: %d\n", p->op);
+	default: 
+/*    fprintf(stderr,"w_ned, unexpected code: %d\n", p->op); */
+    REprintf("w_ned, unexpected code: %d\n", p->op);
 		sig_die(f__fmtbuf, 1);
 	case SLASH:
 		return((*f__donewrec)());

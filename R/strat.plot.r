@@ -1,9 +1,10 @@
-strat.plot <- function (d, yvar = NULL, scale.percent = FALSE, scale.minmax = TRUE,
+strat.plot <- function (d, yvar = NULL, scale.percent = FALSE, graph.widths=1, minmax=NULL, scale.minmax = TRUE,
     xLeft = 0.07, xRight = 1, yBottom = 0.07, yTop = 0.8, title = "", cex.title=1.8, y.axis=TRUE,
     min.width = 5, ylim = NULL, y.rev = FALSE, y.tks=NULL, ylabel = "", cex.ylabel=1, cex.yaxis=1, 
     xSpace = 0.01, wa.order = "none", plot.line = TRUE, col.line = "black", lwd.line = 1,
     plot.bar = TRUE, lwd.bar = 1, col.bar = "grey", sep.bar = FALSE, 
-    cex.xlabel = 1.1, mgp=c(3,.5, 0), cex.axis=.8, clust = NULL, clust.width=0.1, orig.fig=NULL, add=FALSE, ...)
+    plot.poly = FALSE, col.poly = "grey", col.poly.line = "black", lwd.poly = 1, x.names=NULL, 
+    cex.xlabel = 1.1, srt.xlabel=90, mgp=c(3,.5, 0), cex.axis=.8, clust = NULL, clust.width=0.1, orig.fig=NULL, add=FALSE, ...)
 {
     if (!is.null(clust)) {
      if (class(clust)[1]!="chclust") 
@@ -17,10 +18,36 @@ strat.plot <- function (d, yvar = NULL, scale.percent = FALSE, scale.minmax = TR
            ylim=c(0.5, nrow(d)+0.5)
         }
     }
+    if (is.null(x.names))
+       x.names=colnames(d)   
     if (is.null(ylim)) 
         ylim = c(min(yvar, na.rm=TRUE), max(yvar, na.rm=TRUE))
     oldfig = par("fig")
     oldmai <- par("mai")
+    if (is.null(orig.fig)) {
+       orig.fig = par("fig")
+    }
+    nsp <- ncol(d)
+    nsam <- nrow(d)
+    if (!is.null(minmax)) {
+       if (ncol(minmax) != 2)
+          stop("minmax should have 2 columns")
+       if (nrow(minmax) != nsp)
+          stop("number of rows of minmax should equal number of curves")
+    }
+    par(mai = c(0, 0, 0, 0))
+    if (length(graph.widths) == 1)
+       graph.widths <- rep(1, nsp)
+    if (length(graph.widths) != nsp)
+       stop("Length of graph.widths should equal number of curves")
+    cc.line <- rep(col.line, length.out=nsp)
+    if (sep.bar)
+      cc.bar <- rep(col.line, length.out=nsam)
+    else      
+      cc.bar <- rep(col.line, length.out=nsp)
+    cc.poly <- rep(col.poly, length.out=nsp)
+    cc.poly.line <- rep(col.poly.line, length.out=nsp)
+    inc <- 0.002
     if (wa.order == "topleft" || wa.order == "bottomleft") {
         colsum <- colSums(d)
         opt <- (t(d) %*% yvar)/colsum
@@ -28,31 +55,24 @@ strat.plot <- function (d, yvar = NULL, scale.percent = FALSE, scale.minmax = TR
             opt.order <- rev(order(opt))
         else opt.order <- order(opt)
         d <- d[, opt.order]
+        if (!is.null(minmax)) 
+           minmax <- minmax[opt.order, ]
+        if (!is.null(x.names))
+           x.names <- x.names[opt.order]
     }
-    if (is.null(orig.fig)) {
-       orig.fig = par("fig")
-    }
-    par(mai = c(0, 0, 0, 0))
-    nsp <- ncol(d)
-    nsam <- nrow(d)
-
-    inc <- 0.002
     if (scale.percent) {
         colM <- apply(d, 2, max)
         colM <- floor((colM + 5)/5) * 5
         colM[colM < min.width] <- min.width
         colM.sum <- sum(colM)
-#        xLen <- 1 - xLeft - xRight
-        xLen <- xRight - xLeft
-        xInc <- xLen - ((nsp + 1) * xSpace)
-        inc <- xInc/colM.sum
     }
     else {
-#        xLen <- 1 - xLeft - xRight
-        xLen <- xRight - xLeft
-        xInc <- xLen - ((nsp + 1) * xSpace)
-        inc <- xInc/(nsp)
+        colM.sum <- sum(graph.widths)
+        colM <- graph.widths
     }
+    xLen <- xRight - xLeft
+    xInc <- xLen - ((nsp + 1) * xSpace)
+    inc <- xInc/colM.sum
     if (inc < 0.0)
        stop("Too many variables, curves will be too small. Reduce xSpace.")
     x1 <- xLeft
@@ -83,46 +103,53 @@ strat.plot <- function (d, yvar = NULL, scale.percent = FALSE, scale.minmax = TR
             par(fig = figCnvt(orig.fig, c(x1, x1 + inc2, yBottom, yTop)))
             plot(0, 0, cex = 0.5, xlim = c(0, colM[i]), axes = FALSE, 
                 xaxs = "i", type = "n", yaxs = "r", ylim = ylim, ...)
+            if (plot.poly) {
+               y <- c(min(yvar, na.rm=TRUE), yvar, max(yvar, na.rm=TRUE))
+               x <- c(0, d[, i], 0)
+                 polygon(x, y, col = cc.poly[i], border = cc.poly.line[i], lwd=lwd.poly)
+            }
             if (plot.bar) {
-               if (length(col.bar) > 1) {
-                  if (!sep.bar) {
-                      segments(rep(0, nsam), yvar, d[, i], yvar, lwd = lwd.bar, col = col.bar)
-                  } else {
-                      segments(rep(0, nsam), yvar, d[, i], yvar, lwd = lwd.bar, col = col.bar[i])
-                  }
-                } else {
-                  segments(rep(0, nsam), yvar, d[, i], yvar, lwd = lwd.bar, col = col.bar)
-                }
+               if (!sep.bar) {
+                   segments(rep(0, nsam), yvar, d[, i], yvar, lwd = lwd.bar, col = cc.bar)
+               } else {
+                   segments(rep(0, nsam), yvar, d[, i], yvar, lwd = lwd.bar, col = cc.bar[i])
+               }
             }
             lines(c(0, 0), c(min(yvar, na.rm=TRUE), max(yvar, na.rm=TRUE)), ...)
             if (ty == "l") 
-                lines(d[, i], yvar, col = col.line, lwd = lwd.line)
+               lines(d[, i], yvar, col = cc.line[i], lwd = lwd.line)
             axis(side = 1, at = seq(0, colM[i], by = 10), labels = FALSE)
             x1 <- x1 + inc2 + xSpace
         }
         else {
 #            par(fig = c(x1, x1 + inc, yStart, yTop))
-            par(fig = figCnvt(orig.fig, c(x1, min(1, x1 + inc), yBottom, yTop)))
-            plot(d[, i], yvar, cex = 0.5, axes = FALSE, xaxs = "i", 
+            inc2 <- inc * colM[i]
+            par(fig = figCnvt(orig.fig, c(x1, min(1, x1 + inc2), yBottom, yTop)))
+            if (!is.null(minmax)) {
+               plot(d[, i], yvar, cex = 0.5, axes = FALSE, xaxs = "i", 
+                type = "n", yaxs = "r", ylim = ylim, xlim=c(minmax[i, 1], minmax[i,2]), ...)
+            } else {
+               plot(d[, i], yvar, cex = 0.5, axes = FALSE, xaxs = "i", 
                 type = "n", yaxs = "r", ylim = ylim, ...)
+            }
             tks <- axTicks(1)
             us <- par("usr")
-            tks[1] <- us[1]
+            if (plot.poly) {
+               y <- c(min(yvar, na.rm=TRUE), yvar, max(yvar, na.rm=TRUE))
+               x <- c(us[1], d[, i], us[1])
+                 polygon(x, y, col = cc.poly[i], border = cc.poly.line[i], lwd=lwd.poly)
+            }
             if (plot.bar) {
-               if (length(col.bar) > 1) {
-                  if (!sep.bar) {
-                     segments(rep(tks[1], nsam), yvar, d[, i], yvar, lwd = lwd.bar, col = col.bar)
-                  } else {
-                     segments(rep(tks[1], nsam), yvar, d[, i], yvar, lwd = lwd.bar, col = col.bar[i])
-                  }
+               if (!sep.bar) {
+                  segments(rep(us[1], nsam), yvar, d[, i], yvar, lwd = lwd.bar, col = cc.bar)
                } else {
-                  segments(rep(tks[1], nsam), yvar, d[, i], yvar, lwd = lwd.bar, col = col.bar)
+                  segments(rep(us[1], nsam), yvar, d[, i], yvar, lwd = lwd.bar, col = cc.bar[i])
                }
             }
-            lines(c(tks[1], tks[1]), c(min(yvar, na.rm=TRUE), max(yvar, na.rm=TRUE)), 
+            lines(c(us[1], us[1]), c(min(yvar, na.rm=TRUE), max(yvar, na.rm=TRUE)), 
                 ...)
             if (ty == "l") 
-                lines(d[, i], yvar, col = col.line, lwd = lwd.line)
+                lines(d[, i], yvar, col = cc.line[i], lwd = lwd.line)
             if (scale.minmax) {
                 nn <- length(axTicks(1))
                 tk <- c(axTicks(1)[1], axTicks(1)[nn])
@@ -132,14 +159,14 @@ strat.plot <- function (d, yvar = NULL, scale.percent = FALSE, scale.minmax = TR
             else {
                 axis(side = 1, las = 2, cex.axis=cex.axis, mgp=c(3,.8,0), ...)
             }
-            x1 <- x1 + inc + xSpace
+            x1 <- x1 + inc2 + xSpace
         }
         tks1 <- axTicks(1)
         r <- (usr1[4] - usr1[3]) * 0.01
         pos <- usr1[4]+r
         if (y.rev)
            pos <- usr1[4]-r
-        text(tks1[1], pos, labels=colnames(d)[i], adj = c(0, 1), srt=90, cex = cex.xlabel, xpd=NA)
+        text(tks1[1], pos, labels=x.names[i], adj = c(0, 1), srt=srt.xlabel, cex = cex.xlabel, xpd=NA)
     }
     if (!is.null(clust)) {
 #        par(fig = c(x1, 1, yStart, yTop))

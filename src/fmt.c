@@ -1,6 +1,7 @@
 #include "f2c.h"
 #include "fio.h"
 #include "fmt.h"
+#include "R_ext/Print.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -50,7 +51,9 @@ op_gen(int a, int b, int c, int d)
 #endif
 {	struct syl *p= &f__syl[f__pc];
 	if(f__pc>=SYLMX)
-	{	fprintf(stderr,"format too complicated:\n");
+	{	
+/*    fprintf(stderr,"format too complicated:\n"); */
+    REprintf("format too complicated:\n");
 		sig_die(f__fmtbuf, 1);
 	}
 	p->op=a;
@@ -424,7 +427,9 @@ integer do_fio(ftnint *number, char *ptr, ftnlen len)
 loop:	switch(type_f((p= &f__syl[f__pc])->op))
 	{
 	default:
-		fprintf(stderr,"unknown code in do_fio: %d\n%s\n",
+/*		fprintf(stderr,"unknown code in do_fio: %d\n%s\n", 
+			p->op,f__fmtbuf); */
+		REprintf("unknown code in do_fio: %d\n%s\n",
 			p->op,f__fmtbuf);
 		err(f__elist->cierr,100,"do_fio");
 	case NED:

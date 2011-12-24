@@ -178,7 +178,7 @@ plot.WAPLS <- function(x, resid=FALSE, xval=FALSE, npls=1, xlab="", ylab="", yli
   }
   if (missing(xlim))
      xlim <- range(xx, x$x)
-  plot(xx, yy, ylim=ylim, xlim=xlim, xlab=xlab, ylab=ylab, las=1)
+  plot(xx, yy, ylim=ylim, xlim=xlim, xlab=xlab, ylab=ylab, las=1, ...)
   if (add.ref) {
      if (resid)
        abline(h=0, col="grey")
@@ -186,7 +186,7 @@ plot.WAPLS <- function(x, resid=FALSE, xval=FALSE, npls=1, xlab="", ylab="", yli
        abline(0,1, col="grey")
   }
   if (add.smooth) {
-     lines(lowess(xx, yy))
+     lines(lowess(xx, yy), col="red")
   }
 }
 
@@ -194,8 +194,14 @@ fitted.WAPLS <- function(object, ...) {
   object$fitted.values
 }
 
-residuals.WAPLS <- function(object, ...) {
-  object$x - object$fitted.values
+residuals.WAPLS <- function(object, cv=FALSE, ...) {
+  if (cv == FALSE)
+     return (object$x - object$fitted.values)
+  else {
+     if (object$cv.summary$cv.method == "none")
+        stop("Object does not contain cross validation results")
+     return (object$residuals.cv)
+  }
 }
 
 coef.WAPLS <- function(object, ...) {

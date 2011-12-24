@@ -51,7 +51,7 @@ write.list.Excel <- function(x, fName) {
          if (!file.remove(fName))
             stop("Could not remove existing file - is it open?")
      on.exit(odbcCloseAll())
-     if (class(x) != "list")
+     if (! ("list" %in% class(x)))
         stop("object should be a list")
      if (require(RODBC)==FALSE) {
         stop("This function requires package RODBC")

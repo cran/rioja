@@ -19,13 +19,13 @@ Functions for reconstructing (predicting) environmental values from biological a
 \usage{
 MAT(y, x, dist.method="sq.chord", k=5, lean=TRUE)
 
-\method{predict}{MAT}(object, newdata=NULL, k=5, sse=FALSE, 
+\method{predict}{MAT}(object, newdata=NULL, k=object$k, sse=FALSE, 
         nboot=100, match.data=TRUE, verbose=TRUE, lean=TRUE, 
         \dots)
 
 \method{performance}{MAT}(object, \dots)
 
-\method{crossval}{MAT}(object, cv.method="lgo", 
+\method{crossval}{MAT}(object, k=object$k, cv.method="lgo", 
         verbose=TRUE, ngroups=10, nboot=100, \dots)
 
 \method{print}{MAT}(x, \dots)
@@ -36,7 +36,7 @@ MAT(y, x, dist.method="sq.chord", k=5, lean=TRUE)
       ylab="", ylim=NULL, xlim=NULL, add.ref=TRUE,
       add.smooth=FALSE, \dots)
 
-\method{residuals}{MAT}(object, \dots)
+\method{residuals}{MAT}(object, cv=FALSE, \dots)
 
 \method{fitted}{MAT}(object, \dots)
 
@@ -67,7 +67,8 @@ paldist2(y1, y2, dist.method="sq.chord")
   \item{ngroups}{ number of groups in leave-group-out cross-validation, or a vector contain leave-out group menbership. }  
   \item{sse}{ logical indicating that sample specific errors should be calculated. }  
   \item{full}{ logical to indicate a full or abbreviated summary. }
-  \item{...}{ additional arguments. }
+  \item{cv}{ logical to indicate model or cross-validation residuals. }
+  \item{\dots}{ additional arguments. }
 }
 
 \details{
@@ -96,16 +97,19 @@ Function \code{MAT} returns an object of class \code{MAT} which contains the fol
 \item{dist}{ dissimilarity matrix (returned if \code{lean=FALSE}). }
 
 If function \code{predict} is called with \code{newdata=NULL} it returns a matrix of fitted values from the original training set analysis.  If \code{newdata} is not \code{NULL} it returns list with the following named elements:
-\item{predicted}{ predictions for \code{newdata}. }
+\item{fit}{ predictions for \code{newdata}. }
 \item{diagnostics}{ standard deviations of the k closest analogues and distance of closest analogue. }
 \item{dist.n}{ dissimilarities of the k closest analogues. }
 \item{x.n}{ environmental values of the k closest analogues. }
 \item{match.name}{ column names of the k closest analogues. }
 \item{dist}{ dissimilarity matrix (returned if \code{lean=FALSE}). }
+If sample specific errors were requested the list will also include:
+\item{fit.boot}{ mean of the bootstrap estimates of newdata. }
+\item{v1}{ squared standard error of the bootstrap estimates for each new sample. }
+\item{v2}{ mean squared error for the training set samples, across all bootstram samples. }
+\item{SEP}{ standard error of prediction, calculated as the square root of v1 + v2. }
 
-Functions \code{paldist} and \code{paldist2} return dissimilarity matrices.  \code{performance} returns a matrix of performance statistics for the MAT model, with columns for RMSE, R2, mean and max bias.
-
-Function \code{performance} returns a data frame with performce statistics for each number of analogues up to k. See \code{\link{performance}} for a description of the output.
+Functions \code{paldist} and \code{paldist2} return dissimilarity matrices.  \code{performance} returns a matrix of performance statistics for the MAT model, with columns for RMSE, R2, mean and max bias for each number of analogues up to k. See \code{\link{performance}} for a description of the output.
 }
 
 \author{ 

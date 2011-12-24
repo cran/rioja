@@ -1,5 +1,5 @@
 chclust <- function(d, method="coniss") {
-  if (class(d)!="dist")
+  if (!("dist" %in% class(d)))
      stop("Input must be a distance matrix")
   x <- as.matrix(d)
   if (!is.numeric(d))
@@ -147,8 +147,9 @@ plot.chclust <- function (x, labels = NULL, hang = 0.1,
        yl <- ret[2]
    }
     else {
+      u <- par("usr")
     	xl = dnd_xpos[-k]
-     	yl = ifelse(dnd_hang >= 0, y - dnd_hang, min(-dnd_hang, 0))
+     	yl = ifelse(dnd_hang >= 0, y - dnd_hang, min(-dnd_hang, ifelse(horiz, u[1], u[3])))
       yp <- yl-dnd_offset
       if (horiz) {
          if (xl >= min(ax.range) & xl <= max(ax.range)) {
@@ -168,8 +169,9 @@ plot.chclust <- function (x, labels = NULL, hang = 0.1,
        yr <- ret[2]
     }
     else {
+        u <- par("usr")
       	xr = dnd_xpos[-k]
-      	yr = ifelse(dnd_hang >= 0, y - dnd_hang, min(-dnd_hang, 0))
+      	yr = ifelse(dnd_hang >= 0, y - dnd_hang, min(-dnd_hang, ifelse(horiz, u[1], u[3])))
       	yp <- yr-dnd_offset
         if (horiz) {
           if (xr >= min(ax.range) & xr <= max(ax.range))
@@ -185,9 +187,9 @@ plot.chclust <- function (x, labels = NULL, hang = 0.1,
     xx[3] = xr; yy[3] = y;
     xx[4] = xr; yy[4] = yr;
     if (horiz)
-      lines(yy, xx, ...)
+      lines(yy, xx, xpd=NA, ...)
     else
-      lines(xx, yy, ...)
+      lines(xx, yy, xpd=NA, ...)
     x = 0.5 * (xl + xr);
     return(c(x,y))
 }

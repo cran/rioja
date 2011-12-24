@@ -1,9 +1,7 @@
 .max.bias <- function(resi, x, ng = 10) {
 	t2 <- range(x)
 	MB <- tapply(resi, cut(x, seq(from = t2[1], to = t2[2], length = ng+1), include.lowest=TRUE), mean)
-	MB1 <- min (MB, na.rm=TRUE)
-	MB2 <- max (MB, na.rm=TRUE)
-	ifelse(abs(MB1) > abs(MB2), MB1, MB2)
+  max(abs(MB), na.rm = TRUE)
 }
 
 .rmse <- function(x) {

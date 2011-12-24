@@ -8,16 +8,19 @@
 Plots a diagram of multiple biological, physical or chemical parameters agains depth or time, as used in geology & palaeoecology.
 }
 \usage{
-strat.plot (d, yvar = NULL, scale.percent = FALSE,
-    scale.minmax = TRUE, xLeft = 0.07, xRight = 1,
-    yBottom = 0.07, yTop = 0.8, title = "", cex.title=1.8,
-    y.axis=TRUE, min.width = 5, ylim = NULL, y.rev = FALSE,
-    y.tks=NULL, ylabel = "", cex.ylabel=1, cex.yaxis=1,
-    xSpace = 0.01, wa.order = "none", plot.line = TRUE,
-    col.line = "black", lwd.line = 1, plot.bar = TRUE,
-    lwd.bar = 1, col.bar = "grey", sep.bar = FALSE,
-    cex.xlabel = 1.1, mgp=c(3,.5, 0), cex.axis=.8, clust = NULL,
-    clust.width=0.1, orig.fig=NULL, add=FALSE, ...)
+strat.plot (d, yvar = NULL, scale.percent = FALSE, 
+    graph.widths=1, minmax=NULL, 
+    scale.minmax = TRUE, xLeft = 0.07, xRight = 1, 
+    yBottom = 0.07, yTop = 0.8, title = "", cex.title=1.8, 
+    y.axis=TRUE, min.width = 5, ylim = NULL, y.rev = FALSE, 
+    y.tks=NULL, ylabel = "", cex.ylabel=1, cex.yaxis=1, 
+    xSpace = 0.01, wa.order = "none", plot.line = TRUE, 
+    col.line = "black", lwd.line = 1, plot.bar = TRUE, 
+    lwd.bar = 1, col.bar = "grey", sep.bar = FALSE, 
+    plot.poly = FALSE, col.poly = "grey", col.poly.line = "black", 
+    lwd.poly = 1, x.names=NULL, cex.xlabel = 1.1, srt.xlabel=90, 
+    mgp=c(3,.5, 0), cex.axis=.8, clust = NULL, clust.width=0.1, 
+    orig.fig=NULL, add=FALSE, ...)
     
 addZone (x, upper, lower=NULL, ...)
 
@@ -27,9 +30,12 @@ addClustZone(x, clust, nZone, ...)
   \item{d}{ a matrix or data frame of variables to plot. }
   \item{yvar}{ a vector of depths or ages to use for the y-axis (defaults to sample number). }
   \item{scale.percent}{ logical to scale x-axes for (biological) percentage data. }
+  \item{graph.widths}{ a vector of relative widths for each curve, used if \code{scale.percent=FALSE}. }
+  \item{minmax}{ 2 * nvar matrix of min and max values to scale each curve if \code{scale.percent=FALSE}. }
   \item{scale.minmax}{ logical to show only min and max values on x-axes (to avoid label crowding). }
   \item{xLeft, xRight, yBottom, yTop }{ x, y position of plot on page, in relative units. }
   \item{title}{ main title for plot. }
+  \item{x.names}{ character vector of names for each graph, of same length as \code{ncol(d)}. }
   \item{cex.title}{ size of label for title. }
   \item{y.axis}{ logical to control drawing to left-hand y-axis scale. Defaults to TRUE. }
   \item{min.width}{ minimum upper value of x-axis when scaled for percent data. }
@@ -37,18 +43,17 @@ addClustZone(x, clust, nZone, ...)
   \item{y.rev}{ logical to reverse y-axis. Defaults to FALSE. }
   \item{y.tks}{ numerical vector listing values of y-axis ticks / labels. }
   \item{ylabel}{ label for y-axis. }
-  \item{cex.ylabel}{ text size for y-axis label. }
-  \item{cex.yaxis}{ text size for y-axis values. }
+  \item{cex.ylabel, cex.yaxis}{ text size for y-axis labels and values. }
   \item{xSpace}{ space between graphs, in relative units. }
   \item{wa.order}{ "none", "topleft" or "bottomleft", to sort variables according to the weighted average with y. }
-  \item{plot.line}{ logical flag to plot a line graph. }
-  \item{col.line}{ colour of lines in line graph. }
-  \item{lwd.line}{ line weight (thickness) in line graph. }
-  \item{plot.bar}{ logical flag to plot bars or horizonal lines. }
-  \item{lwd.bar}{ bar weight (thickness) bar graph. }
-  \item{col.bar}{ colour of bars in a bar graph. Can be a vector to specify colours of individual bars or graphs.}
-  \item{sep.bar}{ If true, colours applied to individual bars, otherwise individual graphs. }
+  \item{plot.line, plot.poly, plot.bar}{ logical flags to plot graphs as lines, silhouettes, or bars. }
+  \item{col.line, col.poly.line}{ colour of lines and silhouette outlines. Can be a single colour or a vector of colours, one for each graph. }
+  \item{col.poly}{ silhouette fill colour. Can be a single colour or a vector of colours, one for each graph. }
+  \item{lwd.line, lwd.poly, lwd.bar}{ line widths for line, silhouette or bar graphs. }
+  \item{col.bar}{ colour of bars in a bar graph. \code{col.bar} can be a vector to specify colours of individual bars or graphs.}
+  \item{sep.bar}{ If true, colours in \code{col.bar} are applied to individual bars, otherwise individual graphs. }
   \item{cex.xlabel}{ size of label for variable names. }
+  \item{srt.xlabel}{ rotation angle for variable names. }
   \item{mgp}{ value of mgp for x-axes.  See \code{par} for details. }
   \item{cex.axis}{ text size for x-axis labels.  See \code{par} for details. }
   \item{clust}{ an constrained classification object of class \code{chclust} to add to plot. }

@@ -242,7 +242,7 @@ performance.default <- function(object, ...) {
   } 
   colnames(result) <- colnames(object$fitted.values)
   rownames(result) <- rownames(object$fitted.values)
-  object$predicted=result
-  object$residuals.cv=result-object$x
+  object$predicted <- result
+  object$residuals.cv <- object$x - result
   object
 }

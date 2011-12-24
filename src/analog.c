@@ -9,6 +9,7 @@ double Dissimilarity(double *data1, double *data2, int len, int coef);
 /*
 __declspec(dllexport) void Dissim(double *x, double *res, long *nrow, long *ncol, long *coef) {
 */
+
 void Dissim(double *x, double *res, int *nrow, int *ncol, int *coef) {
    int i, j;
    int nn, nnn;

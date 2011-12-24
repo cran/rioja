@@ -10,6 +10,7 @@ extern char *malloc();
 #endif
 #include "fio.h"
 #include "fmt.h"	/* for struct syl */
+#include "R_ext/Print.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -145,22 +146,35 @@ f__fatal(int n, char *s)
 {
 	if(n<100 && n>=0) perror(s); /*SYSDEP*/
 	else if(n >= (int)MAXERR || n < -1)
-	{	fprintf(stderr,"%s: illegal error number %d\n",s,n);
+	{	
+/*     fprintf(stderr,"%s: illegal error number %d\n",s,n); */
+     REprintf("%s: illegal error number %d\n",s,n);
 	}
-	else if(n == -1) fprintf(stderr,"%s: end of file\n",s);
+	else if(n == -1) 
+/*     fprintf(stderr,"%s: end of file\n",s); */
+     REprintf("%s: end of file\n",s);
 	else
-		fprintf(stderr,"%s: %s\n",s,F_err[n-100]);
+/*		fprintf(stderr,"%s: %s\n",s,F_err[n-100]); */
+		REprintf("%s: %s\n",s,F_err[n-100]);
 	if (f__curunit) {
-		fprintf(stderr,"apparent state: unit %d ",
-			(int)(f__curunit-f__units));
-		fprintf(stderr, f__curunit->ufnm ? "named %s\n" : "(unnamed)\n",
-			f__curunit->ufnm);
+/*		fprintf(stderr,"apparent state: unit %d ",
+			(int)(f__curunit-f__units)); */
+		REprintf("apparent state: unit %d ", (int)(f__curunit-f__units));
+/*		fprintf(stderr, f__curunit->ufnm ? "named %s\n" : "(unnamed)\n",
+			f__curunit->ufnm); */
+		REprintf(f__curunit->ufnm ? "named %s\n" : "(unnamed)\n", 
+    f__curunit->ufnm);
 		}
 	else
-		fprintf(stderr,"apparent state: internal I/O\n");
+/* 		fprintf(stderr,"apparent state: internal I/O\n"); */
+		REprintf("apparent state: internal I/O\n");
 	if (f__fmtbuf)
-		fprintf(stderr,"last format: %s\n",f__fmtbuf);
-	fprintf(stderr,"lately %s %s %s %s",f__reading?"reading":"writing",
+/* 		fprintf(stderr,"last format: %s\n",f__fmtbuf); */
+		REprintf("last format: %s\n",f__fmtbuf);
+/*	fprintf(stderr,"lately %s %s %s %s",f__reading?"reading":"writing",
+		f__sequential?"sequential":"direct",f__formatted?"formatted":"unformatted",
+		f__external?"external":"internal"); */
+	REprintf("lately %s %s %s %s",f__reading?"reading":"writing",
 		f__sequential?"sequential":"direct",f__formatted?"formatted":"unformatted",
 		f__external?"external":"internal");
 	sig_die(" IO", 1);
@@ -171,21 +185,25 @@ f_init(Void)
 {	unit *p;
 
 	f__init=1;
+/*	
 	p= &f__units[0];
 	p->ufd=stderr;
 	p->useek=f__canseek(stderr);
 	p->ufmt=1;
 	p->uwrt=1;
+*/	
 	p = &f__units[5];
 	p->ufd=stdin;
 	p->useek=f__canseek(stdin);
 	p->ufmt=1;
 	p->uwrt=0;
+/*	
 	p= &f__units[6];
 	p->ufd=stdout;
 	p->useek=f__canseek(stdout);
 	p->ufmt=1;
 	p->uwrt=1;
+*/	
 }
 
  int

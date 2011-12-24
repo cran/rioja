@@ -43,7 +43,7 @@ WAPLS.fit(y, x, npls=5, iswapls=TRUE, standx=FALSE, lean=FALSE)
       xlab="", ylab="", ylim=NULL, xlim=NULL, add.ref=TRUE,
       add.smooth=FALSE, \dots)
 
-\method{residuals}{WAPLS}(object, \dots)
+\method{residuals}{WAPLS}(object, cv=FALSE, \dots)
 
 \method{coef}{WAPLS}(object, \dots)
 
@@ -72,6 +72,7 @@ WAPLS.fit(y, x, npls=5, iswapls=TRUE, standx=FALSE, lean=FALSE)
   \item{sse}{ logical indicating that sample specific errors should be calculated. }  
   \item{rand.test}{ logical to perform a randomisation t-test to test significance of cross validated components. } 
   \item{n.perm}{ number of permutations for randomisation t-test. }  
+  \item{cv}{ logical to indicate model or cross-validation residuals. }
   \item{\dots}{ additional arguments. }
 }
 

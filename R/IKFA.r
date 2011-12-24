@@ -161,7 +161,7 @@ plot.IKFA <- function(x, resid=FALSE, xval=FALSE, nFact=max(x$ccoef), xlab="", y
   }
   if (missing(xlim))
      xlim <- range(xx, x$x)
-  plot(xx, yy, ylim=ylim, xlim=xlim, xlab=xlab, ylab=ylab, las=1)
+  plot(xx, yy, ylim=ylim, xlim=xlim, xlab=xlab, ylab=ylab, las=1, ...)
   if (add.ref) {
      if (resid)
        abline(h=0, col="grey")
@@ -169,7 +169,7 @@ plot.IKFA <- function(x, resid=FALSE, xval=FALSE, nFact=max(x$ccoef), xlab="", y
        abline(0,1, col="grey")
   }
   if (add.smooth) {
-     lines(lowess(xx, yy))
+     lines(lowess(xx, yy), col="red")
   }
 }
 
@@ -177,8 +177,14 @@ fitted.IKFA <- function(object, ...) {
   object$fitted.values
 }
 
-residuals.IKFA <- function(object, ...) {
-  object$x - object$fitted.values
+residuals.IKFA <- function(object, cv=FALSE, ...) {
+  if (cv == FALSE)
+     return (object$x - object$fitted.values)
+  else {
+     if (object$cv.summary$cv.method == "none")
+        stop("Object does not contain cross validation results")
+     return (object$residuals.cv)
+  }
 }
 
 coef.IKFA <- function(object, ...) {

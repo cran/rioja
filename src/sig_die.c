@@ -7,10 +7,13 @@
 #endif
 #endif
 
+#define NO_ONEXIT 1
+
 #ifdef KR_headers
 void sig_die(s, kill) register char *s; int kill;
 #else
 #include "stdlib.h"
+#include "R_ext/Print.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -23,24 +26,25 @@ void sig_die(register char *s, int kill)
 #endif
 {
 	/* print error message, then clear buffers */
-	fprintf(stderr, "%s\n", s);
+/* 	fprintf(stderr, "%s\n", s);  */
+	REprintf("%s\n", s);
 
 	if(kill)
 		{
-		fflush(stderr);
+/* 		fflush(stderr); */
 		f_exit();
-		fflush(stderr);
+/*		fflush(stderr); */
 		/* now get a core */
 #ifdef SIGIOT
 		signal(SIGIOT, SIG_DFL);
 #endif
-		abort();
+/*		abort();  */
 		}
 	else {
 #ifdef NO_ONEXIT
 		f_exit();
 #endif
-		exit(1);
+/*		exit(1);  */
 		}
 	}
 #ifdef __cplusplus

@@ -29,6 +29,7 @@ extern "C" {
    int getlin_(int *chan, char *format, int *ncoup, int *cursam, int *sp, double *abun, int *tag);
    int getl2_(int *chan, char *format, int *ncoup, int *cursam, double *abun, int *tag);
    int getnam_(int *chan, char *spnam, char *samnam, int *nsp, int *nsam, int *tag);
+   int closef_(int chan);
 }
 #endif
 
@@ -105,6 +106,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
       if (ab) delete[] ab;
       if (m) delete[] m;
       ccleanup(S,membuffers, first);
+      closef_(channel);
       throw("Out of memory allocating work space");
 //      return ERROR;
 	}
@@ -120,6 +122,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
             ccleanup(S,membuffers, first);
             if (tag==1) sprintf(errorline, "Error reading data for sample %d", new_sample);
             else if (tag==2) sprintf(errorline, "Unexpected end of file reading sample %d", new_sample);
+            closef_(channel);
             throw(errorline);
 //            return ERROR;
          }
@@ -134,6 +137,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
             ccleanup(S,membuffers, first);
             if (tag==1) sprintf(errorline, "Error reading data for sample %d", new_sample);
             else if (tag==2) sprintf(errorline, "Unexpected end of file reading sample %d", new_sample);
+            closef_(channel);
             throw(errorline);
 //            return ERROR;
          }
@@ -150,6 +154,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
          if (lsam>nsam) {
             ccleanup(S,membuffers, first);
             throw("Number of samples exceeds maximum");
+            closef_(channel);
 //            return ERROR;
          }
          double *mm;
@@ -174,6 +179,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
          mm = new double[ii];
          if (mm==NULL) {
             ccleanup(S,membuffers, first);
+            closef_(channel);
             throw("Out of memory allocating storage space");
 //            return ERROR;
          }
@@ -199,6 +205,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
       else if (((new_sample>0)&&(new_sample<current_sample))||(type==full && new_sample==current_sample)) {
          ccleanup(S,membuffers, first);
          sprintf(errorline, "Non sequential sample found after sample %d", current_sample);
+         closef_(channel);
          throw(errorline);
 //         return ERROR;
       }
@@ -213,6 +220,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
             if (sp2[i] >= nsp) {
                ccleanup(S,membuffers, first);
                sprintf(errorline, "Species number %d in sample %d\nis greater than maximum", sp2[i], new_sample);
+               closef_(channel);
                throw(errorline);
 //               return ERROR;
             }
@@ -232,6 +240,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
    occur = new int[nsp];
    if (!occur) {
       ccleanup(S,membuffers, first);
+      closef_(channel);
       throw("Out of memory allocating workspace");
 //      return ERROR;
    }
@@ -256,6 +265,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
    int *DL = new int[nsam];
    if (!DL) {
       ccleanup(S,membuffers, first);
+      closef_(channel);
       throw("Out of memory allocating storage for sample numbers");
 //      return ERROR;
    }
@@ -278,6 +288,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
    double **Dm = dataptr(S);
    if (!Dm) {
       ccleanup(S,membuffers, first);
+      closef_(channel);
       throw("Memory error in CIN");
 //		return ERROR;
    }
@@ -311,6 +322,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
    char *sss = new char[nsp*9];
    if ((!spName)||(!sss)) {
       ccleanup(S,membuffers, first);
+      closef_(channel);
       throw("Out of memory allocating storage for species names");
 //      return ERROR;
 	}
@@ -323,6 +335,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
 	sss = new char[nsam*9];
    if ((!samName)||(!sss)) {
       ccleanup(S,membuffers, first);
+      closef_(channel);
       throw("Out of memory allocating storage for sample names");
 //      return ERROR;
    }
@@ -345,6 +358,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
    getnam_(&channel, spName2, samName2, &nsp, &nsam2, &tag);
    if (tag) {
    	ccleanup(S,membuffers, first);
+      closef_(channel);
       if (tag==1) throw("Unexpected end of file reading species names");
       if (tag==2) throw("Error reading species names");
       if (tag==3) throw("Unexpected end of file reading sample names");
@@ -375,6 +389,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
    if (bError) {
    	ccleanup(S,membuffers, first);
       sprintf(errorline, "Missing names for %d species / samples.", bError);
+      closef_(channel);
       throw(errorline);
 //      return ERROR;
    }
@@ -389,12 +404,14 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
 	if (missing_species > 0) {
       if (missing_species == nsp) {
 			ccleanup(S,membuffers, first);
+      closef_(channel);
 			throw("No data found in file");
 //			return ERROR;
 		}
 		char *sptags = new char[nsp];
 		if (!sptags) {
 			ccleanup(S,membuffers, first);
+      closef_(channel);
 			throw("Out of memory deleting missing taxa");
 //			return ERROR;
 		}
@@ -420,6 +437,7 @@ void NewCornellIn2(dataMat &S, char * fname, int etf, double missing_value, char
   delete [] occur;
   delete [] spName2;
   delete [] samName2;
+  closef_(channel);
   nMissingValues = missing_flag;
   nCouplets = ncoup;
   return;

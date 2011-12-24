@@ -1,14 +1,14 @@
 MAT <- function(y, x, dist.method="sq.chord", k=5, lean=TRUE)
 {
-  call.fit <- as.call(list(quote(MAT), y=quote(y), x=quote(x), dist.method=dist.method, k=5, lean=lean))
+  call.fit <- as.call(list(quote(MAT), y=quote(y), x=quote(x), dist.method=dist.method, k=k, lean=lean))
   x1 <- as.numeric(x)
   n <- 2
   diss <- as.matrix(paldist(y, dist.method=dist.method))
   ind <- apply(diss, 2, order)
-  dist.n <- t(apply(diss, 2, sort)[n:(n+k-1), ])
+  dist.n <- t(apply(diss, 2, sort)[n:(n+k-1), , drop=FALSE])
   rownames(dist.n) <- rownames(y)
   colnames(dist.n) <- paste("N", sprintf("%02d", 1:k), sep="")
-  x.n <- t(matrix(x1[ind[n:(n+k-1), ]], nrow=k))
+  x.n <- t(matrix(x1[ind[n:(n+k-1), , drop=FALSE]], nrow=k))
   rownames(x.n) <- rownames(y)
   colnames(x.n) <- paste("N", sprintf("%02d", 1:k), sep="")
   xHat <- matrix(NA, nrow=nrow(y), ncol=k*2)
@@ -22,7 +22,7 @@ MAT <- function(y, x, dist.method="sq.chord", k=5, lean=TRUE)
   sd <- apply(x.n, 1, sd, na.rm=TRUE)
   minD <- apply(dist.n, 1, min, na.rm=TRUE)
   diagn  <- data.frame(Stdev=sd, minD=minD)  
-  nms <- t(matrix(rownames(y)[ind[n:(n+k-1), ]], nrow=k))
+  nms <- t(matrix(rownames(y)[ind[n:(n+k-1), , drop=FALSE]], nrow=k))
   rownames(nms) <- rownames(y)
   colnames(nms) <- paste("N", sprintf("%02d", 1:k), sep="")
   rownames(diss) <- rownames(y)
@@ -36,12 +36,13 @@ MAT <- function(y, x, dist.method="sq.chord", k=5, lean=TRUE)
 	result
 }
 
-predict.MAT <- function(object, newdata=NULL, k=5, sse=FALSE, nboot=100, match.data=TRUE, verbose=TRUE, lean=TRUE, ...) 
+predict.MAT <- function(object, newdata=NULL, k=object$k, sse=FALSE, nboot=100, match.data=TRUE, verbose=TRUE, lean=TRUE, ...) 
 {
-  if (is.null(newdata))
-     return(object$fitted.values)
-  if (k < 0 | k > object$k)
+  if (k < 1 | k > object$k)
     stop("k out of range")
+  if (is.null(newdata)) {
+     return(object$fitted.values[, c(k, k+object$k), drop=FALSE])
+  }
   if (match.data) {
     d <- Merge(object$y, newdata, split=TRUE)
     y1 <- as.matrix(d[[1]])
@@ -62,13 +63,13 @@ predict.MAT <- function(object, newdata=NULL, k=5, sse=FALSE, nboot=100, match.d
      n = 1
   }
   x1 <- object$x
-  k <- object$k
+#  k <- object$k
   diss <- paldist2(y1, y2, dist.method=object$dist.method)
   ind <- apply(diss, 2, order)
-  dist.n <- t(apply(diss, 2, sort)[n:(n+k-1), ])
+  dist.n <- t(apply(diss, 2, sort)[n:(n+k-1), , drop=FALSE])
   rownames(dist.n) <- rownames(y2)
   colnames(dist.n) <- paste("N", sprintf("%02d", 1:k), sep="")
-  x.n <- t(matrix(x1[ind[n:(n+k-1), ]], nrow=k))
+  x.n <- t(matrix(x1[ind[n:(n+k-1), , drop=FALSE]], nrow=k))
   rownames(x.n) <- rownames(y2)
   colnames(x.n) <- paste("N", sprintf("%02d", 1:k), sep="")
   xHat <- apply(x.n, 1, mean, na.rm=TRUE)
@@ -78,15 +79,14 @@ predict.MAT <- function(object, newdata=NULL, k=5, sse=FALSE, nboot=100, match.d
   sd <- apply(x.n, 1, sd, na.rm=TRUE)
   minD <- apply(dist.n, 1, min, na.rm=TRUE)
   diagn  <- data.frame(Stdev=sd, minD=minD)  
-  nms <- t(matrix(rownames(y1)[ind[n:(n+k-1), ]], nrow=k))
+  nms <- t(matrix(rownames(y1)[ind[n:(n+k-1), , drop=FALSE]], nrow=k))
   rownames(nms) <- rownames(y2)
   colnames(nms) <- paste("N", sprintf("%02d", 1:k), sep="")
   rownames(diss) <- rownames(y1)
   colnames(diss) <- rownames(y2)
-  result <- list(fit=xHat, diagnostics=diagn, dist.n=dist.n, x.n=x.n, match.name=nms)
+  result <- list(k=k, fit=xHat, diagnostics=diagn, dist.n=dist.n, x.n=x.n, match.name=nms)
   if (!lean)
      result <- c(result, list(dist=diss))
-     
   if (sse) {
    feedback <- ifelse(is.logical(verbose), 50, as.integer(verbose))
    if (is.null(object$dist))
@@ -105,18 +105,17 @@ predict.MAT <- function(object, newdata=NULL, k=5, sse=FALSE, nboot=100, match.d
 
       diss.m <- object$dist[o, out]
       ind <- apply(diss.m, 2, order)
-      dist.n <- t(apply(diss.m, 2, sort)[1:k, ])
-      x.n <- t(matrix(x[ind[1:k, ]], nrow=k))
+      dist.n <- t(apply(diss.m, 2, sort)[1:k, , drop=FALSE])
+      x.n <- t(matrix(x[ind[1:k, , drop=FALSE]], nrow=k))
       res2[out, 1, i] <- apply(x.n, 1, mean, na.rm=TRUE)
       res2[out, 2, i] <- rowSums((x.n / dist.n), na.rm=TRUE) / rowSums(1/dist.n)
       
       diss.f <- diss[o, ]
       ind <- apply(diss.f, 2, order)
-      dist.n <- apply(diss.f, 2, sort)[1:k, ]
-      x.n <- matrix(x[ind[1:k, ]], nrow=k)
+      dist.n <- apply(diss.f, 2, sort)[1:k, , drop=FALSE]
+      x.n <- matrix(x[ind[1:k, , drop=FALSE]], nrow=k)
       res2.new[, 1, i] <- apply(x.n, 2, mean, na.rm=TRUE)
-      res2.new[, 2, i] <- rowSums((x.n / dist.n), na.rm=TRUE) / rowSums(1/dist.n)
-      
+      res2.new[, 2, i] <- colSums((x.n / dist.n), na.rm=TRUE) / colSums(1/dist.n)
       if (verbose) {
           if (i %% feedback == 0) {
             cat (paste("Bootstrap sample", i, "\n"))
@@ -140,8 +139,10 @@ predict.MAT <- function(object, newdata=NULL, k=5, sse=FALSE, nboot=100, match.d
   result
 }
 
-crossval.MAT <- function(object, cv.method="lgo", verbose=TRUE, ngroups=10, nboot=100, ...)
+crossval.MAT <- function(object, k=object$k, cv.method="lgo", verbose=TRUE, ngroups=10, nboot=100, ...)
 {
+  if (k < 1 | k > object$k)
+    stop("k out of range")
   METHODS <- c("lgo", "bootstrap")
   cv.method <- pmatch(cv.method, METHODS)
   if (is.na(cv.method))
@@ -233,6 +234,16 @@ print.MAT <- function(x, ...) {
   cat("\n")
 }
 
+residuals.MAT <- function(object, cv=FALSE, ...) {
+  if (cv == FALSE)
+     return (object$x - object$fitted.values)
+  else {
+     if (object$cv.summary$cv.method == "none")
+        stop("Object does not contain cross validation results")
+     return (object$residuals.cv)
+  }
+}
+
 performance.MAT <- function(object, ...) {
   .performance(object, ...)
 }
@@ -282,7 +293,7 @@ plot.MAT <- function(x, resid=FALSE, xval=FALSE, k=5, wMean=FALSE, xlab="", ylab
   }
   if (missing(xlim))
      xlim <- range(xx, x$x)
-  plot(xx, yy, ylim=ylim, xlim=xlim, xlab=xlab, ylab=ylab, las=1)
+  plot(xx, yy, ylim=ylim, xlim=xlim, xlab=xlab, ylab=ylab, las=1, ...)
   if (add.ref) {
      if (resid)
        abline(h=0, col="grey")
@@ -290,16 +301,12 @@ plot.MAT <- function(x, resid=FALSE, xval=FALSE, k=5, wMean=FALSE, xlab="", ylab
        abline(0,1, col="grey")
   }
   if (add.smooth) {
-     lines(lowess(xx, yy))
+     lines(lowess(xx, yy), col="red")
   }
 }
 
 fitted.MAT <- function(object, ...) {
   object$fitted.values
-}
-
-residuals.MAT <- function(object, ...) {
-  object$x - object$fitted.values
 }
 
 screeplot.MAT <- function(x, ...) {

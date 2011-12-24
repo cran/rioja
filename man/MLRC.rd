@@ -35,7 +35,7 @@ MLRC.fit(y, x, n.cut=2, use.glm=FALSE, max.iter=50, lean=FALSE, \dots)
 \method{plot}{MLRC}(x, resid=FALSE, xval=FALSE, xlab="", ylab="", 
       ylim=NULL, xlim=NULL, add.ref=TRUE, add.smooth=FALSE, \dots)
 
-\method{residuals}{MLRC}(object, \dots)
+\method{residuals}{MLRC}(object, cv=FALSE, \dots)
 
 \method{coef}{MLRC}(object, \dots)
 
@@ -62,6 +62,7 @@ MLRC.fit(y, x, n.cut=2, use.glm=FALSE, max.iter=50, lean=FALSE, \dots)
   \item{nboot}{ number of bootstrap samples. }  
   \item{ngroups}{ number of groups in leave-group-out cross-validation, or a vector contain leave-out group menbership. }  
   \item{sse}{ logical indicating that sample specific errors should be calculated. }    
+  \item{cv}{ logical to indicate model or cross-validation residuals. }
   \item{\dots}{ additional arguments. }
 }
 

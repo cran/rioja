@@ -28,7 +28,7 @@ IKFA.fit(y, x, nFact = 5, IsPoly = FALSE, IsRot = TRUE,
 \method{predict}{IKFA} (object, newdata=NULL, sse=FALSE, nboot=100,
       match.data=TRUE, verbose=TRUE, \dots)
 
-communality <- function(object, y)
+communality(object, y)
 
 \method{crossval}{IKFA}(object, cv.method="loo", verbose=TRUE, ngroups=10,
       nboot=100, \dots)
@@ -47,7 +47,7 @@ communality <- function(object, y)
       xlab="", ylab="", ylim=NULL, xlim=NULL, add.ref=TRUE,
       add.smooth=FALSE, \dots)
 
-\method{residuals}{IKFA}(object, \dots)
+\method{residuals}{IKFA}(object, cv=FALSE, \dots)
 
 \method{coef}{IKFA}(object, \dots)
 
@@ -78,6 +78,7 @@ communality <- function(object, y)
   \item{sse}{ logical indicating that sample specific errors should be calculated. }    
   \item{rand.test}{ logical to perform a randomisation t-test to test significance of cross validated factors. } 
   \item{n.perm}{ number of permutations for randomisation t-test. } 
+  \item{cv}{ logical to indicate model or cross-validation residuals. }
   \item{\dots}{ additional arguments. }
 }
 

@@ -13,6 +13,7 @@ extern double atof();
 #include "fmt.h"
 #include "fp.h"
 #include "ctype.h"
+#include "R_ext/Print.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -478,7 +479,9 @@ rd_ed(struct syl *p, char *ptr, ftnlen len)
 	}
 	switch(p->op)
 	{
-	default: fprintf(stderr,"rd_ed, unexpected code: %d\n", p->op);
+	default: 
+/*    fprintf(stderr,"rd_ed, unexpected code: %d\n", p->op); */
+    REprintf("rd_ed, unexpected code: %d\n", p->op);
 		sig_die(f__fmtbuf, 1);
 	case IM:
 	case I: ch = rd_I((Uint *)ptr,p->p1,len, 10);
@@ -528,7 +531,9 @@ rd_ned(struct syl *p)
 {
 	switch(p->op)
 	{
-	default: fprintf(stderr,"rd_ned, unexpected code: %d\n", p->op);
+	default: 
+/*    fprintf(stderr,"rd_ned, unexpected code: %d\n", p->op); */
+    REprintf("rd_ned, unexpected code: %d\n", p->op);
 		sig_die(f__fmtbuf, 1);
 	case APOS:
 		return(rd_POS(p->p2.s));
