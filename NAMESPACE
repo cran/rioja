@@ -96,6 +96,7 @@ S3method(print, C2)
 S3method(print, IKFA)
 S3method(print, LWR)
 S3method(print, MAT)
+S3method(print, MLRC)
 S3method(print, WA)
 S3method(print, WAPLS)
 

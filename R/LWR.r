@@ -187,7 +187,7 @@ predict.LWR <- function(object, newdata=NULL, k=object$k, sse=FALSE, nboot=100, 
   result
 }
 
-crossval.LWR <- function(object, k=object$k, cv.method="loo", verbose=TRUE, ngroups=10, nboot=100, ...)
+crossval.LWR <- function(object, k=object$k, cv.method="loo", verbose=TRUE, ngroups=10, nboot=100, h.cutoff=0, h.dist=NULL, ...)
 {
   if (k < 1 | k > object$k)
     stop("k out of range")
@@ -274,10 +274,10 @@ print.LWR <- function(x, ...) {
   cat("Call   : ")
   print(x$call)
 ##  cat(paste(deparse(x$call), "\n\n"))
-  cat(paste("Distance :", x$dist.method, "\n"))
-  cat(paste("No. samples  :", length(x$x), "\n"))
-  cat(paste("No. species  :", ncol(x$y), "\n"))
-  cat(paste("No. local    :", x$k, "\n"))
+  cat(paste("Distance           :", x$dist.method, "\n"))
+  cat(paste("No. samples        :", length(x$x), "\n"))
+  cat(paste("No. species        :", ncol(x$y), "\n"))
+  cat(paste("No. local          :", x$k, "\n"))
   
   .print.crossval(x)
   cat("\nPerformance:\n")

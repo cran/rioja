@@ -31,7 +31,7 @@ IKFA.fit(y, x, nFact = 5, IsPoly = FALSE, IsRot = TRUE,
 communality(object, y)
 
 \method{crossval}{IKFA}(object, cv.method="loo", verbose=TRUE, ngroups=10,
-      nboot=100, \dots)
+      nboot=100, h.cutoff=0, h.dist=NULL, \dots)
 
 \method{performance}{IKFA}(object, \dots)
 
@@ -75,6 +75,8 @@ communality(object, y)
   \item{verbose}{ logical or integer to show feedback during cross-validaton. If TRUE print feedback every 50 cycles, if integer, use this value. }
   \item{nboot}{ number of bootstrap samples. }  
   \item{ngroups}{ number of groups in leave-group-out cross-validation, or a vector contain leave-out group menbership. }  
+  \item{h.cutoff}{ cutoff for h-block cross-validation. Only training samples greater than \code{h.cutoff} from each test sample will be used. }
+  \item{h.dist}{ distance matrix for use in h-block cross-validation. Usually a matrix of geographical distances between samples. }
   \item{sse}{ logical indicating that sample specific errors should be calculated. }    
   \item{rand.test}{ logical to perform a randomisation t-test to test significance of cross validated factors. } 
   \item{n.perm}{ number of permutations for randomisation t-test. } 

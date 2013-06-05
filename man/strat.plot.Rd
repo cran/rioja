@@ -14,12 +14,14 @@ strat.plot (d, yvar = NULL, scale.percent = FALSE,
     yBottom = 0.07, yTop = 0.8, title = "", cex.title=1.8, 
     y.axis=TRUE, min.width = 5, ylim = NULL, y.rev = FALSE, 
     y.tks=NULL, ylabel = "", cex.ylabel=1, cex.yaxis=1, 
-    xSpace = 0.01, wa.order = "none", plot.line = TRUE, 
+    xSpace = 0.01, x.pc.inc=10, x.pc.lab=TRUE, x.pc.omit0=TRUE,
+    wa.order = "none", plot.line = TRUE,
     col.line = "black", lwd.line = 1, plot.bar = TRUE, 
     lwd.bar = 1, col.bar = "grey", sep.bar = FALSE, 
     plot.poly = FALSE, col.poly = "grey", col.poly.line = "black", 
-    lwd.poly = 1, x.names=NULL, cex.xlabel = 1.1, srt.xlabel=90, 
-    mgp=c(3,.5, 0), cex.axis=.8, clust = NULL, clust.width=0.1, 
+    lwd.poly = 1, plot.symb = FALSE, symb.pch=19, symb.cex=1,
+    x.names=NULL, cex.xlabel = 1.1, srt.xlabel=90, 
+    mgp=NULL, cex.axis=.8, clust = NULL, clust.width=0.1, 
     orig.fig=NULL, add=FALSE, ...)
     
 addZone (x, upper, lower=NULL, ...)
@@ -45,6 +47,9 @@ addClustZone(x, clust, nZone, ...)
   \item{ylabel}{ label for y-axis. }
   \item{cex.ylabel, cex.yaxis}{ text size for y-axis labels and values. }
   \item{xSpace}{ space between graphs, in relative units. }
+  \item{x.pc.inc}{ increment for x-axis values when \code{scale.percent} is TRUE. }
+  \item{x.pc.lab}{ logical to control drawing of x-axis values when \code{scale.percent} is TRUE. }
+  \item{x.pc.omit0}{ logical to omit initial zero x-axis label when \code{scale.percent} is TRUE. }
   \item{wa.order}{ "none", "topleft" or "bottomleft", to sort variables according to the weighted average with y. }
   \item{plot.line, plot.poly, plot.bar}{ logical flags to plot graphs as lines, silhouettes, or bars. }
   \item{col.line, col.poly.line}{ colour of lines and silhouette outlines. Can be a single colour or a vector of colours, one for each graph. }
@@ -54,6 +59,7 @@ addClustZone(x, clust, nZone, ...)
   \item{sep.bar}{ If true, colours in \code{col.bar} are applied to individual bars, otherwise individual graphs. }
   \item{cex.xlabel}{ size of label for variable names. }
   \item{srt.xlabel}{ rotation angle for variable names. }
+  \item{plot.symb, symb.pch, symb.cex}{ logical for plotting symbols and symbol type / size. }
   \item{mgp}{ value of mgp for x-axes.  See \code{par} for details. }
   \item{cex.axis}{ text size for x-axis labels.  See \code{par} for details. }
   \item{clust}{ an constrained classification object of class \code{chclust} to add to plot. }
@@ -102,7 +108,7 @@ windows(width=12, height=7) # quartz() on Mac, X11 on linux
 # remove less abundant taxa
 mx <- apply(RLGH$spec, 2, max)
 spec <- RLGH$spec[, mx > 3]
-depth <- RLGH$depth$Depth
+depth <- RLGH$depths$Depth
 #basic stratigraphic plot
 strat.plot(spec, y.rev=TRUE)
 #scale for percentage data

@@ -41,7 +41,7 @@ Steve Juggins
 \examples{
 data(RLGH)
 spec <- RLGH$spec
-depth <- RLGH$depth$Depth
+depth <- RLGH$depths$Depth
 
 # interpolate new dataset to every 0.5 cm
 # using default method (linear)

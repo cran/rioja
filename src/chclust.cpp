@@ -288,7 +288,7 @@ bool Conslink(int nsam, double **DPtr, double **dend)
    int nclust, *nbit, *least, nlev, ncount;
    char *nsplur;
 
-   int i=0;
+   unsigned int i=0, nsam2;
    double prev;
    diag = new double[nsam+1];
    *dend = new double[nsam+1];
@@ -300,8 +300,9 @@ bool Conslink(int nsam, double **DPtr, double **dend)
 
 /*  Setup parameters   */
    large=0.0;
-   for (i=1;i<nsam;i++) {
-		  diag[i] =  dc(i,i+1);
+   nsam2 = unsigned(nsam);
+   for (i=1;i<nsam2;i++) {
+      diag[i] =  dc(i,i+1);
       nsplur[i]='\\';
       nbit[i]=0;
       large += diag[i];

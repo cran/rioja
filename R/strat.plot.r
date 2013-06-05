@@ -1,11 +1,14 @@
 strat.plot <- function (d, yvar = NULL, scale.percent = FALSE, graph.widths=1, minmax=NULL, scale.minmax = TRUE,
     xLeft = 0.07, xRight = 1, yBottom = 0.07, yTop = 0.8, title = "", cex.title=1.8, y.axis=TRUE,
-    min.width = 5, ylim = NULL, y.rev = FALSE, y.tks=NULL, ylabel = "", cex.ylabel=1, cex.yaxis=1, 
-    xSpace = 0.01, wa.order = "none", plot.line = TRUE, col.line = "black", lwd.line = 1,
+    min.width = 5, ylim = NULL, y.rev = FALSE, y.tks=NULL, ylabel = "", cex.ylabel=1, cex.yaxis=1,
+    xSpace = 0.01, x.pc.inc=10, x.pc.lab=TRUE, x.pc.omit0=TRUE, wa.order = "none", plot.line = TRUE, col.line = "black", lwd.line = 1,
     plot.bar = TRUE, lwd.bar = 1, col.bar = "grey", sep.bar = FALSE, 
-    plot.poly = FALSE, col.poly = "grey", col.poly.line = "black", lwd.poly = 1, x.names=NULL, 
-    cex.xlabel = 1.1, srt.xlabel=90, mgp=c(3,.5, 0), cex.axis=.8, clust = NULL, clust.width=0.1, orig.fig=NULL, add=FALSE, ...)
+    plot.poly = FALSE, col.poly = "grey", col.poly.line = "black", lwd.poly = 1,
+    plot.symb = FALSE, symb.pch=19, symb.cex=1, x.names=NULL,
+    cex.xlabel = 1.1, srt.xlabel=90, mgp=NULL, cex.axis=.8, clust = NULL, clust.width=0.1,
+    orig.fig=NULL, add=FALSE, ...)
 {
+    fcall <- match.call(expand.dots=TRUE)
     if (!is.null(clust)) {
      if (class(clust)[1]!="chclust") 
         stop("clust must be a chclust object")
@@ -29,6 +32,12 @@ strat.plot <- function (d, yvar = NULL, scale.percent = FALSE, graph.widths=1, m
     }
     nsp <- ncol(d)
     nsam <- nrow(d)
+    if (scale.percent==TRUE & length(x.pc.inc) > 1) {
+       if (length(x.pc.inc) != nsp)
+          stop("length of x.pc.inc should equal number of curves")
+    } else {
+       x.pc.inc <- rep(x.pc.inc[1], nsp)
+    }
     if (!is.null(minmax)) {
        if (ncol(minmax) != 2)
           stop("minmax should have 2 columns")
@@ -90,19 +99,31 @@ strat.plot <- function (d, yvar = NULL, scale.percent = FALSE, graph.widths=1, m
          y.tks <- axTicks(2)
       ax <- axis(side = 2, las = 1, at = y.tks, labels = as.character(y.tks), cex.axis=cex.yaxis, xpd=NA)
       x1 <- x1 + xSpace
-      mtext(title, adj = 0, lin = 5, cex = cex.title)
+      mtext(title, adj = 0, line = 5, cex = cex.title)
       mtext(ylabel, side = 2, line = 2.5, cex=cex.ylabel)
     }
     ty <- ifelse(plot.line, "l", "n")
+    tcll <- -.3
+    if ("tcl" %in% names(fcall))
+       tcll <- eval(fcall$tcl)
+    spc <- 0
+    if ("las" %in% names(fcall)) {
+       if ((eval(fcall$las)) == 2)
+          spc = 0.3
+    }
+    figs <- vector("list", length=nsp)
+    usrs <- vector("list", length=nsp)
     for (i in 1:nsp) {
         par(new = TRUE)
         par(lend = "butt")
         if (scale.percent) {
             inc2 <- inc * colM[i]
-#            par(fig = c(x1, x1 + inc2, yStart, yTop))
             par(fig = figCnvt(orig.fig, c(x1, x1 + inc2, yBottom, yTop)))
             plot(0, 0, cex = 0.5, xlim = c(0, colM[i]), axes = FALSE, 
                 xaxs = "i", type = "n", yaxs = "r", ylim = ylim, ...)
+            if (plot.symb) {
+               points(d[, i], yvar, pch=symb.pch, cex=symb.cex, xpd=NA)
+            }
             if (plot.poly) {
                y <- c(min(yvar, na.rm=TRUE), yvar, max(yvar, na.rm=TRUE))
                x <- c(0, d[, i], 0)
@@ -118,11 +139,19 @@ strat.plot <- function (d, yvar = NULL, scale.percent = FALSE, graph.widths=1, m
             lines(c(0, 0), c(min(yvar, na.rm=TRUE), max(yvar, na.rm=TRUE)), ...)
             if (ty == "l") 
                lines(d[, i], yvar, col = cc.line[i], lwd = lwd.line)
-            axis(side = 1, at = seq(0, colM[i], by = 10), labels = FALSE)
+            xlabb <- seq(0, colM[i], by = x.pc.inc[i])
+            if (x.pc.lab) {
+               xlabbt <- as.character(xlabb)
+               if (x.pc.omit0)
+                  xlabbt[1] <- ""
+               mgpX <- if (is.null(mgp)) { c(3,max(0.0, spc-tcll),0) } else { mgp }
+               axis(side = 1, at = xlabb, labels = xlabbt, mgp=mgpX, cex.axis=cex.axis, ...)
+            }
+            else
+               axis(side = 1, at = xlabb, labels = FALSE, ...)
             x1 <- x1 + inc2 + xSpace
         }
         else {
-#            par(fig = c(x1, x1 + inc, yStart, yTop))
             inc2 <- inc * colM[i]
             par(fig = figCnvt(orig.fig, c(x1, min(1, x1 + inc2), yBottom, yTop)))
             if (!is.null(minmax)) {
@@ -134,6 +163,9 @@ strat.plot <- function (d, yvar = NULL, scale.percent = FALSE, graph.widths=1, m
             }
             tks <- axTicks(1)
             us <- par("usr")
+            if (plot.symb) {
+               points(d[, i], yvar, pch=symb.pch, cex=symb.cex, xpd=NA)
+            }
             if (plot.poly) {
                y <- c(min(yvar, na.rm=TRUE), yvar, max(yvar, na.rm=TRUE))
                x <- c(us[1], d[, i], us[1])
@@ -150,42 +182,48 @@ strat.plot <- function (d, yvar = NULL, scale.percent = FALSE, graph.widths=1, m
                 ...)
             if (ty == "l") 
                 lines(d[, i], yvar, col = cc.line[i], lwd = lwd.line)
+            mgpX <- if (is.null(mgp)) { c(3, max(0.0, spc-tcll),0) } else { mgp }
             if (scale.minmax) {
-                nn <- length(axTicks(1))
-                tk <- c(axTicks(1)[1], axTicks(1)[nn])
-                axis(side = 1, at = tk, labels = as.character(tk), 
-                  las = 2, cex.axis=cex.axis, mgp=c(3,.8,0), ...)
+               nn <- length(axTicks(1))
+               tk <- c(axTicks(1)[1], axTicks(1)[nn])
+               axis(side = 1, at = tk, labels = as.character(tk), cex.axis=cex.axis, mgp=mgpX, ...)
             }
             else {
-                axis(side = 1, las = 2, cex.axis=cex.axis, mgp=c(3,.8,0), ...)
+               axis(side = 1, cex.axis=cex.axis, mgp=mgpX, ...)
             }
             x1 <- x1 + inc2 + xSpace
         }
-        tks1 <- axTicks(1)
+#        tks1 <- axTicks(1)
+        usr2 <- par("usr")
+        tks1 <- usr2[1]
+
         r <- (usr1[4] - usr1[3]) * 0.01
         pos <- usr1[4]+r
         if (y.rev)
            pos <- usr1[4]-r
-        text(tks1[1], pos, labels=x.names[i], adj = c(0, 1), srt=srt.xlabel, cex = cex.xlabel, xpd=NA)
+        if (srt.xlabel < 90)
+           text(tks1[1], pos, labels=x.names[i], adj = c(0, 0), srt=srt.xlabel, cex = cex.xlabel, xpd=NA)
+        else
+           text(tks1[1], pos, labels=x.names[i], adj = c(0, 1), srt=srt.xlabel, cex = cex.xlabel, xpd=NA)
+           
+        usrs[[i]] <- usr2   
+        figs[[i]] <- par("fig")
     }
     if (!is.null(clust)) {
-#        par(fig = c(x1, 1, yStart, yTop))
         par(fig = figCnvt(orig.fig, c(x1, xRight+clust.width, yBottom, yTop)))
         par(mar=c(0,0,0,0))
         par(new = TRUE)
 #        plot(clust, horiz = TRUE, xaxt.rev=yaxt.rev, leaflab = "none", cex.axis = 0.5, yaxt.rev=TRUE)
 #        if(y.rev)
 #           clust <- rev(clust)
-
-        plot(clust, xvar=yvar, horiz=TRUE, x.rev=y.rev, labels=rep("", length(yvar)), hang=-1, mgp=mgp, cex.axis=cex.axis, ...)
-
-#        plot(clust, horiz = TRUE, leaflab = "none", cex.axis = 0.5, yaxt.rev=TRUE)
+        mgpX <- if (is.null(mgp)) { c(2, .5, 0) } else { mgp }
+        plot(clust, xvar=yvar, horiz=TRUE, x.rev=y.rev, labels=rep("", length(yvar)), hang=-1, mgp=mgpX, cex.axis=cex.axis, ...)
     }
     par(mai = oldmai)
+    oldfig[oldfig < 0] <- 0
     par(fig = oldfig)
-    ll <- list(box=c(xLeft=xLeft, xRight=xRight, yBottom=yBottom, yTop=yTop), usr = usr1, yvar=yvar, ylim=ylim, y.rev=y.rev)
+    ll <- list(call=fcall, box=c(xLeft=xLeft, xRight=xRight, yBottom=yBottom, yTop=yTop), usr = usr1, yvar=yvar, ylim=ylim, y.rev=y.rev, figs=figs, usrs=usrs)
     invisible(ll)
-    
 }
 
 addZone <- function(x, upper, lower=NULL, ...) {

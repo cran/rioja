@@ -150,8 +150,8 @@ predict.internal.WA <- function(object, y, lean=FALSE, ...) {
 	xHat
 }
 
-crossval.WA <- function(object, cv.method="loo", verbose=TRUE, ngroups=10, nboot=100, ...) {
-  .crossval(object=object, cv.method=cv.method, verbose=verbose, ngroups=ngroups, nboot=nboot, ...)
+crossval.WA <- function(object, cv.method="loo", verbose=TRUE, ngroups=10, nboot=100, h.cutoff=0, h.dist=NULL, ...) {
+  .crossval(object=object, cv.method=cv.method, verbose=verbose, ngroups=ngroups, nboot=nboot, h.cutoff=h.cutoff, h.dist=h.dist, ...)
 }
 
 predict.WA <- function(object, newdata=NULL, sse=FALSE, nboot=100, match.data=TRUE, verbose=TRUE, ...) {
@@ -163,10 +163,11 @@ print.WA <- function(x, ...)
   cat("\n")
   cat("Method : Weighted Averaging\n")
   cat("Call   : ")
-  cat(paste(deparse(x$call), "\n\n"))
-  cat(paste("Tolerance DW :", ifelse(x$tolDW, "Yes", "No"), "\n"))
-  cat(paste("No. samples  :", length(x$x), "\n"))
-  cat(paste("No. species  :", nrow(x$coefficients), "\n"))
+  cat(paste(deparse(x$call.print), "\n\n"))
+  cat(paste("Tolerance DW       :", ifelse(x$tolDW, "Yes", "No"), "\n"))
+  cat(paste("Monotonic deshrink :", ifelse(x$mono, "Yes", "No"), "\n"))
+  cat(paste("No. samples        :", length(x$x), "\n"))
+  cat(paste("No. species        :", nrow(x$coefficients), "\n"))
   .print.crossval(x)
   cat("Deshrinking regression coefficients:\n")
   print(round(x$deshrink.coefficients, 4))

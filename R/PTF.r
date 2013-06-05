@@ -25,11 +25,13 @@ performance.default <- function(object, ...) {
 
 .print.crossval <- function(object) {
   if (object$cv.summary$cv.method == "none" | object$cv.summary$cv.method == "loo")
-    cat(paste("Cross val.   :", object$cv.summary$cv.method, "\n\n"))
+    cat(paste("Cross val.         :", object$cv.summary$cv.method, "\n\n"))
   else if (object$cv.summary$cv.method == "lgo")
-    cat(paste("Cross val.   :", object$cv.summary$cv.method, ": no. groups = ", object$cv.summary$ngroups , "\n\n"))
+    cat(paste("Cross val.         :", object$cv.summary$cv.method, ": no. groups = ", object$cv.summary$ngroups , "\n\n"))
   else if (object$cv.summary$cv.method == "bootstrap")
-    cat(paste("Cross val.   :", object$cv.summary$cv.method, ": no. boot cycles = ", object$cv.summary$nboot , "\n\n"))
+    cat(paste("Cross val.         :", object$cv.summary$cv.method, ": no. boot cycles = ", object$cv.summary$nboot , "\n\n"))
+  else if (object$cv.summary$cv.method == "h-block")
+    cat(paste("Cross val.         :", object$cv.summary$cv.method, ": h-block cutoff = ", object$cv.summary$h.cutoff , "\n\n"))
 }
 
 .print.performance <- function(object, ...) {
@@ -48,8 +50,10 @@ performance.default <- function(object, ...) {
   R2 <- apply(object$fitted.values, 2, .r2, x=object$x)
   Avg.Bias <- apply(residuals(object), 2, mean, na.rm=TRUE)
   Max.Bias <- apply(residuals(object), 2, .max.bias, x=object$x)
-  res <- cbind(RMSE, R2, Avg.Bias, Max.Bias)
-  result <- list(object=res)
+  Skill <- 100 * (1.0 - apply((object$x - object$fitted)^2, 2, sum) / sum((object$x - mean(object$x))^2) )
+  RMSE0 <- sqrt(mean((mean(object$x)-object$x)^2))
+  res <- cbind(RMSE, R2, Avg.Bias, Max.Bias, Skill)
+  result <- list(RMSE0=RMSE0, object=res)
   if (object$cv.summary$cv.method != "none") {
     if (object$cv.summary$cv.method == "bootstrap")
       RMSE <- object$cv.summary$RMSE.boot
@@ -58,7 +62,8 @@ performance.default <- function(object, ...) {
     R2 <- apply(object$predicted, 2, .r2, x=object$x)
     Avg.Bias <- apply(object$x - object$predicted, 2, mean, na.rm=TRUE)
     Max.Bias <- apply(object$x - object$predicted, 2, .max.bias, x=object$x)
-    result.cv <- cbind(RMSE, R2, Avg.Bias, Max.Bias)
+    Skill <- 100 * (1.0 - apply((object$x - object$predicted)^2, 2, sum) / sum((object$x - mean(object$x))^2))
+    result.cv <- cbind(RMSE, R2, Avg.Bias, Max.Bias, Skill)
     result$crossval <- result.cv
   }
   result
@@ -149,11 +154,11 @@ performance.default <- function(object, ...) {
   results
 }
 
-.crossval <- function(object, cv.method="loo", ngroups=10, nboot=100, verbose=TRUE, ...) 
+.crossval <- function(object, cv.method="loo", ngroups=10, nboot=100, verbose=TRUE, h.cutoff=0, h.dist, ...) 
 {
   if (!("y" %in% names(object)))
     stop("Object does not contain species data, refit object using option lean=FALSE")
-  METHODS <- c("loo", "lgo", "bootstrap")
+  METHODS <- c("loo", "lgo", "bootstrap", "h-block")
   cv.method <- pmatch(cv.method, METHODS)
   if (is.na(cv.method))
      stop("Unknown cross-validation method")
@@ -226,13 +231,51 @@ performance.default <- function(object, ...) {
             cat (paste("Bootstrap sample", i, "\n"))
             flush.console()
           }
-      }
+       }
     }
     result <- apply(res2, c(1,2), mean, na.rm=TRUE)
     MS <- apply((object$x-res2)^2, c(1,2), mean, na.rm=TRUE)
     RMSE.boot <- sqrt(apply(MS, 2, mean, na.rm=TRUE))
     object$cv.summary$nboot=nboot
     object$cv.summary$RMSE.boot <- RMSE.boot
+  } 
+  if (cv.method == 4) {
+    if (is.null(h.dist))
+       stop("h-block cross-validation requested but h.dist is null") 
+    h.dist <- as.matrix(h.dist)  
+    if (nrow(h.dist) != ncol(h.dist))
+       stop("h.dist doesn't look like a matrix of inter-site distances") 
+    if (nrow(h.dist) != nsam) 
+       stop(paste("Number of rows in h.dist (", nrow(h.dist), ") not equal to number of samples (", nsam, ")", sep="")) 
+    nSamp <- vector("numeric", length=nsam)
+    for (i in 1:nsam) {
+       d <- h.dist[i, ]  
+       sel <- d > h.cutoff
+       y <- object$y[sel, , drop=FALSE]
+       nSamp[i] <- nrow(y)
+       if (nSamp[i] > 0) {
+          keep <- abs(apply(y, 2, max)) > 0
+          y <- y[, keep]
+          x <- object$x[sel]
+          y.test <- object$y[i, keep, drop=FALSE]
+          mod <- eval(call)
+          xHat <- do.call(predict.func, args=list(object=quote(mod), y=quote(y.test), lean=TRUE, ...))
+          result[i, ] <- xHat
+       } else {
+          nmiss <- nmiss + 1
+       }
+       if (verbose) {
+          if (i %% feedback == 0) {
+            cat (paste("h-block sample", i, "\n"))
+            flush.console()
+          }
+       }
+    }
+    if (sum(nSamp < 1) > 0) {
+       warning(paste(nmiss, "samples had no training samples with distance greater than ", h.cutoff, " and have not been predicted"))
+    }
+    object$n.h.block <- nSamp
+    object$cv.summary$h.cutoff=h.cutoff
   } 
   colnames(result) <- colnames(object$fitted.values)
   rownames(result) <- rownames(object$fitted.values)

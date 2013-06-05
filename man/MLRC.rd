@@ -24,7 +24,7 @@ MLRC.fit(y, x, n.cut=2, use.glm=FALSE, max.iter=50, lean=FALSE, \dots)
       match.data=TRUE, verbose=TRUE, \dots)
 
 \method{crossval}{MLRC}(object, cv.method="loo", verbose=TRUE, ngroups=10,
-      nboot=100, \dots)
+      nboot=100, h.cutoff=0, h.dist=NULL, \dots)
 
 \method{performance}{MLRC}(object, \dots)
 
@@ -61,6 +61,8 @@ MLRC.fit(y, x, n.cut=2, use.glm=FALSE, max.iter=50, lean=FALSE, \dots)
   \item{verbose}{ logical or integer to show feedback during cross-validaton. If TRUE print feedback every 50 cycles, if integer, use this value. }
   \item{nboot}{ number of bootstrap samples. }  
   \item{ngroups}{ number of groups in leave-group-out cross-validation, or a vector contain leave-out group menbership. }  
+  \item{h.cutoff}{ cutoff for h-block cross-validation.  Only training samples greater than \code{h.cutoff} from each test sample will be used. }
+  \item{h.dist}{ distance matrix for use in h-block cross-validation.  Usually a matrix of geographical distances between samples. }
   \item{sse}{ logical indicating that sample specific errors should be calculated. }    
   \item{cv}{ logical to indicate model or cross-validation residuals. }
   \item{\dots}{ additional arguments. }
@@ -77,7 +79,6 @@ Function \code{predict} predicts values of the environemntal variable for \code{
 \value{
 Function \code{MLRC} returns an object of class \code{MLRC} with the following named elements:
 
-To do
 
 Function \code{crossval} also returns an object of class \code{MLRC} and adds the following named elements:
 \item{predicted}{ predicted values of each training set sample under cross-validation. }

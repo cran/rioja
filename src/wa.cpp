@@ -7,11 +7,14 @@
    #define max(a,b) ((a)>(b)?(a):(b))
 #endif
 
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+
 extern "C" {
 /*
 __declspec(dllexport) 
 */
-SEXP WA_fit(SEXP sexp_SpecData, SEXP sexp_EnvData, SEXP sexp_MinTol, SEXP sexp_Lean)
+
+   SEXP WA_fit(SEXP sexp_SpecData, SEXP sexp_EnvData, SEXP sexp_MinTol, SEXP sexp_Lean)
 {
    SEXP dims, retNames=R_NilValue;
    dims = Rf_getAttrib(sexp_SpecData, R_DimSymbol);

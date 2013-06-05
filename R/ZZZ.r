@@ -1,6 +1,6 @@
 .onAttach <- function(lib, pkg)  {
     packageStartupMessage("This is rioja ",
-    utils::packageDescription("rioja", field="Version"), appendLF = TRUE)
+    utils::packageDescription("rioja", fields="Version"), appendLF = TRUE)
 }
 
 .onUnload <- function(libpath)

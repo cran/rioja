@@ -57,7 +57,7 @@ result
 write.list.Excel(result, "Comparison.xls")
 
 #visualise the comparison
-plot.compare.datasets(result, RLGH$spec)
+plot(result, RLGH$spec)
 }
 }
 \keyword{ utilities }

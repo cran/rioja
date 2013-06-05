@@ -12,6 +12,8 @@
 #include "mat.h"
 #include "mlrc.h"
 
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+
 #define LOGITTOL 1.0E-12
 
 double *pcom = 0, *xicom = 0;
@@ -78,6 +80,7 @@ extern "C" {
          IBeta(i) = logit(x2, sp, bhat, mmxinv, LOGITTOL, maxiter);
       }
       catch (char *ex) {
+         REprintf("\n%s\n", ex);
          IBeta(i) = -4;
       }
       if (IBeta(i) > -1 && IBeta(i) < maxiter) {
@@ -130,7 +133,8 @@ int logit(dMat &x, dMat &y, dMat &bhat, dMat &mmxinv, double tol, int maxiter)
     try {
       mmxinv = ((x).tproduct(x*p)).inverse(errorflag);
     }
-    catch (char *e) {
+    catch (const char *e) {
+       REprintf("\n%s\n", e);
        errorflag = 3;
     }
     if (errorflag)
@@ -203,7 +207,8 @@ SEXP MLRC_predict(SEXP sexp_SpecData, SEXP sexp_Beta, SEXP sexp_meanX)
       try {
           powell(p, xi, nDimen, FTOL, &iter, &fret, beta, sp, calib_func);
        }
-       catch (char *) {
+       catch (const char *e) {
+          REprintf("\n%s\n", e);
           retval = TRUE;
        }
        if (retval) {

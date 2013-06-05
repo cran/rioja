@@ -4,10 +4,13 @@ WAPLS <- function(y, x, npls=5, iswapls=TRUE, standx=FALSE, lean=FALSE, check.da
   if (!is.null(dim(x)))
      x <- x[, 1]
   if (check.data) {
-    if (any(apply(y, 1, sum) < 1.0E-8))
-       stop(paste("Species data have zero abundaces for the following rows:", paste(which(apply(y, 1, sum) < 1.0E-8), collapse=",")))
-    if (any(apply(y, 2, sum) < 1.0E-8))
-       stop(paste("Species data have zero abundaces for the following columns:", paste(which(apply(y, 2, sum) < 1.0E-8), collapse=",")))
+    if (iswapls & any(y < 0)) {
+       stop("Negative values in species data not allowed for WAPLS")
+    }
+    if (any(abs(apply(y, 1, max)) < 1.0E-8))
+       stop(paste("Species data have zero abundances for the following rows:", paste(which(abs(apply(y, 1, max)) < 1.0E-8), collapse=",")))
+    if (any(abs(apply(y, 2, max)) < 1.0E-8))
+       stop(paste("Species data have zero abundances for the following columns:", paste(which(abs(apply(y, 2, max)) < 1.0E-8), collapse=",")))
   }
   model <- WAPLS.fit(y,x,npls, iswapls, standx, lean)
   xHat <- predict.internal.WAPLS(model, y, lean)
@@ -27,11 +30,15 @@ WAPLS.fit <- function(y, x, npls=5, iswapls=TRUE, standx=FALSE, lean=FALSE)
   x <- as.numeric(x)
   result <- .Call("WAPLS_fit", y, x, as.integer(npls), as.integer(iswapls), as.integer(standx), as.integer(lean), PACKAGE="rioja")
   beta <- matrix(result$Beta, nrow=ncol(y))
+  if (ncol(beta) == 0)
+     stop("Components could not be extracted, please check data")
+  if (ncol(beta) != npls)
+     warning(paste("Only", ncol(beta), "components could be extracted"))
   if (!lean) {
     rownames(beta) <- colnames(y)
-    colnames(beta) <- paste("Comp", formatC(1:ncol(beta), width=2, flag="0"), sep="")
     if (ncol(beta) != npls)
        warning(paste("Only", ncol(beta), "components could be extracted"))
+    colnames(beta) <- paste("Comp", formatC(1:ncol(beta), width=2, flag="0"), sep="")
   }
   ret <- list(coefficients=beta, meanY=result$meanY, iswapls=iswapls)
   if (!lean) {
@@ -71,8 +78,8 @@ predict.WAPLS <- function(object, newdata=NULL, sse=FALSE, nboot=100, match.data
   .predict(object=object, newdata=newdata, sse=sse, nboot=nboot, match.data=match.data, verbose=verbose, ...)
 }
 
-crossval.WAPLS <- function(object, cv.method="loo", verbose=TRUE, ngroups=10, nboot=100, ...) {
-  .crossval(object=object, cv.method=cv.method, verbose=verbose, ngroups=ngroups, nboot=nboot, ...)
+crossval.WAPLS <- function(object, cv.method="loo", verbose=TRUE, ngroups=10, nboot=100, h.cutoff=0, h.dist=NULL, ...) {
+  .crossval(object=object, cv.method=cv.method, verbose=verbose, ngroups=ngroups, nboot=nboot, h.cutoff=h.cutoff, h.dist=h.dist, ...)
 }
 
 performance.WAPLS <- function(object, ...) {
@@ -85,8 +92,9 @@ print.WAPLS <- function(x, ...)
   cat("Method : Weighted Averaging Partial Least Squares\n")
   cat("Call   : ")
   cat(paste(deparse(x$call.print), "\n\n"))
-  cat(paste("No. samples  :", length(x$x), "\n"))
-  cat(paste("No. species  :", nrow(x$coefficients), "\n"))
+  cat(paste("No. samples        :", length(x$x), "\n"))
+  cat(paste("No. species        :", nrow(x$coefficients), "\n"))
+  cat(paste("No. components     :", ncol(x$fitted.values), "\n"))
   .print.crossval(x)
   cat("\nPerformance:\n")
   .print.performance(x)
@@ -216,24 +224,24 @@ rand.t.test.WAPLS <- function(object, n.perm=999, ...)
   if (object$npls < 2)
      stop("Only one component - nothing to test.")
   npls <- nrow(p$crossval)
-  delta <- diff(p$crossval[, 1]) / p$crossval[1:(npls-1)] * 100
-  e <- object$residuals.cv
+  delta <- diff(p$crossval[, 1]) / p$crossval[1:(npls-1), 1] * 100
+  e0 <- object$x - mean(object$x)
+  delta <- c((p$crossval[1, 1]-p$RMSE)/p$RMSE*100, delta)
+  e <- cbind(e0, object$residuals.cv)
   t.res <- vector("numeric",npls)
-  t.res[] <- NA
-  for (i in 2:npls) {
-    d <- e[, i-1]^2 - e[, i]^2
-    t.obs <- mean(d, na.rm=TRUE)
-    t.sum <- 0
+  t <- vector("numeric",n.perm+1)
+#  t.res[] <- NA
+  n <- nrow(e)
+  for (i in 1:npls) {
+    d <- e[, i]^2 - e[, i+1]^2
+    t[1] <- mean(d, na.rm=TRUE)
     for (j in 1:n.perm) {
-      rnd <- sample(c(TRUE, FALSE), 100, replace=TRUE)
-      d2 <- ifelse(rnd, abs(d), -abs(d))
-      t <- mean(d2, na.rm=TRUE)
-      if (t >= t.obs)
-         t.sum <- t.sum + 1
+      sig <- 2 * rbinom(n, 1, 0.5) - 1
+      t[j+1] <- mean(d * sig, na.rm=TRUE)
     }
-    t.res[i] <- t.sum / (n.perm+1)
+    t.res[i] <- sum(t >= t[1]) / (n.perm+1)
   }
-  result <- cbind(p$crossval, delta.RMSE=c(NA, delta), p=t.res)
+  result <- cbind(p$crossval, delta.RMSE=delta, p=t.res)
   result
 }
 

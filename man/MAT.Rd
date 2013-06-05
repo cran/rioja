@@ -26,7 +26,7 @@ MAT(y, x, dist.method="sq.chord", k=5, lean=TRUE)
 \method{performance}{MAT}(object, \dots)
 
 \method{crossval}{MAT}(object, k=object$k, cv.method="lgo", 
-        verbose=TRUE, ngroups=10, nboot=100, \dots)
+        verbose=TRUE, ngroups=10, nboot=100, h.cutoff=0, h.dist=NULL, \dots)
 
 \method{print}{MAT}(x, \dots)
 
@@ -65,6 +65,8 @@ paldist2(y1, y2, dist.method="sq.chord")
   \item{verbose}{ logical or integer to show feedback during cross-validaton. If TRUE print feedback every 50 cycles, if integer, use this value. }
   \item{nboot}{ number of bootstrap samples. }  
   \item{ngroups}{ number of groups in leave-group-out cross-validation, or a vector contain leave-out group menbership. }  
+  \item{h.cutoff}{ cutoff for h-block cross-validation.  Only training samples greater than \code{h.cutoff} from each test sample will be used. }
+  \item{h.dist}{ distance matrix for use in h-block cross-validation.  Usually a matrix of geographical distances between samples. }
   \item{sse}{ logical indicating that sample specific errors should be calculated. }  
   \item{full}{ logical to indicate a full or abbreviated summary. }
   \item{cv}{ logical to indicate model or cross-validation residuals. }

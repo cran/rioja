@@ -24,26 +24,39 @@ MLRC <- function(y, x, check.data=TRUE, lean=FALSE, ...)
 
 MLRC.fit <- function(y, x, n.cut=2, use.glm = FALSE, max.iter=50, lean=FALSE, ...)
 { 
+  glr <- function(x, e) {
+    gfit <- glm.fit(e, x, family = quasibinomial(link=logit), ...)
+    if (gfit$converged)
+       return(gfit$coefficients)
+    else
+       return(c(NA, NA, NA))
+  }
+  skip <- colSums(y > 0) < n.cut
   if (use.glm) {
-    glr <- function(x, e) {
-	 	   gfit <- glm(x ~ e + I(e^2), family = quasibinomial(link=logit), ...)
-	 	   if (gfit$converged)
-		      return(gfit$coefficients)
-       else
-          return(c(NA, NA, NA))
-    }
-	  beta <- apply(y, 2, glr, e=x)
+#    glr <- function(x, e) {
+#	 	   gfit <- glm(x ~ e + I(e^2), family = quasibinomial(link=logit), ...)
+#	 	   if (gfit$converged)
+#		      return(gfit$coefficients)
+#      else
+#          return(c(NA, NA, NA))
+#    }
+    lp <- cbind(rep(1, nrow(y)), x, x^2)
+	  beta <- apply(y[, !skip], 2, glr, e=lp)
+    BETA <- matrix(NA, nrow = 3, ncol = ncol(y))
+    BETA[, !skip] <- beta
     rownames(beta) <- c("b0", "b1", "b2")
-	  return (list(coefficients=t(beta), meanX=mean(x, na.rm=TRUE)))
+	  return (list(coefficients=t(BETA), meanX=mean(x, na.rm=TRUE)))
   } else {
-     res <- .Call("MLRC_regress", as.matrix(y), as.matrix(x), as.integer(max.iter), NAOK=TRUE, PACKAGE="rioja")  
-     beta <- matrix(res$Beta, ncol=3)
-     rownames(beta) <- colnames(y)
-     colnames(beta) <- c("b0", "b1", "b2")
-     n <- colSums(y>0)
-     if (any(n < n.cut))
-        beta[n < n.cut, ] <- NA
-     list(coefficients=beta, meanX=mean(x, na.rm=TRUE), IBeta=res$IBeta, n.cut=n.cut)
+    res <- .Call("MLRC_regress", as.matrix(y[, !skip]), as.matrix(x), as.integer(max.iter), NAOK=TRUE, PACKAGE="rioja")  
+    beta <- matrix(res$Beta, ncol=3)
+    BETA <- matrix(NA, ncol = 3, nrow = ncol(y))
+    BETA[!skip, ] <- beta
+    IBETA <- vector("integer", length=ncol(y))
+    IBETA[] <- NA
+    IBETA[!skip] <- res$IBeta
+    rownames(BETA) <- colnames(y)
+    colnames(BETA) <- c("b0", "b1", "b2")
+    list(coefficients=BETA, meanX=mean(x, na.rm=TRUE), IBeta=IBETA, n.cut=n.cut)
   }
 }
 
@@ -52,7 +65,7 @@ predict.internal.MLRC <- function(object, y, lean=FALSE, ...)
 {
 	coef <- object$coefficients
 	if (!lean) {
-	   if (nrow(object$coef) != ncol(y))
+	   if (nrow(object$coefficients) != ncol(y))
 	      stop("Number of columns different in y, beta in predict.internal.MLRC")
 	}
   xHat <- .Call("MLRC_predict", as.matrix(y), as.matrix(object$coefficients), as.double(object$meanX), NAOK=TRUE, PACKAGE="rioja")
@@ -62,8 +75,8 @@ predict.internal.MLRC <- function(object, y, lean=FALSE, ...)
   xHat
 }
 
-crossval.MLRC <- function(object, cv.method="loo", verbose=TRUE, ngroups=10, nboot=100, ...) {
-  .crossval(object=object, cv.method=cv.method, verbose=verbose, ngroups=ngroups, nboot=nboot, ...)
+crossval.MLRC <- function(object, cv.method="loo", verbose=TRUE, ngroups=10, nboot=100, h.cutoff=0, h.dist=NULL, ...) {
+  .crossval(object=object, cv.method=cv.method, verbose=verbose, ngroups=ngroups, nboot=nboot, h.cutoff=h.cutoff, h.dist=h.dist, ...)
 }
 
 predict.MLRC <- function(object, newdata=NULL, sse=FALSE, nboot=100, match.data=TRUE, verbose=TRUE, ...) {
@@ -83,8 +96,8 @@ print.MLRC <- function(x, ...)
   cat("Method : Maximum Likelihood using Response Curves \n")
   cat("Call   : ")
   cat(paste(deparse(x$call.print), "\n\n"))
-  cat(paste("No. samples  :", length(x$x), "\n"))
-  cat(paste("No. species  :", nrow(x$coefficients), "\n"))
+  cat(paste("No. samples        :", length(x$x), "\n"))
+  cat(paste("No. species        :", nrow(x$coefficients), "\n"))
   .print.crossval(x)
   cat("\nPerformance:\n")
   .print.performance(x)

@@ -94,8 +94,8 @@ predict.internal.IKFA <- function(object, y, lean=FALSE, ...)
   xHat
 }
 
-crossval.IKFA <- function(object, cv.method="loo", verbose=TRUE, ngroups=10, nboot=100, ...) {
-  .crossval(object=object, cv.method=cv.method, verbose=verbose, ngroups=ngroups, nboot=nboot, ...)
+crossval.IKFA <- function(object, cv.method="loo", verbose=TRUE, ngroups=10, nboot=100, h.cutoff=0, h.dist=NULL, ...) {
+  .crossval(object=object, cv.method=cv.method, verbose=verbose, ngroups=ngroups, nboot=nboot, h.cutoff=h.cutoff, h.dist=h.dist, ...)
 }
 
 predict.IKFA <- function(object, newdata=NULL, sse=FALSE, nboot=100, match.data=TRUE, verbose=TRUE, ...) {
@@ -108,8 +108,8 @@ print.IKFA <- function(x, ...)
   cat("Method : Imbrie & Kipp Factor Analysis\n")
   cat("Call   : ")
   cat(paste(deparse(x$call.print), "\n\n"))
-  cat(paste("No. samples  :", length(x$x), "\n"))
-  cat(paste("No. species  :", nrow(x$V), "\n"))
+  cat(paste("No. samples        :", length(x$x), "\n"))
+  cat(paste("No. species        :", nrow(x$V), "\n"))
   .print.crossval(x)
   cat("\nPerformance:\n")
   .print.performance(x)

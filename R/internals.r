@@ -1,6 +1,6 @@
 .max.bias <- function(resi, x, ng = 10) {
 	t2 <- range(x)
-	MB <- tapply(resi, cut(x, seq(from = t2[1], to = t2[2], length = ng+1), include.lowest=TRUE), mean)
+	MB <- tapply(resi, cut(x, seq(from = t2[1], to = t2[2], length.out = ng+1), include.lowest=TRUE), mean)
   max(abs(MB), na.rm = TRUE)
 }
 

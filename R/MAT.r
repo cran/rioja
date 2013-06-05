@@ -139,7 +139,7 @@ predict.MAT <- function(object, newdata=NULL, k=object$k, sse=FALSE, nboot=100, 
   result
 }
 
-crossval.MAT <- function(object, k=object$k, cv.method="lgo", verbose=TRUE, ngroups=10, nboot=100, ...)
+crossval.MAT <- function(object, k=object$k, cv.method="lgo", verbose=TRUE, ngroups=10, nboot=100, h.cutoff=0, h.dist=NULL, ...)
 {
   if (k < 1 | k > object$k)
     stop("k out of range")
@@ -226,8 +226,8 @@ print.MAT <- function(x, ...) {
   cat("Call   : ")
   cat(paste(deparse(x$call), "\n\n"))
   cat(paste("Distance :", x$dist.method, "\n"))
-  cat(paste("No. samples  :", length(x$x), "\n"))
-  cat(paste("No. species  :", ncol(x$y), "\n"))
+  cat(paste("No. samples        :", length(x$x), "\n"))
+  cat(paste("No. species        :", ncol(x$y), "\n"))
   .print.crossval(x)
   cat("\nPerformance:\n")
   .print.performance(x)
@@ -337,6 +337,9 @@ screeplot.MAT <- function(x, ...) {
 # 17   " Ochiai Coefficient          ",
 # 18   " Edwards Chord               ",
 # 19   " Overpeck Sq Chord Dist      ",
+
+
+# TO DO - Fix problem calling paldist with integer data.
 
 paldist <- function(y, dist.method="sq.chord") {
    METHODS <- c("euclidean", "sq.euclidean", "chord", "sq.chord", "chord.t", "sq.chord.t", "chi.squared", "sq.chi.squared", "bray")

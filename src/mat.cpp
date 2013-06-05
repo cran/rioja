@@ -903,8 +903,8 @@ void dMat::fill(double f)
    }
 }
 
-char mes1[] = "\nError: Cannot deleteRows - fMat has references";
-char mes2[] = "\nError: Out of memory in fMat";
+const char mes1[] = "\nError: Cannot deleteRows - fMat has references";
+const char mes2[] = "\nError: Out of memory in fMat";
 
 int dMat::deleteRows(char *ii)
 {

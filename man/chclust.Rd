@@ -68,7 +68,7 @@ plot(clust, hang=-1)
 # Rotated through 90 degrees
 plot(clust, hang=-1, horiz=TRUE)
 # Rotated and observations plotted according to sample depth.
-plot(clust, xvar=RLGH$depth$Depth, hang=-1, horiz=TRUE, x.rev=TRUE)
+plot(clust, xvar=RLGH$depths$Depth, hang=-1, horiz=TRUE, x.rev=TRUE)
 
 # Conslink for comparison
 clust <- chclust(diss, method = "conslink")
