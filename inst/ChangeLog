@@ -1,5 +1,12 @@
 rioja Change Log
 
+Version 0.8-4
+* Released on CRAN 09/07/13
+Fixed numerous small bugs
+Added h-block cross-validation to function crossval
+Improvements to strat.plot
+Updated help files
+
 Version 0.7-3
 * Released on CRAN 05/01/12
 Fixed numerous small bugs
@@ -19,7 +26,7 @@ Fixed bug in help file (WA example) pointed out by Sven Adler
 Version 0.5-4
 * Not released on CRAN
 Fixed bug in WAPLS CPP & R code that crashed R with PLS (identified by Richard Telford) 
-Fixed bug in WAPLS R code that incorrectly calculated predicted values with standx=TRUE 
+Fixed bug in WAPLS R code that incorrectly calculated predicted values with standX=TRUE 
 	
 Version 0.5-3
 * Released on CRAN, 12/8/09

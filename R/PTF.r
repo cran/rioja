@@ -189,7 +189,7 @@ performance.default <- function(object, ...) {
   } 
   if (cv.method == 2) {
     if (length(ngroups) > 1) {
-       grps <- ngroups
+       grps <- as.integer(ngroups)
        ngroups <- length(unique(ngroups))
        o <- 1:nsam
     }

@@ -1,10 +1,10 @@
-7bbc67263cd0db2ad5e068783615ed82 *DESCRIPTION
+1aa6297fac37e29a4328c2b7b33a094c *DESCRIPTION
 00fe6d10496b204e37f5266a220fd587 *NAMESPACE
 c33bf4d76aee5c7ca82cfaff1afafa6f *R/IKFA.r
 47753529b3c60b0014e86cd5a6720076 *R/LWR.r
 d0fa0054b8391628e42198d509bbe6dc *R/MAT.r
 263a33d5cf833b72b7c11190d290b4e2 *R/MLRC.r
-641dada92e462d7c961e24225a6ce54e *R/PTF.r
+1973eac01df834eb5688773766b7acad *R/PTF.r
 f9b307600769bef80c9f0b81f1fa1872 *R/WA.r
 3a4361a01f05a6e12eebddb5a0d38a0a *R/WAPLS.r
 c832434eb03136b175a5ab0d135b4afe *R/bstick.r
@@ -28,7 +28,7 @@ fa04502573754703f05f42dd3a46a297 *data/RLGH.rda
 5b51a6e4cc4f90ccdd5f2106587d1632 *data/aber.rda
 8f3d0d3592a9fbbf781d3cd47d3cf77a *inst/CITATION
 69050a96ceba743cad67709120a91f26 *inst/COPYING
-3f3aa0a2744e64c98a0396520e3afe90 *inst/ChangeLog
+40414262c1c68547de81f1e6676a1baf *inst/ChangeLog
 864ca9e205897fd0020a60b849238c84 *inst/example.datasets/C2_IK_Model.xls
 0d5d86ce7a2535782209096e39f5af4f *inst/example.datasets/RLGHLongCore.cep
 44a94d0d16ffda336c10dcc728ce2e79 *inst/example.datasets/WOLSFELD.TIL
@@ -54,7 +54,7 @@ cbaf21affb3497997faabf29fb7af9c2 *man/inkspot.Rd
 3750bb366650907cac9ec93c4b5351b7 *man/read.CEP.Rd
 d4e221e345197c6ec40fbb193f30ebb9 *man/read.Tilia.Rd
 6abbf7d77b79df872bfeb2bf8b067a05 *man/rioja-internal.Rd
-5be09f539dccf66b4cd8d9412329ff9e *man/rioja.package.Rd
+10fac81a4577e0a35601ca76e2c0ada6 *man/rioja.package.Rd
 16e8c1abe073235b7e42da8b0e7f97ec *man/sp.plot.Rd
 3e909510267270a2f7c63522962ea10a *man/strat.plot.Rd
 ad61f7286ded44ee280b7532b49cf1d4 *man/strat.plot.simple.Rd
@@ -87,7 +87,7 @@ f4d9a619bf268d3a5f1f3660cc0553d8 *src/nutil.cpp
 2fd3d032936fc1b2d7c54d05601788c6 *src/nutil.h
 5e952b2bd39d79c1d949e0c525f51fd1 *src/open.c
 9181a46521ba649f49369f86ec03b09b *src/rawio.h
-645b8124aa9d4efe1458cfd4511c29cc *src/rdfmt.c
+998c7697411a7a3199b690758ef84ebe *src/rdfmt.c
 be90a52cc7846987fb788afbafe6efca *src/rsfe.c
 2dee048dc757228a9ba0dea54fe26278 *src/s_copy.c
 a2a4f751d5e372243bb26d873254aab8 *src/sfe.c

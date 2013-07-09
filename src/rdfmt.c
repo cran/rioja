@@ -18,7 +18,9 @@ extern double atof();
 extern "C" {
 #endif
 
- static int
+#pragma GCC diagnostic ignored "-Wparentheses"
+
+static int
 #ifdef KR_headers
 rd_Z(n,w,len) Uint *n; ftnlen len;
 #else
@@ -87,19 +89,18 @@ rd_Z(Uint *n, int w, ftnlen len)
 			return 0;
 		t += i;
 	}
-	
-#pragma GCC diagnostic ignored "-Wparentheses"
-	
 	do {
 		*t = hex[*s0 & 0xff]-1 << 4 | hex[s0[1] & 0xff]-1;
 		t += i;
 		s0 += 2;
 		}
 		while(--w);
-#pragma GCC diagnostic warning "-Wparentheses"		
-		
 	return 0;
 	}
+
+#pragma GCC diagnostic warning "-Wparentheses"		
+		
+
 
  static int
 #ifdef KR_headers
