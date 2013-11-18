@@ -10,7 +10,7 @@ LWR <- function(y, x, FUN=WA, dist.method="sq.chord", k=30, lean=TRUE, fit.model
        stop(paste("Species data have zero abundances for the following columns:", paste(which(apply(y, 2, sum) < 1.0E-8), collapse=",")))
   }
   if (k >= nrow(y))
-    stop("k is less than number of training samples")
+    stop("k is greater than number of training samples")
   x1 <- as.numeric(x)
   n <- 2
   diss <- as.matrix(paldist(y, dist.method=dist.method))
@@ -19,8 +19,6 @@ LWR <- function(y, x, FUN=WA, dist.method="sq.chord", k=30, lean=TRUE, fit.model
   dist.n <- t(apply(diss, 2, sort)[n:(n+k-1), ])
   rownames(dist.n) <- rownames(y)
   colnames(dist.n) <- paste("N", sprintf("%02d", 1:k), sep="")
-  xHat <- matrix(NA, nrow=nrow(y), ncol=20*length(k))
-  colnames(xHat) <- 1:ncol(xHat)
   nsam <- nrow(y)
   ncol.res <- NA
   feedback <- ifelse(is.logical(verbose), 50, as.integer(verbose))
@@ -41,17 +39,22 @@ LWR <- function(y, x, FUN=WA, dist.method="sq.chord", k=30, lean=TRUE, fit.model
       ytrain <- y[ind[, i], ]
       N <- apply(ytrain>0, 2, sum)
       Mx <- apply(ytrain, 2, sum)
-      ytrain <- ytrain[, N>cut1 & Mx > cut2]
       xtrain <- x[ind[, i]]
-      mod <- FUN(ytrain, xtrain, check.data=FALSE, ...)
-      pred <- predict(mod, y[i, N>cut1 & Mx>cut2, drop=FALSE])$fit
+      if (funname=="MLRC") {
+         ytrain <- ytrain[, N>cut1 & Mx > cut2]
+         mod <- FUN(ytrain, xtrain, check.data=FALSE, ...)
+         pred <- predict(mod, y[i, N>cut1 & Mx>cut2, drop=FALSE])$fit
+      } else {
+         mod <- FUN(ytrain, xtrain, check.data=FALSE, ...)
+         pred <- predict(mod, y[i, , drop=FALSE])$fit
+      }
       if (i == 1) {
          ncol.res <- ncol(pred)
-         colnames(xHat)[1:ncol.res] <- colnames(pred)
+         xHat <- matrix(NA, nrow=nrow(y), ncol=ncol.res)
+         colnames(xHat) <- colnames(pred)
       }
-      xHat[i, 1:ncol.res] <- pred
+      xHat[i, ] <- pred
     }
-    xHat <- xHat[, 1:ncol.res, drop=FALSE]
   }
   rownames(xHat) <- rownames(y)
   nms <- t(matrix(rownames(y)[ind], nrow=k))
@@ -59,7 +62,7 @@ LWR <- function(y, x, FUN=WA, dist.method="sq.chord", k=30, lean=TRUE, fit.model
   rownames(diss) <- rownames(y)
   colnames(diss) <- rownames(y)
   call.print <- match.call()
-  result <- list(call=call.fit, call.print=call.print, fitted.values=xHat, dist.n=dist.n, ind=ind, match.name=nms, x=x1, dist.method=dist.method, k=k, y=y)
+  result <- list(call=call.fit, call.print=call.print, fitted.values=xHat, dist.n=dist.n, ind=ind, match.name=nms, x=x1, dist.method=dist.method, k=k, y=y, FUN=FUN)
   if (!lean)
      result <- c(result, list(dist=diss))
   result$cv.summary <- list(cv.method="none")
@@ -102,24 +105,22 @@ predict.LWR <- function(object, newdata=NULL, k=object$k, sse=FALSE, nboot=100, 
   dist.n <- t(apply(diss, 2, sort)[n:(n+k-1), ])
   rownames(dist.n) <- rownames(y2)
   colnames(dist.n) <- paste("N", sprintf("%02d", 1:k), sep="")
-  xHat <- matrix(NA, nrow=nrow(y2), ncol=20*length(k))
-  colnames(xHat) <- 1:ncol(xHat)
   ncol.res <- NA
   for (i in 1:nrow(y2)) {
     ytrain <- y1[ind[, i], ]
     xtrain <- x1[ind[, i]]
-    N <- apply(ytrain>0, 2, sum)
-    ytrain <- ytrain[, N>0]
-    ytest <- y2[i, N>0, drop=FALSE]
+    mx <- apply(ytrain, 2, sum)
+    ytrain <- ytrain[, mx>0]
+    ytest <- y2[i, mx>0, drop=FALSE]
     mod <- FUN(ytrain, xtrain, check.data=FALSE, ...)
     pred <- predict(mod, ytest)$fit
     if (i == 1) {
        ncol.res <- ncol(pred)
-       colnames(xHat)[1:ncol.res] <- colnames(pred)
+       xHat <- matrix(NA, nrow=nrow(y2), ncol=ncol.res)
+       colnames(xHat) <- colnames(pred)
     }
-    xHat[i, 1:ncol.res] <- pred
+    xHat[i, ] <- pred
   }
-  xHat <- xHat[, 1:ncol.res, drop=FALSE]
   rownames(xHat) <- rownames(y2)
   nms <- t(matrix(rownames(y1)[ind[n:(n+k-1), ]], nrow=k))
   rownames(nms) <- rownames(y2)
@@ -130,6 +131,9 @@ predict.LWR <- function(object, newdata=NULL, k=object$k, sse=FALSE, nboot=100, 
   if (!lean)
      result <- c(result, list(dist=diss))
   if (sse) {
+   
+   stop("Sample Specific Errors not yet implemented for LWR")
+     
    feedback <- ifelse(is.logical(verbose), 50, as.integer(verbose))
    if (is.null(object$dist))
       stop("No distances: refit original model using \"lean=FALSE\"")
@@ -171,8 +175,6 @@ predict.LWR <- function(object, newdata=NULL, k=object$k, sse=FALSE, nboot=100, 
     }      
     xHat.boot <- apply(res2, c(1,2), mean, na.rm=TRUE)
     xHat.new.boot <- apply(res2.new, c(1,2), mean, na.rm=TRUE)
-    print(dim(xHat.new.boot))
-    print(dim(result$fit))
 #    colnames(xHat.new.boot) <- colnames(result$fit)
 #    rownames(xHat.new.boot) <- rownames(newdata)
     v1.boot <- apply(res2.new, c(1,2), sd, na.rm=TRUE)
@@ -187,12 +189,14 @@ predict.LWR <- function(object, newdata=NULL, k=object$k, sse=FALSE, nboot=100, 
   result
 }
 
-crossval.LWR <- function(object, k=object$k, cv.method="loo", verbose=TRUE, ngroups=10, nboot=100, h.cutoff=0, h.dist=NULL, ...)
+
+crossval.LWR <- function(object, k=object$k, cv.method="lgo", verbose=TRUE, ngroups=10, nboot=100, h.cutoff=0, h.dist=NULL, ...)
 {
   if (k < 1 | k > object$k)
     stop("k out of range")
   METHODS <- c("lgo", "bootstrap")
   cv.method <- pmatch(cv.method, METHODS)
+  FUN <- match.fun(object$call$FUN)
   if (is.na(cv.method))
      stop("Unknown cross-validation method")
   nsam <- length(object$x)
@@ -201,10 +205,10 @@ crossval.LWR <- function(object, k=object$k, cv.method="loo", verbose=TRUE, ngro
   object$cv.summary$cv.method=METHODS[cv.method]
   feedback <- ifelse(is.logical(verbose), 50, as.integer(verbose))
   k <- object$k
-  if (is.null(object$dist))
-     stop("No distances: refit original model using \"lean=FALSE\"")
   if (cv.method == 1) {
     if (length(ngroups) > 1) {
+       if (length(ngroups) != nsam)
+          stop("length of leave-out groups does not equal number of samples")
        grps <- ngroups
        ngroups <- length(unique(ngroups))
        o <- 1:nsam
@@ -215,17 +219,16 @@ crossval.LWR <- function(object, k=object$k, cv.method="loo", verbose=TRUE, ngro
     }
     for (i in 1:ngroups) {
       out <- o[grps==i]
-      x <- object$x[-out, drop=FALSE]
-      diss <- object$dist[-out, out, drop=FALSE]
-      ind <- apply(diss, 2, order)
-      dist.n <- t(apply(diss, 2, sort)[1:k, , drop=FALSE])
-      x.n <- t(matrix(x[ind[1:k, , drop=FALSE]], nrow=k))
-      xHat <- matrix(NA, nrow=length(out), ncol=k*2)
-      for (j in 1:k) {
-        xHat[, j] <- apply(x.n[ ,1:j, drop=FALSE], 1, mean, na.rm=TRUE)
-        xHat[, j+k] <- rowSums((x.n / dist.n)[ ,1:j, drop=FALSE], na.rm=TRUE) / rowSums(1/dist.n[ ,1:j, drop=FALSE])
-      }
-      result[out, ] <- xHat
+      x.test <- object$x[out, drop=FALSE]
+      x.train <- object$x[-out, drop=FALSE]
+      y.test <- object$y[out, , drop=FALSE]
+      y.train <- object$y[-out, , drop=FALSE]
+      sel <- apply(y.train, 2, sum) > 0
+      y.train <- y.train[, sel]
+#      y.test <- y.test[, sel]
+      mod <- LWR(y.train, x.train, FUN, dist.method=object$dist.method, k=k, lean=TRUE, fit.model=TRUE, check.data=TRUE, verbose=FALSE, ...)
+      xHat <- predict.LWR(mod, y.test, verbose=FALSE)
+      result[out, ] <- xHat$fit
       if (verbose) {
           cat (paste("Leavout group", i, "\n"))
           flush.console()
@@ -234,20 +237,18 @@ crossval.LWR <- function(object, k=object$k, cv.method="loo", verbose=TRUE, ngro
     object$cv.summary$ngroups=ngroups
   } else if (cv.method == 2) {
     res2 <- array(dim=c(nsam, nres, nboot))
-#    .set.rand.seed(100)
     for (i in 1:nboot) {
-#      o <- apply(data.frame(rep(nsam, nsam)), 1, .get.rand) + 1
       o <- sample(nsam, replace=TRUE)
       out <- (1:nsam)[-unique(o)]
-      x <- object$x[o]
-      diss <- object$dist[o, out]
-      ind <- apply(diss, 2, order)
-      dist.n <- t(apply(diss, 2, sort)[1:k, ])
-      x.n <- t(matrix(x[ind[1:k, ]], nrow=k))
-      for (j in 1:k) {
-        res2[out, j, i] <- apply(x.n[ ,1:j, drop=FALSE], 1, mean, na.rm=TRUE)
-        res2[out, j+k, i] <- rowSums((x.n / dist.n)[ ,1:j, drop=FALSE], na.rm=TRUE) / rowSums(1/dist.n[ ,1:j, drop=FALSE])
-      }
+      x.test <- object$x[out, drop=FALSE]
+      x.train <- object$x[-out, drop=FALSE]
+      y.test <- object$y[out, , drop=FALSE]
+      y.train <- object$y[-out, , drop=FALSE]
+      sel <- apply(y.train, 2, sum) > 0
+      y.train <- y.train[, sel]
+      mod <- LWR(y.train, x.train, FUN, dist.method=object$dist.method, k=k, lean=TRUE, fit.model=TRUE, check.data=TRUE, verbose=FALSE, ...)
+      xHat <- predict.LWR(mod, y.test, verbose=FALSE)
+      res2[out, , ] <- xHat$fit
       if (verbose) {
           if (i %% feedback == 0) {
             cat (paste("Bootstrap sample", i, "\n"))
@@ -265,8 +266,10 @@ crossval.LWR <- function(object, k=object$k, cv.method="loo", verbose=TRUE, ngro
   colnames(result) <- colnames(object$fitted.values)
   object$predicted=result
   object$residuals.cv=result-object$x
+  object$cv.summary$cv.method = cv.method
   object
 }
+
 
 print.LWR <- function(x, ...) {
   cat("\n")

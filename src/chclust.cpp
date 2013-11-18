@@ -27,7 +27,7 @@ SEXP chclust(SEXP sexpData, SEXP sexMethod)
    int i =0;
 	for (i=1;i<nr;i++) {
 		if ((DPtr[i]= new double[i])==NULL)
-			return false;
+			return eMessage;
 		diss=DPtr[i];
 		for(int j=0;j<i;j++) {
             diss[j] = REAL(sexpData)[i + nr*j];

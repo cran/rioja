@@ -182,12 +182,12 @@ public:
 
 // INDEX friends from matmath
 
-   friend double IndexMinimum(const dMat &d, Index *I=NULL);
-   friend double IndexMaximum(const dMat &d, Index *I=NULL);
-   friend double IndexSd(const dMat &d, Index *I=NULL);
-   friend double IndexMean(const dMat &d, Index *I=NULL);
-   friend double IndexMedian(const dMat &d, Index *I=NULL);
-   friend double IndexQuartile(const dMat &d, double perc, Index *I=NULL);
+//   friend double IndexMinimum(const dMat &d, Index *I=NULL);
+//   friend double IndexMaximum(const dMat &d, Index *I=NULL);
+//   friend double IndexSd(const dMat &d, Index *I=NULL);
+//   friend double IndexMean(const dMat &d, Index *I=NULL);
+//   friend double IndexMedian(const dMat &d, Index *I=NULL);
+//   friend double IndexQuartile(const dMat &d, double perc, Index *I=NULL);
 
    dMat diag();
    dMat inverse(char &errorflag);

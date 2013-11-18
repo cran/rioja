@@ -1,6 +1,10 @@
 rioja Change Log
 
 Version 0.8-4
+* Released on CRAN 18/11/13
+Fixed incompatabilities in C++ code
+
+Version 0.8-4
 * Released on CRAN 09/07/13
 Fixed numerous small bugs
 Added h-block cross-validation to function crossval

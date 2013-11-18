@@ -36,8 +36,6 @@ read.CEP <- function(fName, mValue=-99.9, impZero=0) {
 }
 
 write.CEP <- function(x, fName, fTitle=fName, type = "condensed", nSig=5, nCouplets=4, mValue=-99.9) {
-  if (!require(vegan))
-     stop("This function requires the package vegan")
   x <- as.matrix(x)
   if (!is.numeric(x))
     stop("output matric must be numeric")

@@ -22,7 +22,7 @@ LWR(y, x, FUN=WA, dist.method="sq.chord", k=30, lean=TRUE,
 \method{predict}{LWR} (object, newdata=NULL, k = object$k, sse=FALSE, 
       nboot=100, match.data=TRUE, verbose=TRUE, lean=TRUE, \dots)
 
-\method{crossval}{LWR}(object, k=object$k, cv.method="loo", verbose=TRUE, 
+\method{crossval}{LWR}(object, k=object$k, cv.method="lgo", verbose=TRUE, 
       ngroups=10, nboot=100, h.cutoff=0, h.dist=NULL, \dots)
 
 \method{performance}{LWR}(object, \dots)

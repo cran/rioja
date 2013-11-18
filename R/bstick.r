@@ -7,7 +7,6 @@
 bstick.chclust <- function(n, ng=10, plot=TRUE, ...) {
    if (n$method != "coniss")
       stop("bstick cannot display conslink results")
-   require(vegan)
    disp <- rev(n$height)
    tot.disp <- disp[1]
    disp <- abs(diff(disp))
