@@ -16,9 +16,9 @@
 Functions for reconstructing (predicting) environmental values from biological assemblages using Maximum Likelihood response Surfaces.
 }
 \usage{
-MLRC(y, x, check.data=TRUE, lean=FALSE, \dots)
+MLRC(y, x, check.data=TRUE, lean=FALSE, n.cut=5, verbose=TRUE, \dots)
 
-MLRC.fit(y, x, n.cut=2, use.glm=FALSE, max.iter=50, lean=FALSE, \dots)
+MLRC.fit(y, x, n.cut=2, use.glm=FALSE, max.iter=50, lean=FALSE, verbose=TRUE, \dots)
 
 \method{predict}{MLRC} (object, newdata=NULL, sse=FALSE, nboot=100,
       match.data=TRUE, verbose=TRUE, \dots)
@@ -44,7 +44,7 @@ MLRC.fit(y, x, n.cut=2, use.glm=FALSE, max.iter=50, lean=FALSE, \dots)
 \arguments{
   \item{y}{ a data frame or matrix of biological abundance data. }
   \item{x, object}{ a vector of environmental values to be modelled or an object of class \code{wa}. }
-  \item{n.cut}{ cutoff value for number of occurrences.  Species with fewer than n.cut occurences will be excluded for the analysis.}
+  \item{n.cut}{ cutoff value for number of occurrences.  Species with fewer than n.cut occurrences will be excluded from the analysis.}
   \item{use.glm}{ logical to use \code{glm} to fit responses rather than internal code.  Defaults to \code{FALSE}.}
   \item{newdata}{ new biological data to be predicted. }
   \item{max.iter}{ maximum iterations of the logit regression algorithm.}
@@ -58,7 +58,7 @@ MLRC.fit(y, x, n.cut=2, use.glm=FALSE, max.iter=50, lean=FALSE, \dots)
   \item{add.ref}{ add 1:1 line on plot. }
   \item{add.smooth}{ add loess smooth to plot. }
   \item{cv.method}{ cross-validation method, either "loo", "lgo" or "bootstrap". }
-  \item{verbose}{ logical or integer to show feedback during cross-validaton. If TRUE print feedback every 50 cycles, if integer, use this value. }
+  \item{verbose}{ logical to show feedback during cross-validaton. }
   \item{nboot}{ number of bootstrap samples. }  
   \item{ngroups}{ number of groups in leave-group-out cross-validation, or a vector contain leave-out group menbership. }  
   \item{h.cutoff}{ cutoff for h-block cross-validation.  Only training samples greater than \code{h.cutoff} from each test sample will be used. }

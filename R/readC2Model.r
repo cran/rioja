@@ -7,9 +7,10 @@ read.C2Model <- function(fName) {
      }
      on.exit(odbcCloseAll())
 #     channel <- odbcConnectExcel(fName)
-     fp <- RODBC:::full.path(fName)
-     con <- paste("Driver={Microsoft Excel Driver (*.xls)};DriverId=790;Dbq=", fp, ";DefaultDir=", dirname(fp), ";", sep = "")
-     channel <- odbcDriverConnect(con, tabQuote = c("[", "]"))
+#     fp <- RODBC:::full.path(fName)
+#     con <- paste("Driver={Microsoft Excel Driver (*.xls)};DriverId=790;Dbq=", fp, ";DefaultDir=", dirname(fp), ";", sep = "")
+#     channel <- odbcDriverConnect(con, tabQuote = c("[", "]"))
+     channel <- odbcConnectExcel(fName, tabQuote = c("[", "]"))
      tabs <- sqlTables(channel, errors=TRUE)
      tabs <- tabs[tabs$TABLE_TYPE == "TABLE", ]
      ntabs <- nrow(tabs)

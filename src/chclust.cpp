@@ -9,8 +9,8 @@
 #include "mat.h"
 #include "nutil.h"
 
-bool Conslink(int nsam, double **DPtr, double **dend);
-bool ConISS(int nsam, double **DPtr, double **dend);
+bool Conslink(long nsam, double **DPtr, double **dend);
+bool ConISS(long nsam, double **DPtr, double **dend);
 bool CalcDissimilarity(dMat &Data, double ***DissimPtr, int coef);
 
 extern "C" {
@@ -20,16 +20,16 @@ SEXP chclust(SEXP sexpData, SEXP sexMethod)
    SEXP dims, eMessage = R_NilValue;
    dims = Rf_getAttrib(sexpData, R_DimSymbol);
    int method = INTEGER(sexMethod)[0];
-   int nr = INTEGER(dims)[0];
+   long nr = INTEGER(dims)[0];
    PROTECT(sexpData);
    double **DPtr = new double*[nr];
    double *diss;
-   int i =0;
+   long i =0;
 	for (i=1;i<nr;i++) {
 		if ((DPtr[i]= new double[i])==NULL)
 			return eMessage;
 		diss=DPtr[i];
-		for(int j=0;j<i;j++) {
+		for(long j=0;j<i;j++) {
             diss[j] = REAL(sexpData)[i + nr*j];
       }
 	}
@@ -79,27 +79,26 @@ SEXP chclust(SEXP sexpData, SEXP sexMethod)
 
 #define dc(a,b)  (((a) > (b)) ? (DPtr[(a)-1][(b)-1]) : (DPtr[(b)-1][(a)-1]))
 
-double Update(double **DPtr, int j, int p, int q,int *nclus, int *name, double dshort, int np, int nq);
-void Minim(double *diag, double *tiny, int *least, int *ncount, int nsam);
-void Group(double **DPtr, double *diag, double tiny, double *prev, double *dend, int *least, int ncount, int *nclust, double large, int *nbit, int nsam, int *nlev, char *nsplur, FILE *fout);
+double Update(double **DPtr, long j, long p, long q, long *nclus, long *name, double dshort, long np, long nq);
+void Minim(double *diag, double *tiny, long *least, long *ncount, long nsam);
+void Group(double **DPtr, double *diag, double tiny, double *prev, double *dend, long *least, long ncount, long *nclust, double large, long *nbit, long nsam, long *nlev, char *nsplur, FILE *fout);
 
-double Update(double **DPtr, int j, int p, int q,int *nclus, int *name, double dshort, int np, int nq)
+double Update(double **DPtr, long j, long p, long q, long *nclus, long *name, double dshort, long np, long nq)
 {
-	int nr;
+	long nr;
 	nr = nclus[name[j-1]-1];
 	return( ( ((double)(nr+np)) *dc(j,p)+((double)(nr+nq))*dc(j,q)-((double)nr)*dshort) / ((double)(nr+np+nq)));
 }
 
-bool ConISS(int nsam, double **DPtr, double **es)
+bool ConISS(long nsam, double **DPtr, double **es)
 {
 	double *ess, dshort,e,de;
-	int i=0 ,n=0, j=0, iter=0, p, q, np, nq, *name, *nclus,
-		  msiz,namp,namq;
+	long i=0 ,n=0, j=0, iter=0, p, q, np, nq, *name, *nclus, msiz,namp,namq;
 
 	ess = new double[nsam];
 	*es =  new double[nsam];
-	nclus = new int[nsam];
-	name = new int[nsam];
+	nclus = new long[nsam];
+	name = new long[nsam];
 	if ((ess==NULL)||(es==NULL)||(nclus==NULL)||(name==NULL))
 		return(false);
 
@@ -172,9 +171,9 @@ bool ConISS(int nsam, double **DPtr, double **es)
 	return true;
 }
 
-void Minim(double *diag, double *tiny, int *least, int *ncount, int nsam)
+void Minim(double *diag, double *tiny, long *least, long *ncount, long nsam)
 {
-   int i=0;
+   long i=0;
    double diff;
 
    *ncount=1;
@@ -197,9 +196,9 @@ void Minim(double *diag, double *tiny, int *least, int *ncount, int nsam)
    }
 }
 
-void Group(double **DPtr, double *diag, double tiny, double *prev, double *dend, int *least, int ncount, int *nclust, double large, int *nbit, int nsam, int *nlev, char *nsplur)
+void Group(double **DPtr, double *diag, double tiny, double *prev, double *dend, long *least, long ncount, long *nclust, double large, long *nbit, long nsam, long *nlev, char *nsplur)
 {
-   int i=0,j=0,k=0,l=0,up=0, down=0, up1=0, up2=0, down1=0, down2=0;
+   long i=0,j=0,k=0,l=0,up=0, down=0, up1=0, up2=0, down1=0, down2=0;
    double diss;
 
    for (i=0;i<ncount;i++) {
@@ -282,19 +281,19 @@ void Group(double **DPtr, double *diag, double tiny, double *prev, double *dend,
    }
 }
 
-bool Conslink(int nsam, double **DPtr, double **dend)
+bool Conslink(long nsam, double **DPtr, double **dend)
 {
    double *diag, large, tiny;
-   int nclust, *nbit, *least, nlev, ncount;
+   long nclust, *nbit, *least, nlev, ncount;
    char *nsplur;
 
-   unsigned int i=0, nsam2;
+   long i=0, nsam2;
    double prev;
    diag = new double[nsam+1];
    *dend = new double[nsam+1];
    nsplur = new char[nsam+1];
-   nbit = new int[nsam+1];
-   least = new int[nsam+1];
+   nbit = new long[nsam+1];
+   least = new long[nsam+1];
    if ((diag==NULL)||(*dend==NULL)||(nsplur==NULL)||(nbit==NULL)||(least==NULL))
       return false;
 

@@ -33,18 +33,19 @@ static double sqrarg;
 
 //int powell(double p[], double **xi, int n, double ftol, int *iter, double *fret, dMat & params, dMat &,  double(*func)(double *, dMat &, dMat &));
 
-int logit(dMat &x, dMat &y, dMat &bhat, dMat &mmxinv, double tol, int maxiter);
+int logit(dMat &x, dMat &y, dMat &bhat, dMat &mmxinv, double tol, int maxiter, int verbose);
 
 extern "C" {
 /*
    __declspec(dllexport) 
 */   
-   SEXP MLRC_regress(SEXP sexp_SpecData, SEXP sexp_Env, SEXP sexp_miter) 
+   SEXP MLRC_regress(SEXP sexp_SpecData, SEXP sexp_Env, SEXP sexp_miter, SEXP sexp_verbose) 
 {
    SEXP dims, R_Beta, R_IBeta, ret, retNames;
    dims = Rf_getAttrib(sexp_SpecData, R_DimSymbol);
    int nr = INTEGER(dims)[0];
    int nc = INTEGER(dims)[1];
+   int verbose = INTEGER(sexp_verbose)[0];
    int maxiter = INTEGER(sexp_miter)[0];
    int i=0, j=0;
 
@@ -77,10 +78,12 @@ extern "C" {
       for (j=0;j<nr;j++)
          sp(j,0) = Y(j,i);
       try {
-         IBeta(i) = logit(x2, sp, bhat, mmxinv, LOGITTOL, maxiter);
+         IBeta(i) = logit(x2, sp, bhat, mmxinv, LOGITTOL, maxiter, verbose);
       }
       catch (char *ex) {
-         REprintf("\n%s\n", ex);
+         if (verbose) {
+            REprintf("\n%s\n", ex);
+         }
          IBeta(i) = -4;
       }
       if (IBeta(i) > -1 && IBeta(i) < maxiter) {
@@ -110,7 +113,7 @@ extern "C" {
 }
 }
 
-int logit(dMat &x, dMat &y, dMat &bhat, dMat &mmxinv, double tol, int maxiter)
+int logit(dMat &x, dMat &y, dMat &bhat, dMat &mmxinv, double tol, int maxiter, int verbose)
 {
 	dMat ys, r, p, delta;
 	bhat = dMat(cols(x),1, 0.0);
@@ -134,7 +137,9 @@ int logit(dMat &x, dMat &y, dMat &bhat, dMat &mmxinv, double tol, int maxiter)
       mmxinv = ((x).tproduct(x*p)).inverse(errorflag);
     }
     catch (const char *e) {
-       REprintf("\n%s\n", e);
+       if (verbose) {
+          REprintf("\n%s\n", e);
+       }
        errorflag = 3;
     }
     if (errorflag)
@@ -413,10 +418,12 @@ void powell(double *p, double **xi, int n, double ftol, int *iterate,
          pt[j] = p[j];
       }
       fptt =(*func)(ptt, params, SpecData);
+      double arg1, arg2;
       if (fptt < fp) {
 //         t = 2.0*(fp-2.0*(*fret)+fptt)*SQR(fp-(*fret)-del)-del*SQR(fp-fptt);
-         t = 2.0*(fp-2.0*(*fret)+fptt)*SQR(fp-(*fret)-del)-del*SQR(fp-fptt);
-         
+         arg1 = fp-(*fret)-del;
+         arg2 = fp-fptt;
+         t = 2.0*(fp-2.0*(*fret)+fptt) * arg1*arg1 - del*arg2*arg2;
          if (t < 0.0) {
             linmin(p,xit,n,fret,params, SpecData, func);
             for (j=1;j<=n;j++) {

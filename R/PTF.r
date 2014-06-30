@@ -1,3 +1,5 @@
+# Utility functions for Quant Reconstructions II
+
 rand.t.test <- function(object, ...) UseMethod("rand.t.test")
 
 rand.t.test.default <- function(object, ...) { 
@@ -91,7 +93,6 @@ performance.default <- function(object, ...) {
     if (any(colnames(object$y) != colnames(newdata)))
        stop("Taxon names do not match between datasets")
   }
-  feedback <- ifelse(is.logical(verbose), 50, as.integer(verbose))
 #  nm.mod <- rownames(coef(object))
 #  nm.new <- colnames(newdata)
 #  mt <- match(nm.new, nm.mod)
@@ -106,6 +107,11 @@ performance.default <- function(object, ...) {
   rownames(xHat.new) <- rownames(newdata)
   colnames(xHat.new) <- colnames(object$fitted.values)
   if (sse) {
+    if (verbose) {
+      writeLines("Bootstrapping for SSE:")
+      pb <- txtProgressBar(min = 0, max = 1, style = 3)
+      on.exit(close(pb))
+    }
     nsam <- nrow(object$y)
     nsam.new <- nrow(newdata)
     nest <- ncol(object$fitted.values)
@@ -124,22 +130,14 @@ performance.default <- function(object, ...) {
       res2[out, , i] <- do.call(predict.func, args=list(object=quote(mod), y=quote(y.test), lean=TRUE, ...))
       res2.new[, , i] <- do.call(predict.func, args=list(object=quote(mod), y=quote(newdata), lean=TRUE, ...))
       if (verbose) {
-          if (i %% feedback == 0) {
-            cat (paste("Bootstrap sample", i, "\n"))
-            flush.console()
-          }
-      }
+        setTxtProgressBar(pb, i/nboot)
+      }        
     }
     xHat <- object$fitted.values
     xHat.boot <- apply(res2, c(1,2), mean, na.rm=TRUE)
-#    colnames(xHat.boot) <- colnames(xHat)
-#    rownames(xHat.boot) <- rownames(xHat)
     xHat.new.boot <- apply(res2.new, c(1,2), mean, na.rm=TRUE)
     colnames(xHat.new.boot) <- colnames(xHat)
     rownames(xHat.new.boot) <- rownames(newdata)
-#    SEP.boot <- apply(object$x-res2, c(1,2), .rmse)
-#    colnames(SEP.boot) <- colnames(xHat)
-#    rownames(SEP.boot) <- rownames(xHat)
     v1.boot <- apply(res2.new, c(1,2), sd, na.rm=TRUE)
     v2.boot <- apply(object$x-xHat.boot, 2, .rmse)
     colnames(v1.boot) <- colnames(xHat)
@@ -169,7 +167,11 @@ performance.default <- function(object, ...) {
   predict.func <- paste("predict.internal", class(object)[1], sep=".")
   result <- matrix(nrow=nsam, ncol=nres)
   object$cv.summary$cv.method=METHODS[cv.method]
-  feedback <- ifelse(is.logical(verbose), 50, as.integer(verbose))
+  if (verbose) {
+    writeLines("Cross-validating:")
+    pb <- txtProgressBar(min = 0, max = 1, style = 3)
+    on.exit(close(pb))
+  }
   if (cv.method == 1) {
     for (i in 1:nsam) {
       y <- object$y[-i, ]
@@ -180,18 +182,16 @@ performance.default <- function(object, ...) {
 #      xHat <- do.call(predict, args=list(object=quote(mod), y=quote(y.test), lean=TRUE))
       result[i, ] <- xHat
       if (verbose) {
-          if (i %% feedback == 0) {
-            cat (paste("LOO sample", i, "\n"))
-            flush.console()
-          }
-      }
+        setTxtProgressBar(pb, i/nsam)
+      }        
     }
-  } 
-  if (cv.method == 2) {
+  } else if (cv.method == 2) {
     if (length(ngroups) > 1) {
-       grps <- as.integer(ngroups)
-       ngroups <- length(unique(ngroups))
-       o <- 1:nsam
+      if (length(ngroups) != nsam)
+        stop("length of leave-out groups does not equal number of samples")
+      grps <- as.integer(ngroups)
+      ngroups <- length(unique(ngroups))
+      o <- 1:nsam
     }
     else {
       o <- sample(nsam)
@@ -206,13 +206,11 @@ performance.default <- function(object, ...) {
       xHat <- do.call(predict.func, args=list(object=quote(mod), y=quote(y.test), lean=TRUE))
       result[out, ] <- xHat
       if (verbose) {
-            cat (paste("Leavout group", i, "\n"))
-            flush.console()
+        setTxtProgressBar(pb, i/ngroups)
       }
     }
     object$cv.summary$ngroups=ngroups
-  } 
-  if (cv.method == 3) {
+  } else if (cv.method == 3) {
     nest <- ncol(object$fitted.values)
     res2 <- array(dim=c(nsam, nest, nboot))
 #    .set.rand.seed(100)
@@ -227,19 +225,15 @@ performance.default <- function(object, ...) {
       xHat <- do.call(predict.func, args=list(object=quote(mod), y=quote(y.test), lean=TRUE))
       res2[out, , i] <- xHat
       if (verbose) {
-          if (i %% feedback == 0) {
-            cat (paste("Bootstrap sample", i, "\n"))
-            flush.console()
-          }
-       }
+        setTxtProgressBar(pb, i/nboot)
+      }
     }
     result <- apply(res2, c(1,2), mean, na.rm=TRUE)
     MS <- apply((object$x-res2)^2, c(1,2), mean, na.rm=TRUE)
     RMSE.boot <- sqrt(apply(MS, 2, mean, na.rm=TRUE))
     object$cv.summary$nboot=nboot
     object$cv.summary$RMSE.boot <- RMSE.boot
-  } 
-  if (cv.method == 4) {
+  } else if (cv.method == 4) {
     if (is.null(h.dist))
        stop("h-block cross-validation requested but h.dist is null") 
     h.dist <- as.matrix(h.dist)  
@@ -265,10 +259,7 @@ performance.default <- function(object, ...) {
           nmiss <- nmiss + 1
        }
        if (verbose) {
-          if (i %% feedback == 0) {
-            cat (paste("h-block sample", i, "\n"))
-            flush.console()
-          }
+         setTxtProgressBar(pb, i/nsam)
        }
     }
     if (sum(nSamp < 1) > 0) {
