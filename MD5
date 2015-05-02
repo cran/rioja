@@ -1,5 +1,5 @@
-f60dc9acc9104cf8a801980bf9b14c5a *DESCRIPTION
-f353f8f1a2f7b24e82a64961bc8f40b6 *NAMESPACE
+e775258baae33d7c44f8bd89f9ecb691 *DESCRIPTION
+6ab30b0a2d26fdb3438192066ca72bd1 *NAMESPACE
 575ed38a08f95da9e84b5bd18ad2e58d *R/IKFA.r
 9628c0f616ed526c8daadb10888a4bbb *R/LWR.r
 d0fa0054b8391628e42198d509bbe6dc *R/MAT.r
@@ -7,7 +7,7 @@ aeaf656e38f7a6277329b6d3bc9afb87 *R/MLRC.r
 d9847d7298a30539cca6b2c7a0b0649b *R/MLRC2.R
 baa1465aa47753627aa43cf268374b24 *R/MR.r
 c65f11b6d9392feca238238bbc4c58f2 *R/PTF.r
-245fe73b0f966f164280b83f60f0a079 *R/WA.r
+ce62974aa235e114377c9fb63e9916e3 *R/WA.r
 3a4361a01f05a6e12eebddb5a0d38a0a *R/WAPLS.r
 73419b766231053b47dc0c204d1eb3e6 *R/bstick.r
 ccf4075fabd0645a1036a002213ec9a1 *R/cep.r
@@ -27,14 +27,14 @@ dcb84dbeb1ab306c357557fb1eb6b913 *R/utils.r
 796d147e2aa999c62ba86c49040c35f0 *data/Ponds.rda
 fa04502573754703f05f42dd3a46a297 *data/RLGH.rda
 432d82ae82177f4c08b98daa95d4b1cd *data/SWAP.rda
-5b51a6e4cc4f90ccdd5f2106587d1632 *data/aber.rda
-18da850d3cef4d69cee3cbd55600f64d *inst/CITATION
+c70f0bc5a948ca564dc81bf808257428 *data/aber.rda
+71af22015f2ee98dfd647680c7ec33ae *inst/CITATION
 69050a96ceba743cad67709120a91f26 *inst/COPYING
-50411bfaf4509035f60e9b6ccfc9c31f *inst/ChangeLog
+f2699bf25cf30e26f4a3fe09625c997a *inst/ChangeLog
 864ca9e205897fd0020a60b849238c84 *inst/example.datasets/C2_IK_Model.xls
 0d5d86ce7a2535782209096e39f5af4f *inst/example.datasets/RLGHLongCore.cep
 44a94d0d16ffda336c10dcc728ce2e79 *inst/example.datasets/WOLSFELD.TIL
-f9a39ae276a774c4d985f48a9a45439d *man/IK.Rd
+e148714306e2d76ea9bcdec51d4eba9f *man/IK.Rd
 3da9cbf8b5f354883f51d61ada5333fa *man/IKFA.Rd
 f8db3c39c4c5631eefbea6b44c685e31 *man/LWR.Rd
 2e1bd079e40792aacd7f9237677aff6e *man/MAT.Rd
@@ -47,7 +47,7 @@ daa7037c38b44806eddc1529bab3cc47 *man/RLGH.Rd
 71aae94608a7f3b3ac39876327f4e6b9 *man/SWAP.Rd
 f17faac716f032dc76b9f33753682db4 *man/WA.Rd
 7bb19cf1eeb9f00dc4b6a8c8a0dd986e *man/WAPLS.Rd
-56ddd4d2eff3deb46478932f636a9351 *man/aber.Rd
+e796c23854da7ac3d42b7e34d5aa50f1 *man/aber.Rd
 1bdf7902d781f308c78a38b97329df88 *man/chclust.Rd
 fa1c5119d407330350e5b2bb1c566079 *man/compare.datasets.Rd
 d8fb2b8b37ae77fa5fd9f464e6a59b89 *man/gutils.Rd
@@ -57,7 +57,7 @@ f741e147e6471e1d05f695f38960834f *man/read.C2Model.Rd
 3750bb366650907cac9ec93c4b5351b7 *man/read.CEP.Rd
 d4e221e345197c6ec40fbb193f30ebb9 *man/read.Tilia.Rd
 21031929004df63a4e044843108c4be7 *man/rioja-internal.Rd
-8886162deb90d7f3218b02f1155f10e5 *man/rioja.package.Rd
+640102b2498957d2e5e752c04427619c *man/rioja.package.Rd
 16e8c1abe073235b7e42da8b0e7f97ec *man/sp.plot.Rd
 3e909510267270a2f7c63522962ea10a *man/strat.plot.Rd
 ad61f7286ded44ee280b7532b49cf1d4 *man/strat.plot.simple.Rd
