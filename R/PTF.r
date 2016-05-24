@@ -243,6 +243,7 @@ performance.default <- function(object, ...) {
     if (nrow(h.dist) != nsam) 
        stop(paste("Number of rows in h.dist (", nrow(h.dist), ") not equal to number of samples (", nsam, ")", sep="")) 
     nSamp <- vector("numeric", length=nsam)
+    nmiss <- 0
     for (i in 1:nsam) {
        d <- h.dist[i, ]  
        sel <- d > h.cutoff
@@ -256,15 +257,13 @@ performance.default <- function(object, ...) {
           mod <- eval(call)
           xHat <- do.call(predict.func, args=list(object=quote(mod), y=quote(y.test), lean=TRUE, ...))
           result[i, ] <- xHat
-       } else {
-          nmiss <- nmiss + 1
-       }
+       } 
        if (verbose) {
          setTxtProgressBar(pb, i/nsam)
        }
     }
     if (sum(nSamp < 1) > 0) {
-       warning(paste(nmiss, "samples had no training samples with distance greater than ", h.cutoff, " and have not been predicted"))
+       warning(paste(sum(nSamp < 1), "samples had no training samples with distance greater than ", h.cutoff, " and have not been predicted"))
     }
     object$n.h.block <- nSamp
     object$cv.summary$h.cutoff=h.cutoff
