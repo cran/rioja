@@ -77,7 +77,7 @@ summary.MR <- function(object, full=FALSE, ...)
 
 plot.MR <- function(x, resid=FALSE, xval=FALSE, xlab="", ylab="", ylim=NULL, xlim=NULL, add.ref=TRUE, add.smooth=FALSE, ...) {
   if (xval & x$cv.summary$cv.method=="none")
-     stop("IKFA model does not have cross validation estimates")
+     stop("MR model does not have cross validation estimates")
   xx <- x$x
   if (resid) {
      if (xval) {
