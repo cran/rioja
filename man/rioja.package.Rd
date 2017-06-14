@@ -13,9 +13,9 @@ Analysis of Quaternary Science Data
 \tabular{ll}{
 Package: \tab rioja\cr
 Type: \tab Package\cr
-Version: \tab 0.9-9\cr
-Date: \tab 2016-07-12\cr
-License: \tab GPL (>= 2)\cr
+Version: \tab 0.9-14\cr
+Date: \tab 2017-06-09\cr
+License: \tab GPL-2\cr
 }
 
 Main functions:
@@ -35,19 +35,15 @@ randomPTF               Variable important via random palaeoecological
                         transfer functions                        
 read.CEP                Read and write data in Cornell Ecology 
                         Program format
-read.Tilia              Read Tilia files
-read.C2Model            Import results form a C2 model
-sp.plot                 Plot species distributions along one or two 
-                        environmental gradients 
+read.Tilia              Read old format Tilia (*.til) files
 strat.plot              Plot a stratigraphic diagram
-strat.plot.simple       Plot a simple stratigraphic diagram
 chclust                 Constrained heirarchical clustering (zonation)
 bstick                  Broken stick model to determine number of 
                         significant groups in a constrained cluster 
                         analysis
 inkspot                 Plot a two-way ordered diagram of species 
                         abundances
-Merge                   Merge two or more datasets by column names
+Merge                   Merge two or more data frames by column names
 interp.dataset          Interpolate one dataset to the depth or ages 
                         of another
 compare.datasets        Assess conformity of species occurrence and 

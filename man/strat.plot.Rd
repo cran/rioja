@@ -80,7 +80,7 @@ addClustZone(x, clust, nZone, ...)
   \item{...}{ further graphical arguments. }
 }
 \details{
-\code{strat.plot} plots a series of variables in a stratigraphic diagram. Diagrams can be plotted as line graphs and / or bar charts. Samples are plotted on the y-axis by sample number by default but may be plotted against sample age otr depth by specifying a variable for yvar. Margins of the plotting area can be changed using xLeft, xRight, yBottom and yTop.  A dendrogram produced by \code{chclust} can be added to the right of the diagram.
+\code{strat.plot} plots a series of variables in a stratigraphic diagram. Diagrams can be plotted as line graphs and / or bar charts. Samples are plotted on the y-axis by sample number by default but may be plotted against sample age or depth by specifying a variable for yvar. Margins of the plotting area can be changed using xLeft, xRight, yBottom and yTop.  A dendrogram produced by \code{chclust} can be added to the right of the diagram.
 
 The function \code{addZone} can be used to add a horizontal line or box to an existing plot, and 
 \code{addClustZone} will add a specified number of zones from a dendrogram (see examples).
@@ -145,7 +145,7 @@ y.axis=FALSE, clust=clust, clust.width=0.08, add=TRUE)
 
 # Use custom function to add smooth to curve
 
-sm.fun <- function(x, y) {
+sm.fun <- function(x, y, i, nm) {
   tmp <- data.frame(x=y, y=x)
   tmp <- na.omit(tmp)
   lo <- lowess(tmp, f=0.3)
@@ -155,10 +155,7 @@ sm.fun <- function(x, y) {
 x <- strat.plot(spec, yvar = depth, y.rev=TRUE, scale.percent=TRUE, 
 title="Round Loch of Glenhead", ylabel="Depth (cm)", fun1=sm.fun)
 
-
-
 # Pollen diagram using built-in Abernethy Forest dataset
-
 data(aber)
 depth <- aber$ages$Age
 spec <- aber$spec

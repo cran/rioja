@@ -70,7 +70,7 @@ MR.fit(y, x, lean=FALSE)
 \details{
 Function \code{MR} performs multiple regrssion.  It is a wrapper to \code{lm}. 
 
-Function \code{predict} predicts values of the environemntal variable for \code{newdata} or returns the fitted (predicted) values from the original modern dataset if \code{newdata} is \code{NULL}. Variables are matched between training and newdata by column name (if \code{match.data} is \code{TRUE}).  Use \code{\link{compare.datasets}} to assess conformity of two species datasets and identify possible no-analogue samples. 
+Function \code{predict} predicts values of the environmental variable for \code{newdata} or returns the fitted (predicted) values from the original modern dataset if \code{newdata} is \code{NULL}. Variables are matched between training and newdata by column name (if \code{match.data} is \code{TRUE}).  Use \code{\link{compare.datasets}} to assess conformity of two species datasets and identify possible no-analogue samples. 
 
 \code{MR} has methods \code{fitted} and \code{rediduals} that return the fitted values (estimates) and residuals for the training set, \code{performance}, which returns summary performance statistics (see below), \code{coef} which returns the species coefficients, and \code{print} and \code{summary} to summarise the output. \code{MR} also has a \code{plot} method that produces scatter plots of predicted vs observed measurements for the training set. }
 
@@ -111,26 +111,23 @@ spec <- IK$spec
 SumSST <- IK$env$SumSST
 core <- IK$core
 
-fit <- IKFA(spec, SumSST)
+# Generate a MR model using taxa with max abun > 20%
+
+mx <- apply(spec, 2, max)
+spec2 <- spec[, mx > 20]
+
+fit <- MR(spec2, SumSST)
 fit
 # cross-validate model
 fit.cv <- crossval(fit, cv.method="lgo")
-# How many components to use?
-screeplot(fit.cv)
+fit.cv
 
 #predict the core
-pred <- predict(fit, core, npls=2)
+pred <- predict(fit, core)
 
 #plot predictions - depths are in rownames
 depth <- as.numeric(rownames(core))
-plot(depth, pred$fit[, 2], type="b")
-
-# fit using only factors 1, 2, 4, & 5
-# and using polynomial terms
-# as Imbrie & Kipp (1971)
-fit2 <- IKFA(spec, SumSST, ccoef=c(1, 2, 4, 5), IsPoly=TRUE)
-fit2.cv <- crossval(fit2, cv.method="lgo")
-screeplot(fit2.cv)
+plot(depth, pred$fit[, 1], type="b")
 
 \dontrun{
 # predictions with sample specific errors
