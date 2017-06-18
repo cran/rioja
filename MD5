@@ -1,4 +1,4 @@
-03f393456e9f093dbc103e44f6367da5 *DESCRIPTION
+c893860985ac12356190e32b5cc9555c *DESCRIPTION
 b94d967ad211be366f89358bf74670c8 *NAMESPACE
 575ed38a08f95da9e84b5bd18ad2e58d *R/IKFA.r
 9628c0f616ed526c8daadb10888a4bbb *R/LWR.r
@@ -19,7 +19,7 @@ e53bf84004e090bfe60bb6aca518776e *R/inkspot.r
 448bfeeda90f6c62ca0514951c7ba81c *R/interp.datasets.r
 0a5058a844c4bfe7993909e86268ec4f *R/merge.r
 119317a066ac3d6549149f82f66d4030 *R/randomPTF.R
-58072d43ffc9c1b7d177963c98071f46 *R/strat.plot.r
+2b0563ffab1bf3a4d0959fcfb7cd6d5b *R/strat.plot.r
 20036452a24aba766aa1f44910bc661e *R/utils.r
 8e8286583426a7d0d37a4b7cb25f038e *R/zzz.r
 718eed01f62af277e4527975041090e2 *data/IK.rda
@@ -29,7 +29,7 @@ fa04502573754703f05f42dd3a46a297 *data/RLGH.rda
 c70f0bc5a948ca564dc81bf808257428 *data/aber.rda
 9b2e7f9da342d42278084f4637a3d913 *inst/CITATION
 69050a96ceba743cad67709120a91f26 *inst/COPYING
-66365b6ffa77d58d9b6217c6126e8346 *inst/ChangeLog
+c2f18a8612ce5b9ae2df545b37d1cb11 *inst/ChangeLog
 864ca9e205897fd0020a60b849238c84 *inst/example.datasets/C2_IK_Model.xls
 0d5d86ce7a2535782209096e39f5af4f *inst/example.datasets/RLGHLongCore.cep
 44a94d0d16ffda336c10dcc728ce2e79 *inst/example.datasets/WOLSFELD.TIL
@@ -56,7 +56,7 @@ b8aff94cbdd8890b1bf947ea5a3a8ad5 *man/randomPTF.Rd
 3750bb366650907cac9ec93c4b5351b7 *man/read.CEP.Rd
 3c75083b5159963958dfb773459e74c8 *man/read.Tilia.Rd
 21031929004df63a4e044843108c4be7 *man/rioja-internal.Rd
-7dceb0bb6f96b3f6e22a63ccf66c9577 *man/rioja.package.Rd
+705334884fb08e70b305424b4cd50a75 *man/rioja.package.Rd
 772fe654bc950d5ba9fb4c149d153aff *man/strat.plot.Rd
 bd673688ba5d393e98837d617e559672 *man/utils.Rd
 f254a28c6b4dbb2259c6faa9cc5f7f22 *src/analog.c
@@ -94,7 +94,7 @@ be90a52cc7846987fb788afbafe6efca *src/rsfe.c
 a2a4f751d5e372243bb26d873254aab8 *src/sfe.c
 03b63a7da5c59b969554b225b36de8dd *src/sig_die.c
 ab474857c01997f6e9b56f7d0d291a97 *src/sysdep1.h
-f654f59643a85c301bc6c24813ac1cf6 *src/tilfuncs.h
+e3726208119fb32c5707429e3dbc42ea *src/tilfuncs.h
 8da290d7ceb23382c6cb33c70aa593e4 *src/tilia.cpp
 a4c7f568a36ec5b303b9af34ea3be871 *src/tiliafuncs.cpp
 35f2d713d49cbab8d3d8e0afacea3844 *src/util.c

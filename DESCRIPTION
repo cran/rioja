@@ -1,8 +1,8 @@
 Package: rioja
 Type: Package
 Title: Analysis of Quaternary Science Data
-Version: 0.9-14
-Date: 2017-06-09
+Version: 0.9-15
+Date: 2017-06-16
 Author: Steve Juggins
 Maintainer: Steve Juggins <Stephen.Juggins@ncl.ac.uk>
 Imports: vegan, mgcv, grDevices
@@ -14,5 +14,5 @@ License: GPL-2
 URL: http://www.staff.ncl.ac.uk/stephen.juggins/
 NeedsCompilation: yes
 Repository: CRAN
-Packaged: 2017-06-14 21:25:06 UTC; nsj3
-Date/Publication: 2017-06-14 22:30:44 UTC
+Packaged: 2017-06-18 08:44:41 UTC; nsj3
+Date/Publication: 2017-06-18 13:35:13 UTC
