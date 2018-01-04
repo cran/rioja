@@ -12,7 +12,7 @@
 #include "mat.h"
 #include "mlrc.h"
 
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+//#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 
 #define LOGITTOL 1.0E-12
 

@@ -9,7 +9,7 @@ using namespace std;
    #define max(a,b) ((a)>(b)?(a):(b))
 #endif
 
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+//#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 
 extern "C" {
 /*

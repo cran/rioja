@@ -1,10 +1,10 @@
 Package: rioja
 Type: Package
 Title: Analysis of Quaternary Science Data
-Version: 0.9-15
+Version: 0.9-15.1
 Date: 2017-06-16
 Author: Steve Juggins
-Maintainer: Steve Juggins <Stephen.Juggins@ncl.ac.uk>
+Maintainer: ORPHANED
 Imports: vegan, mgcv, grDevices
 Suggests: maptools, foreach
 Description: Functions for the analysis of Quaternary science data, including
@@ -14,5 +14,8 @@ License: GPL-2
 URL: http://www.staff.ncl.ac.uk/stephen.juggins/
 NeedsCompilation: yes
 Repository: CRAN
-Packaged: 2017-06-18 08:44:41 UTC; nsj3
-Date/Publication: 2017-06-18 13:35:13 UTC
+Packaged: 2018-01-04 20:13:53 UTC; ripley
+Date/Publication: 2018-01-04 21:47:06 UTC
+X-CRAN-Original-Maintainer: Steve Juggins <Stephen.Juggins@ncl.ac.uk>
+X-CRAN-Comment: Orphaned and corrected on 2018-01-04 as C++ errors were
+        not corrected.

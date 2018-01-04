@@ -18,7 +18,7 @@ extern double atof();
 extern "C" {
 #endif
 
-#pragma GCC diagnostic ignored "-Wparentheses"
+// #pragma GCC diagnostic ignored "-Wparentheses"
 
 static int
 #ifdef KR_headers

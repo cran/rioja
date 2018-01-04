@@ -1,4 +1,4 @@
-c893860985ac12356190e32b5cc9555c *DESCRIPTION
+fdd3d0007a9948d017fa1ebbebe1f25a *DESCRIPTION
 b94d967ad211be366f89358bf74670c8 *NAMESPACE
 575ed38a08f95da9e84b5bd18ad2e58d *R/IKFA.r
 9628c0f616ed526c8daadb10888a4bbb *R/LWR.r
@@ -76,11 +76,11 @@ b820670b0847175947527134ac67632e *src/f2c.h
 1a750caf3ed1161f9c5d7cf62e477394 *src/fp.h
 be81727a390ab51fe7b188b8930175b7 *src/init.c
 9d91545d0cc3e63efe3a1c3ba8bfadfa *src/lio.h
-f2f679491f83401dbc23fd04962f1689 *src/lread.c
+82b9e2d897bb260d3a34c43ceb9aed73 *src/lread.c
 cae9d18b03798456643b7634d2cec701 *src/lwrite.c
-5c134a9eb6071625d7f2aeea5d61ec89 *src/mat.cpp
+a99634b910c9512391ff731659027bed *src/mat.cpp
 1c81ad6e7f44ecce6c024609f86ed6d7 *src/mat.h
-161b0cf8254ec8d4566bb15fd91d0fae *src/mlrc.cpp
+61cf3001145fd7113540d8543a3e2bc7 *src/mlrc.cpp
 a1d041853fb31a57008ecc2a76e059ce *src/mlrc.h
 e4251cdcfa95982416fd6d87d4fd6305 *src/newcin2.cpp
 7bf0fa9580549517347a24dfbca46348 *src/newcinfuncs.c
@@ -88,7 +88,7 @@ e4251cdcfa95982416fd6d87d4fd6305 *src/newcin2.cpp
 2fd3d032936fc1b2d7c54d05601788c6 *src/nutil.h
 5e952b2bd39d79c1d949e0c525f51fd1 *src/open.c
 9181a46521ba649f49369f86ec03b09b *src/rawio.h
-998c7697411a7a3199b690758ef84ebe *src/rdfmt.c
+236ff6b8ae72aa94c8c413367f8fe379 *src/rdfmt.c
 be90a52cc7846987fb788afbafe6efca *src/rsfe.c
 2dee048dc757228a9ba0dea54fe26278 *src/s_copy.c
 a2a4f751d5e372243bb26d873254aab8 *src/sfe.c
@@ -99,7 +99,7 @@ e3726208119fb32c5707429e3dbc42ea *src/tilfuncs.h
 a4c7f568a36ec5b303b9af34ea3be871 *src/tiliafuncs.cpp
 35f2d713d49cbab8d3d8e0afacea3844 *src/util.c
 068ce7355c782098407143fd8be6df79 *src/utils2.c
-d6d2d2d270db21983a2e60dbe0ce0b14 *src/wa.cpp
+4e2e2f2102536f824c667b9225404afd *src/wa.cpp
 7bdfd6622a299d588fb87b590968e7cc *src/wapls.cpp
 ce94406b72ca79523a9929a0801ac820 *src/wref.c
 d48d38a2f5e810935af5e9455c8424f1 *src/wrtfmt.c
