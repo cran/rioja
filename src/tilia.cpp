@@ -43,6 +43,7 @@ SEXP ReadTiliaFile(SEXP fN)
    SET_STRING_ELT(retNames, 7, mkChar("ErrorMessage"));
    SET_NAMES(ans, retNames);
    PROTECT(errorM = allocVector(STRSXP, 1));
+   int nprotect = 3;
    bool bError = false;
 
    FILE *fin = fopen(fName, "rb");
@@ -69,6 +70,7 @@ SEXP ReadTiliaFile(SEXP fN)
          PROTECT(pCodeNums = allocVector(INTSXP, nc));
          PROTECT(pSums = allocVector(STRSXP, nc));
          PROTECT(pCodeNames = allocVector(STRSXP, nc));
+         nprotect += 6;
          dMat *dm = getdMat(dData);
          char str[5];
          for (int i=0;i<nc;i++) {
@@ -88,6 +90,7 @@ SEXP ReadTiliaFile(SEXP fN)
          }
          PROTECT(pDepths = allocVector(REALSXP, nr));
          PROTECT(rnames = allocVector(STRSXP, nr));
+         nprotect += 2;
          for (int j=0;j<nr;j++) {
            SET_STRING_ELT(rnames, j, mkChar(dData.samName(j)));
             REAL(pDepths)[j] = (pdDepths)[j];
@@ -107,10 +110,7 @@ SEXP ReadTiliaFile(SEXP fN)
    SET_VECTOR_ELT(ans, 6, pDepths);
    SET_VECTOR_ELT(ans, 7, errorM);
 
-   if (!bError)
-      UNPROTECT(3);
-   else
-      UNPROTECT(11);
+   UNPROTECT(nprotect);
    return(ans);
 }
 }

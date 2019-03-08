@@ -30,21 +30,22 @@ SEXP ReadCornellFile(SEXP fN, SEXP mValue, SEXP impZero)
 
    double *mV = REAL(PROTECT(mValue));
    double *iZ = REAL(PROTECT(impZero));
+   int nprotect = 5;
    try {
       NewCornellIn2(dData, (char *) fName, 1, (double) mV[0], InFileType, nMissingValues, ColsWithNoData, RowsWithNoData, nCouplets, iZ[0]);
    }
    catch (char *ErrorMessage) {
       bError = true;
-      PROTECT(errorM = allocVector(STRSXP, 1));
+      PROTECT(errorM = allocVector(STRSXP, 1)); nprotect++;
       SET_STRING_ELT(errorM, 0, mkChar(ErrorMessage));
    }
    if (!bError) {
       int nr = rows(dData);
       int nc = cols(dData);
       if (nr * nc > 0) {
-         PROTECT(mat = allocVector(VECSXP, nc));
+         PROTECT(mat = allocVector(VECSXP, nc)); nprotect++;
          dMat *dm = getdMat(dData);
-         PROTECT(names = allocVector(STRSXP, nc));
+         PROTECT(names = allocVector(STRSXP, nc)); nprotect++;
          for (int i=0;i<nc;i++) {
             SET_STRING_ELT(names, i, mkChar(dData.spName(i)));
             SET_VECTOR_ELT(mat, i, allocVector(REALSXP, nr));
@@ -55,13 +56,13 @@ SEXP ReadCornellFile(SEXP fN, SEXP mValue, SEXP impZero)
                   REAL(VECTOR_ELT(mat, i))[j] = (*dm)(j,i);
             }
          }
-         PROTECT(rnames = allocVector(STRSXP, nr));
+         PROTECT(rnames = allocVector(STRSXP, nr)); nprotect++;
          for (int j=0;j<nr;j++) {
             SET_STRING_ELT(rnames, j, mkChar(dData.samName(j)));
          }
       }
       SET_NAMES(mat, names);     
-      PROTECT(iSummNames = allocVector(STRSXP, 2));
+      PROTECT(iSummNames = allocVector(STRSXP, 2)); nprotect++;
       SET_STRING_ELT(iSummNames, 0, mkChar("Number of missing values"));
       SET_STRING_ELT(iSummNames, 1, mkChar("Number of empty columns"));
       INTEGER(iSumm)[0] = nMissingValues;
@@ -73,10 +74,7 @@ SEXP ReadCornellFile(SEXP fN, SEXP mValue, SEXP impZero)
    SET_VECTOR_ELT(ans, 2, errorM);
    SET_VECTOR_ELT(ans, 3, iSumm);
    SET_NAMES(ans, retNames);
-   if (bError)
-      UNPROTECT(6);
-   else
-      UNPROTECT(9);
+   UNPROTECT(nprotect);
    return(ans);
 }
 }

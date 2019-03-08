@@ -24,10 +24,12 @@ SEXP WriteCornellFile(SEXP sexpData, SEXP sexpfName, SEXP sexpTitle, SEXP sexpSu
    dMat *pData = NULL;
    PROTECT(eMessage = allocVector(STRSXP, 1));
    PROTECT(dimnames = getAttrib(sexpData, R_DimNamesSymbol));
+   PROTECT(sexpData);
+   int nprotect = 3;
    
    try {
       pData = new dMat(nr, nc, 0.0);
-      PROTECT(sexpData);
+      
       for (int i=0;i<nr;i++) {
          for (int j=0;j<nc;j++) {
             if (ISNA(REAL(sexpData)[i + nr*j]))
@@ -36,20 +38,20 @@ SEXP WriteCornellFile(SEXP sexpData, SEXP sexpfName, SEXP sexpTitle, SEXP sexpSu
                (*pData)(i,j) = REAL(sexpData)[i + nr*j];
          }
       }
-      UNPROTECT(1);
    }
    catch (char *eM) {
       delete pData;
       SET_STRING_ELT(eMessage, 0, mkChar(eM));
-      UNPROTECT(2);
+      UNPROTECT(nprotect);
       return eMessage;
    }
+   UNPROTECT(1); nprotect--;
 
-   PROTECT(sexpfName);
+   PROTECT(sexpfName); nprotect++;
    int nNumericFields = nc;
    int nRecords = nr;
 
-   PROTECT(sexpTitle);
+   PROTECT(sexpTitle); nprotect++;
    int CornellFnPlaces = INTEGER(sexpCornellFnPlaces)[0];
    int CornellCnPlaces = INTEGER(sexpCornellCnPlaces)[0];
    int CornellCnCouplets = INTEGER(sexpCornellCnCouplets)[0];
@@ -66,7 +68,7 @@ SEXP WriteCornellFile(SEXP sexpData, SEXP sexpfName, SEXP sexpTitle, SEXP sexpSu
       delete pData;
       sprintf(str, "Cannot open file %s", CHAR(STRING_ELT(sexpfName, 0)));
       SET_STRING_ELT(eMessage, 0, mkChar(str));
-      UNPROTECT(4);
+      UNPROTECT(nprotect);
       return eMessage;
    }
 
@@ -199,7 +201,7 @@ SEXP WriteCornellFile(SEXP sexpData, SEXP sexpfName, SEXP sexpTitle, SEXP sexpSu
    }
    fclose(fout);
    delete pData;
-   UNPROTECT(4);
+   UNPROTECT(nprotect);
    return eMessage;
 }
 }

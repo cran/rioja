@@ -23,42 +23,45 @@ SEXP chclust_c(SEXP sexpData, SEXP sexMethod)
    dims = Rf_getAttrib(sexpData, R_DimSymbol);
    int method = INTEGER(sexMethod)[0];
    long nr = INTEGER(dims)[0];
-   PROTECT(sexpData);
-   double **DPtr = new double*[nr];
+   int nprotect = 0;
+   PROTECT(sexpData); nprotect++;
+   double **DPtr = new double*[nr]; // will leak memory on long jump
    double *diss;
    long i =0;
 	for (i=1;i<nr;i++) {
-		if ((DPtr[i]= new double[i])==NULL)
+		if ((DPtr[i]= new double[i])==NULL) {
+		        UNPROTECT(nprotect);
 			return eMessage;
+                }
 		diss=DPtr[i];
 		for(long j=0;j<i;j++) {
             diss[j] = REAL(sexpData)[i + nr*j];
       }
 	}
-   UNPROTECT(1);
+   UNPROTECT(1); nprotect--;
    double *dend = NULL;
    bool errorFlag = false;
    if (method==1) {
       if (!Conslink(nr, DPtr, &dend))  {
-         PROTECT(eMessage = allocVector(STRSXP, 1));
+         PROTECT(eMessage = allocVector(STRSXP, 1)); nprotect++;
          SET_STRING_ELT(eMessage, 0, mkChar("Error in Conslink C++ code"));
          errorFlag = true;
       }
    }
    else if (method==2) {
       if (!ConISS(nr, DPtr, &dend)) {
-         PROTECT(eMessage = allocVector(STRSXP, 1));
+         PROTECT(eMessage = allocVector(STRSXP, 1)); nprotect++;
          SET_STRING_ELT(eMessage, 0, mkChar("Error in ConISS C++ code"));
          errorFlag = true;
       }
    }
    else {
-      PROTECT(eMessage = allocVector(STRSXP, 1));
+      PROTECT(eMessage = allocVector(STRSXP, 1)); nprotect++;
       SET_STRING_ELT(eMessage, 0, mkChar("Unknown clustering method"));
          errorFlag = true;
    }
    SEXP sDend;
-   PROTECT(sDend = allocVector(REALSXP, nr-1));
+   PROTECT(sDend = allocVector(REALSXP, nr-1)); nprotect++;
    for (i=1;i<nr;i++) {
       REAL(sDend)[i-1] = dend[i];
    }
@@ -67,11 +70,9 @@ SEXP chclust_c(SEXP sexpData, SEXP sexMethod)
  	for (i=1;i<nr;i++)
       delete [] DPtr[i];
    delete [] DPtr;
-   UNPROTECT(1);
-   if (errorFlag) {
-      UNPROTECT(1);
+   UNPROTECT(nprotect);
+   if (errorFlag)
       return eMessage;
-   }
    return sDend;
 }
 
