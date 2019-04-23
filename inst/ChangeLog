@@ -1,7 +1,27 @@
 rioja Change Log
 
+Version 0.9-21
+Fixed new / delete mismatch in mat.cpp 
+
+Version 0.9-20
+Fixed return bugs in mat.cpp 
+
+Version 0.9-19
+Removed read.CEP and read.Tilia to package riojaExtra on github
+Added R_registerRoutines
+
+Version 0.9-18
+Added option to save bootstrap matrices in predict
+
+Version 0.9-17
+Added ... argument to approx in interp.dataset
+
+Version 0.9-16
+Fixed bug in strat.plot & protection stack imbalance in cornellout.cpp
+
 Version 0.9-15
-Fixed problem with #pragma not compoliing on Sun machines
+* Released on CRAN 20/06/2017
+Fixed problem with #pragma not compiling on Sun machines
 
 Version 0.9-14
 Fixed bug in parallel code of randomPTF
