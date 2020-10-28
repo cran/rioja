@@ -1,5 +1,22 @@
 rioja Change Log
 
+version 0.9-26
+bug fixes and enhances to strat.plot and riojaPlot
+
+version 0.9-25
+Tweaks to strat.plot
+Shiny plotting app
+
+version 0.9-24
+Fixed bug in strat.plot when species data are in tibble.
+Added option to specify y tick labels
+
+Version 0.9-23
+fixed bug in MLRC use.glm=TRUE
+
+Version 0.9-22
+removed 1000 col and 20000 row limit in mat
+
 Version 0.9-21
 Fixed new / delete mismatch in mat.cpp 
 
