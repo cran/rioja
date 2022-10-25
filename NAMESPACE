@@ -5,21 +5,32 @@ useDynLib(rioja, .registration=TRUE)
 ##
 importFrom(vegan, bstick, make.cepnames)
 
+importFrom(sjmisc, word_wrap)
+
+importFrom(stringr, str_trim)
+
+importFrom(dplyr, left_join)
+
+importFrom(methods, is)
+
+importFrom(forcats, fct_explicit_na)
+
 ## mgcv
 importFrom(mgcv,
            gam, s, smoothCon, mono.con, pcls, Predict.matrix)
 
 ## grDevices
-importFrom("grDevices", "chull", "col2rgb", "rgb")
+importFrom("grDevices", "chull", "col2rgb", "rgb", "dev.size")
 
+# importFrom(flextable, flextable, autofit, height_all, padding)
 
 ## Export regular function names (no dots)
 export(chclust, crossval, performance, inkspot, Merge, bstick)
 
 ## export regular functions with dot names
 export(compare.datasets, 
-       rand.t.test, interp.dataset, strat.plot, addClustZone,
-       addZone)
+       rand.t.test, interp.dataset, strat.plot, riojaPlot, riojaPlot2, addClustZone, 
+       addClustZone, addZone, addRPZone, addRPClustZone, addRPClust, listStyles, makeStyles)
 
 ## export utility functions
 export(hulls, figCnvt, communality, paldist, paldist2,
@@ -29,6 +40,7 @@ export(hulls, figCnvt, communality, paldist, paldist2,
 ## export fit functions
 export(IKFA, IKFA.fit, LWR, MAT, 
        MLRC, MLRC.fit, 
+       MLRC2, MLRC2.fit, 
        WA, WA.fit, 
        WAPLS, WAPLS.fit, 
        MR, MR.fit, randomPTF)
@@ -70,6 +82,7 @@ S3method(dot, data.frame)
 # coef: stats
 S3method(coef, IKFA)
 S3method(coef, MLRC)
+S3method(coef, MLRC2)
 S3method(coef, MR)
 
 # fitted: stats
@@ -77,6 +90,7 @@ S3method(fitted, IKFA)
 S3method(fitted, LWR)
 S3method(fitted, MAT)
 S3method(fitted, MLRC)
+S3method(fitted, MLRC2)
 S3method(fitted, WA)
 S3method(fitted, WAPLS)
 S3method(fitted, MR)
@@ -87,6 +101,7 @@ S3method(performance, IKFA)
 S3method(performance, LWR)
 S3method(performance, MAT)
 S3method(performance, MLRC)
+S3method(performance, MLRC2)
 S3method(performance, WA)
 S3method(performance, WAPLS)
 S3method(performance, MR)
@@ -106,6 +121,7 @@ S3method(predict, IKFA)
 S3method(predict, LWR)
 S3method(predict, MAT)
 S3method(predict, MLRC)
+S3method(predict, MLRC2)
 S3method(predict, WA)
 S3method(predict, WAPLS)
 S3method(predict, MR)
@@ -115,6 +131,7 @@ S3method(print, IKFA)
 S3method(print, LWR)
 S3method(print, MAT)
 S3method(print, MLRC)
+S3method(print, MLRC2)
 S3method(print, WA)
 S3method(print, WAPLS)
 S3method(print, MR)
@@ -132,6 +149,7 @@ S3method(residuals, IKFA)
 S3method(residuals, LWR)
 S3method(residuals, MAT)
 S3method(residuals, MLRC)
+S3method(residuals, MLRC2)
 S3method(residuals, WA)
 S3method(residuals, WAPLS)
 S3method(residuals, MR)
@@ -146,6 +164,7 @@ S3method(summary, IKFA)
 S3method(summary, LWR)
 S3method(summary, MAT)
 S3method(summary, MLRC)
+S3method(summary, MLRC2)
 S3method(summary, WA)
 S3method(summary, WAPLS)
 S3method(summary, MR)

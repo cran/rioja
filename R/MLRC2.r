@@ -11,6 +11,7 @@ MLRC2 <- function(y, x, n.out=100, expand.grad=0.1, use.gam=FALSE, check.data=TR
   if (any(y>1) | any (y<0))
     stop("Species data must be proportions between 0 and 1")
   fit <- MLRC2.fit(y=y, x=x, n.out=n.out, expand.grad=expand.grad, use.gam=use.gam, lean=lean, n.cut=n.cut, verbose=verbose, ...)
+  print(substitute(x))
   xHat <- predict.internal.MLRC2(object=fit, y=y, lean=lean, ...) 
   call.print <- match.call()
   call.fit <- as.call(list(quote(MLRC2.fit), y=quote(y), x=quote(x), lean=FALSE))
@@ -25,21 +26,17 @@ MLRC2 <- function(y, x, n.out=100, expand.grad=0.1, use.gam=FALSE, check.data=TR
 MLRC2.fit <- function(y, x, n.out=100, expand.grad=0.1, use.gam=FALSE, check.data=TRUE, lean=FALSE, n.cut=5, verbose=TRUE, ...) {
 #  require(mgcv)
   glr <- function(y, e, pred) {
-    gfit <- glm(y ~ V1 + V2 + I(V2^2) + I(V2^2) + V1*V2, data=e, family = quasibinomial(link=logit), maxit = 100)
+    gfit <- glm(y ~ V1 + I(V1^2), data=e, 
+                family=quasibinomial(link=logit), maxit = 100)
     p2 <- predict.glm(gfit, pred, type="response")
   }
-  
-  if (ncol(x) != 2)
-    stop("x must contain 2 columns")
-  nms <- colnames(x)
-  colnames(x) <- c("V1", "V2")
+
+  x <- data.frame(x)  
+  colnames(x) <- c("V1")
   r.V1 <- range(x[, 1])
   exp.V1 <- (r.V1[2] - r.V1[1]) * expand.grad
   xpred1=seq(r.V1[1]-exp.V1, r.V1[2]+exp.V1, length.out=n.out)
-  r.V2 <- range(x[, 2])
-  exp.V2 <- (r.V2[2] - r.V2[1]) * expand.grad
-  xpred2=seq(r.V2[1]-exp.V2, r.V2[2]+exp.V2, length.out=n.out)
-  pred <- expand.grid(V1=xpred1, V2=xpred2)
+  pred <- data.frame(V1=xpred1)
 #  res <- matrix(0, ncol = ncol(y), nrow = nrow(pred))
   
 #  for (spec in 1:ncol(y))  {
@@ -56,7 +53,7 @@ MLRC2.fit <- function(y, x, n.out=100, expand.grad=0.1, use.gam=FALSE, check.dat
 
   res <- apply(y, 2, glr, e=x, pred=pred)
   colnames(res) <- colnames(y)
-  colnames(pred) <- nms
+  colnames(pred) <- "V1"
   list(spp=res, env=pred)
 }
 
@@ -73,7 +70,7 @@ predict.internal.MLRC2 <- function(object, y, lean=FALSE, ...)
   ppp <- log(1-object$spp)
   LL.res <- as.matrix(p) %*% t(y) + as.matrix(ppp) %*% t(1.0-y)
   LL.res[is.na(LL.res)] <- -1.0E30
-  res3 <- object$env[apply(LL.res, 2, order, decreasing = TRUE)[1, ], 1:2]
+  res3 <- object$env[apply(LL.res, 2, order, decreasing = TRUE)[1, ], 1, drop=FALSE]
   rownames(res3) <- rownames(y)
   colnames(res3) <- colnames(object$env)
   as.matrix(res3)
@@ -89,7 +86,7 @@ predict.MLRC2 <- function(object, newdata=NULL, sse=FALSE, nboot=100, match.data
 performance.MLRC2 <- function(object, ...) {
 #  .performance(object, ...)
   RMSE <- apply(residuals(object), 2, .rmse)
-  R2 <- diag(apply(object$fitted.values, 2, .r2, x=object$x))
+  R2 <- .r2(object$fitted.values, object$x)
   result <- cbind(RMSE, R2)
   out <- list(object=result)
   if (object$cv.summary$cv.method != "none") {
@@ -145,3 +142,4 @@ coef.MLRC2 <- function(object, ...) {
   rownames(res) <- colnames(object$spp)
   return(res)
 }
+

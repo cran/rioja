@@ -242,8 +242,8 @@ strat.plot <- function(d, yvar = NULL, scale.percent = FALSE, graph.widths=1, mi
 #          x2 <- c(0, d[, i, drop=TRUE]*exag.mult[i], 0)
 #          polygon(x2, y, col = col.exag[i], border = NA)
 #        }
-#        polygon(x, y, col = cc.poly[i], border = cc.poly.line[i], lwd=lwd.poly)
-        polygon(x, y, col = cc.poly[i], border = NA, lwd=lwd.poly)
+        polygon(x, y, col = cc.poly[i], border = cc.poly.line[i], lwd=lwd.poly)
+#        polygon(x, y, col = cc.poly[i], border = NA, lwd=lwd.poly)
       }
       if ( !bar.back) {
         if (is.logical(plot.bar)) {
@@ -264,7 +264,7 @@ strat.plot <- function(d, yvar = NULL, scale.percent = FALSE, graph.widths=1, mi
       if (ty == "l") 
         lines(x_var, y_var, col = cc.line[i], lwd = lwd.line)
       if (plot.symb) {
-        points(x_var, y_var, pch=symb.pch, cex=symb.cex, col=col.symb, xpd=NA)
+        points(x_var, y_var, pch=symb.pch, cex=symb.cex, col=col.symb, xpd=FALSE)
       }
       if (!is.null(fun2[i])) {
         fun2[[i]](x=x_var, y=y_var, i=i, nm=x.names[i])
@@ -326,8 +326,8 @@ strat.plot <- function(d, yvar = NULL, scale.percent = FALSE, graph.widths=1, mi
           x2 <- c(us[1], x_var*exag.mult[i], us[1])
           polygon(x2, y, col = col.exag[i], border = NA)
         }
-#        polygon(x, y, col = cc.poly[i], border = cc.poly.line[i], lwd=lwd.poly)
-        polygon(x, y, col = cc.poly[i], border = NA, lwd=lwd.poly)
+        polygon(x, y, col = cc.poly[i], border = cc.poly.line[i], lwd=lwd.poly)
+#        polygon(x, y, col = cc.poly[i], border = NA, lwd=lwd.poly)
       }
       if (!bar.back) {
         if (is.logical(plot.bar)) {
@@ -347,7 +347,7 @@ strat.plot <- function(d, yvar = NULL, scale.percent = FALSE, graph.widths=1, mi
       if (ty == "l") 
         lines(x_var, y_var, col = cc.line[i], lwd = lwd.line)
       if (plot.symb) {
-        points(x_var, y_var, pch=symb.pch, cex=symb.cex, col=col.symb, xpd=NA)
+        points(x_var, y_var, pch=symb.pch, cex=symb.cex, col=col.symb, xpd=FALSE)
       }
       if (!is.null(fun2[i])) {
         fun2[[i]](x=x_var, y=y_var, i=i, nm=x.names[i])
@@ -373,11 +373,12 @@ strat.plot <- function(d, yvar = NULL, scale.percent = FALSE, graph.widths=1, mi
     pos <- usr1[4]+r
     if (y.rev)
       pos <- usr1[4]-r
-    if (srt.xlabel < 90)
-      text(tks1[1], pos, labels=x.names[i], adj = c(0, 0), srt=srt.xlabel, cex = cex.xlabel, xpd=NA)
-    else
-      text(tks1[1], pos, labels=x.names[i], adj = c(0, 1), srt=srt.xlabel, cex = cex.xlabel, xpd=NA)
-    
+    if (!is.null(srt.xlabel)) {
+      if (srt.xlabel < 90)
+        text(tks1[1], pos, labels=x.names[i], adj = c(0, 0), srt=srt.xlabel, cex = cex.xlabel, xpd=NA)
+      else
+        text(tks1[1], pos, labels=x.names[i], adj = c(0, 1), srt=srt.xlabel, cex = cex.xlabel, xpd=NA)
+    }
     usrs[[i]] <- usr2   
     figs[[i]] <- par("fig")
   }
@@ -405,7 +406,11 @@ strat.plot <- function(d, yvar = NULL, scale.percent = FALSE, graph.widths=1, mi
 addZone <- function(x, upper, lower=NULL, ...) {
   fcall <- match.call(expand.dots=TRUE)
   oldpar <- par(c("fig", "mar", "usr"))
-  par(fig=x$box)
+  fig <- x$box
+  nFigs <- length(x$figs)
+  fig[1] <- x$figs[[1]][1]
+  fig[2] <- x$figs[[nFigs]][2]
+  par(fig=fig)
   par(mar=c(0,0,0,0))
   par(usr=c(0, 1, x$usr[3], x$usr[4]))
   tcll <- -.3
@@ -421,7 +426,11 @@ addZone <- function(x, upper, lower=NULL, ...) {
 
 addClustZone <- function(x, clust, nZone, ...) {
   oldpar <- par(c("fig", "mar", "usr"))
-  par(fig=x$box)
+  fig <- x$box
+  nFigs <- length(x$figs)
+  fig[1] <- x$figs[[1]][1]
+  fig[2] <- x$figs[[nFigs]][2]
+  par(fig=fig)
   par(mar=c(0,0,0,0))
   par(usr=c(0, 1, x$usr[3], x$usr[4]))
   cc <- cutree(clust, k=nZone)
