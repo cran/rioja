@@ -1,5 +1,5 @@
-bf6482a8c7a31dee3b0fd6004890d6c5 *DESCRIPTION
-e77a111bc0b72084a04eedb799ac88ad *NAMESPACE
+2c96729fb1c4c208ee3e3636073331a9 *DESCRIPTION
+dd03c2005d946eb04a1732b53f5bf8a4 *NAMESPACE
 575ed38a08f95da9e84b5bd18ad2e58d *R/IKFA.r
 9628c0f616ed526c8daadb10888a4bbb *R/LWR.r
 a9a94cf9dca37e9925037508e1ccdca7 *R/MAT.r
@@ -18,12 +18,10 @@ e53bf84004e090bfe60bb6aca518776e *R/inkspot.r
 8ea108e435a8342d52d3bf18214fb739 *R/interp.datasets.r
 0a5058a844c4bfe7993909e86268ec4f *R/merge.r
 119317a066ac3d6549149f82f66d4030 *R/randomPTF.r
-2ceb433200ab02758ccfbb5be2036dab *R/riojaPlot.R
 416f88e6f4867df064c37a0005a4a2d6 *R/strat.plot.r
 20036452a24aba766aa1f44910bc661e *R/utils.r
-f8bf14becc2df1cd4b7a783cd7eea1fa *R/zzz.r
-5104f2258e5cd4df60cf5a169f7a0da1 *build/partial.rdb
-8e13e37a3da74730a067c1bbae25db0e *build/vignette.rds
+f829c8ae52e166d7e649b9865a4d0d49 *R/zzz.r
+62801dbe6b4e239bc680b1bf06ab40a2 *build/partial.rdb
 718eed01f62af277e4527975041090e2 *data/IK.rda
 8e6fbfb938e733a1c79f3a12194162eb *data/Ponds.rda
 fe8db975df1da574a6510e44d02515a7 *data/RLGH.rda
@@ -32,14 +30,6 @@ c8bef6bdddefe487bd5e5728ffdd027e *data/SWAP.rda
 34f368caf7b653ea4cda3dd401b1ff05 *inst/CITATION
 69050a96ceba743cad67709120a91f26 *inst/COPYING
 e4a501517458bc0dc6e41be7d85d575e *inst/ChangeLog
-9f7e6b3d5b5e25d01da4c763ce6639fb *inst/doc/riojaPlot.R
-ebe6c639a3ac51e6d63d10c5f02b0d98 *inst/doc/riojaPlot.Rmd
-63937d7ecc0200571f125bc454b1444b *inst/doc/riojaPlot.pdf
-16d0b67809976c93d304b5e95e18660c *inst/doc/riojaPlotPDF.pdf
-28ec417ecd49c2566b0ce6beef39755f *inst/doc/riojaPlotPDF.pdf.asis
-d1258b304c4822aed9f60ffff7915474 *inst/extdata/LochChon.xlsx
-2059c83bee16fa867b2672b96867e34e *inst/extdata/allen1999.xlsx
-b85520bdb0d3c2446dbd90c1acf4d48f *inst/extdata/maule2020geochem.txt
 e148714306e2d76ea9bcdec51d4eba9f *man/IK.Rd
 07fcde7ef14a3112da0e7d257e6b903c *man/IKFA.Rd
 f8db3c39c4c5631eefbea6b44c685e31 *man/LWR.Rd
@@ -63,7 +53,6 @@ d8fb2b8b37ae77fa5fd9f464e6a59b89 *man/gutils.Rd
 b8aff94cbdd8890b1bf947ea5a3a8ad5 *man/randomPTF.Rd
 21031929004df63a4e044843108c4be7 *man/rioja-internal.Rd
 e0f02547d4ca9c4aaf40bf30ac376a55 *man/rioja.package.Rd
-3114de43166338e343f76fd39a77b81d *man/riojaPlot.Rd
 6c832e3cd50e6a8939c123e629ccaa83 *man/strat.plot.Rd
 bd673688ba5d393e98837d617e559672 *man/utils.Rd
 f254a28c6b4dbb2259c6faa9cc5f7f22 *src/analog.c
@@ -77,6 +66,3 @@ a1d041853fb31a57008ecc2a76e059ce *src/mlrc.h
 2fd3d032936fc1b2d7c54d05601788c6 *src/nutil.h
 068ce7355c782098407143fd8be6df79 *src/utils2.c
 7bdfd6622a299d588fb87b590968e7cc *src/wapls.cpp
-863fad2f0d049d91e87810e063497b39 *vignettes/R_Figures/c1-1.png
-ebe6c639a3ac51e6d63d10c5f02b0d98 *vignettes/riojaPlot.Rmd
-28ec417ecd49c2566b0ce6beef39755f *vignettes/riojaPlotPDF.pdf.asis
