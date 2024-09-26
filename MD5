@@ -1,4 +1,4 @@
-c6db115d285f775bd5efa78ff3ee2c07 *DESCRIPTION
+0d23852d816594359d968dd3c1bcaccd *DESCRIPTION
 dd03c2005d946eb04a1732b53f5bf8a4 *NAMESPACE
 575ed38a08f95da9e84b5bd18ad2e58d *R/IKFA.r
 9628c0f616ed526c8daadb10888a4bbb *R/LWR.r
@@ -21,7 +21,7 @@ e8bfb60720e45994c63c8c999965d770 *R/randomPTF.r
 416f88e6f4867df064c37a0005a4a2d6 *R/strat.plot.r
 20036452a24aba766aa1f44910bc661e *R/utils.r
 f829c8ae52e166d7e649b9865a4d0d49 *R/zzz.r
-cd38e7814f190d09117fc3e44af1b4a9 *build/partial.rdb
+51feb0785bdead805587418953a08708 *build/partial.rdb
 718eed01f62af277e4527975041090e2 *data/IK.rda
 8e6fbfb938e733a1c79f3a12194162eb *data/Ponds.rda
 fe8db975df1da574a6510e44d02515a7 *data/RLGH.rda
@@ -29,7 +29,7 @@ c8bef6bdddefe487bd5e5728ffdd027e *data/SWAP.rda
 3604501c4591565438f1ad7e4003767b *data/aber.rda
 25972ed1d42953a49db8db9f36b80623 *inst/CITATION
 69050a96ceba743cad67709120a91f26 *inst/COPYING
-2043962be40ab643fce946bf33a49b14 *inst/ChangeLog
+72a82361e6f16c24415b7e7df8976a14 *inst/ChangeLog
 e148714306e2d76ea9bcdec51d4eba9f *man/IK.Rd
 07fcde7ef14a3112da0e7d257e6b903c *man/IKFA.Rd
 f8db3c39c4c5631eefbea6b44c685e31 *man/LWR.Rd
@@ -56,13 +56,13 @@ e0f02547d4ca9c4aaf40bf30ac376a55 *man/rioja.package.Rd
 6c832e3cd50e6a8939c123e629ccaa83 *man/strat.plot.Rd
 bd673688ba5d393e98837d617e559672 *man/utils.Rd
 f254a28c6b4dbb2259c6faa9cc5f7f22 *src/analog.c
-db0be4f39816aa365e952a413f3344ec *src/chclust.cpp
+7208d627137e67160bff81d2f21133d1 *src/chclust.cpp
 557d17c187c437ca048c8f0e63149b73 *src/dmatinv.cpp
 d5c0c75b925b6ec985f372de5c54afab *src/init.c
 edb06f4e1b954e2e42496509836fc396 *src/mat.cpp
 908e6ff8e7e888de4c4d23f2d9f5f848 *src/mat.h
-c94adadc9b6afb0584dee3731b0d8d02 *src/mlrc.cpp
+cd1e8d3bd68b4651c5739e00724e2657 *src/mlrc.cpp
 a1d041853fb31a57008ecc2a76e059ce *src/mlrc.h
 2fd3d032936fc1b2d7c54d05601788c6 *src/nutil.h
 068ce7355c782098407143fd8be6df79 *src/utils2.c
-7bdfd6622a299d588fb87b590968e7cc *src/wapls.cpp
+9276d150f788116baab6c0defd236c16 *src/wapls.cpp
